@@ -87,14 +87,15 @@ export default function Header() {
       >
         <nav className="site-shell flex flex-col items-center gap-8 text-center">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.label}
               href={item.href}
+              prefetch={false}
               onClick={() => setOpen(false)}
               className="font-display text-[clamp(28px,4vw,42px)] italic leading-[1.15] text-white/72 transition-colors hover:text-white"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           <div className="gold-line mt-4" />
           <a

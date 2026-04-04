@@ -22,26 +22,42 @@ function FeatureSection({
   imageAlt,
   reverse = false,
 }: FeatureSectionProps) {
+  const copyBlock = (
+    <article className="copy-column">
+      <p className="kicker">{eyebrow}</p>
+      <div className="gold-line mt-4" />
+      <h2 className="section-title">{title}</h2>
+      <p className="section-body">{body}</p>
+    </article>
+  );
+
+  const mediaBlock = (
+    <div className="media-column">
+      <Image
+        src={imageSrc}
+        alt={imageAlt}
+        fill
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        className="editorial-img"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/38 via-transparent to-black/8" />
+    </div>
+  );
+
   return (
     <section id={id} className="section-space">
       <div className={`site-shell split-layout${reverse ? " reverse" : ""}`}>
-        <article className="copy-column">
-          <p className="kicker">{eyebrow}</p>
-          <div className="gold-line mt-4" />
-          <h2 className="section-title">{title}</h2>
-          <p className="section-body">{body}</p>
-        </article>
-
-        <div className="media-column">
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="editorial-img"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/38 via-transparent to-black/8" />
-        </div>
+        {reverse ? (
+          <>
+            {mediaBlock}
+            {copyBlock}
+          </>
+        ) : (
+          <>
+            {copyBlock}
+            {mediaBlock}
+          </>
+        )}
       </div>
     </section>
   );
@@ -67,7 +83,7 @@ export default function Home() {
 
       <main>
 
-        <section className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden">
+        <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <Image
               src="/images/illustrations/illustration3.png"
@@ -81,9 +97,10 @@ export default function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.34)_80%)]" />
           </div>
 
-          <div className="site-shell relative">
-            <div className="mx-auto max-w-[720px] text-center">
-              <div className="flex items-center justify-center gap-3 fade-in">
+          <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_auto]">
+            {/* Left — Hero copy */}
+            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+              <div className="flex items-center gap-3 fade-in">
                 <Image
                   src="/images/logos/logo_derived_3_transparent.png"
                   alt="Bevy"
@@ -104,13 +121,30 @@ export default function Home() {
                 <br />
                 feel more.
               </h1>
-              <p className="mx-auto mt-6 max-w-[440px] text-[16px] font-light leading-[1.78] text-white/54 fade-in fade-in-d2">
+              <p className="mt-6 max-w-[440px] text-[16px] font-light leading-[1.78] text-white/54 fade-in fade-in-d2">
                 Bevy transforms truth or dare into something worth remembering.
                 Over 1000 cards designed to spark connection, vulnerability, and
                 unforgettable moments between the people who matter most.
               </p>
 
-              <div className="mx-auto mt-9 h-px w-[120px] bg-white/[0.16] fade-in fade-in-d2" />
+              <div className="mt-9 h-px w-[120px] bg-white/[0.16] fade-in fade-in-d2" />
+            </div>
+
+            {/* Right — iPhone 17 Pro Mockup */}
+            <div className="iphone-mock fade-in fade-in-d3">
+              <div className="iphone-mock__frame">
+                <div className="iphone-mock__notch" />
+                <div className="iphone-mock__screen">
+                  <Image
+                    src="/images/screens/hero-screen.png"
+                    alt="Bevy app welcome screen"
+                    fill
+                    sizes="280px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

@@ -78,26 +78,22 @@ a {
 }
 
 .quote-space {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 40vh;
   padding-block: var(--quote-space);
 }
 
 .split-layout {
   display: grid;
-  align-items: center;
+  align-items: start;
   gap: var(--split-gap);
 }
 
 @media (min-width: 1024px) {
   .split-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  .split-layout.reverse > :first-child {
-    order: 2;
-  }
-
-  .split-layout.reverse > :last-child {
-    order: 1;
   }
 }
 
@@ -107,31 +103,35 @@ a {
 
 .copy-column {
   width: min(100%, 33.5rem);
-  justify-self: center;
+  margin-inline: auto;
 }
 
 @media (min-width: 1024px) {
   .split-layout:not(.reverse) .copy-column {
-    justify-self: end;
+    margin-left: auto;
+    margin-right: 0;
   }
 
   .split-layout.reverse .copy-column {
-    justify-self: start;
+    margin-left: 0;
+    margin-right: auto;
   }
 
   .split-layout:not(.reverse) .media-column {
-    justify-self: start;
+    margin-left: 0;
+    margin-right: auto;
   }
 
   .split-layout.reverse .media-column {
-    justify-self: end;
+    margin-left: auto;
+    margin-right: 0;
   }
 }
 
 .media-column {
   position: relative;
   width: min(100%, 34.5rem);
-  justify-self: center;
+  margin-inline: auto;
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 2px;
@@ -279,6 +279,67 @@ a {
     var(--gold-soft) 84%,
     transparent 100%
   );
+}
+
+/* ── iPhone 17 Pro mockup ────────────────────── */
+
+.iphone-mock {
+  display: flex;
+  justify-content: center;
+}
+
+.iphone-mock__frame {
+  position: relative;
+  width: 260px;
+  aspect-ratio: 393 / 852;
+  border-radius: 46px;
+  background: #1a1a1a;
+  padding: 10px;
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.iphone-mock__notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 28px;
+  background: #0a0a0a;
+  border-radius: 0 0 18px 18px;
+  z-index: 10;
+}
+
+.iphone-mock__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 36px;
+  overflow: hidden;
+  background: #000;
+}
+
+@media (min-width: 640px) {
+  .iphone-mock__frame {
+    width: 280px;
+    border-radius: 50px;
+    padding: 12px;
+  }
+
+  .iphone-mock__notch {
+    top: 12px;
+    width: 104px;
+    height: 30px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .iphone-mock__screen {
+    border-radius: 38px;
+  }
 }
 
 ::-webkit-scrollbar {
