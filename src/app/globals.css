@@ -279,65 +279,55 @@ a {
   );
 }
 
-/* ── iPhone 17 Pro mockup ────────────────────── */
+/* ── Phone mock + bundle strip ────────────────── */
 
-.iphone-mock {
-  display: flex;
-  justify-content: center;
-}
-
-.iphone-mock__frame {
+.phone-mock {
   position: relative;
-  width: 260px;
-  aspect-ratio: 393 / 852;
-  border-radius: 46px;
-  background: #1a1a1a;
-  padding: 10px;
-  box-shadow:
-    0 0 0 1.5px rgba(255, 255, 255, 0.12),
-    0 30px 80px rgba(0, 0, 0, 0.55),
-    0 8px 24px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  width: min(92vw, 760px);
+  aspect-ratio: 1 / 1;
+  filter: drop-shadow(0 24px 52px rgba(0, 0, 0, 0.44));
 }
 
-.iphone-mock__notch {
+.phone-mock--compact {
+  width: min(72vw, 580px);
+}
+
+.phone-mock__screen {
   position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 96px;
-  height: 28px;
-  background: #0a0a0a;
-  border-radius: 0 0 18px 18px;
-  z-index: 10;
-}
-
-.iphone-mock__screen {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 36px;
+  inset: 9.2% 30.8% 9.8% 31.1%;
+  border-radius: 13% / 7%;
   overflow: hidden;
   background: #000;
 }
 
-@media (min-width: 640px) {
-  .iphone-mock__frame {
-    width: 280px;
-    border-radius: 50px;
-    padding: 12px;
-  }
+.phone-mock__frame {
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 2;
+}
 
-  .iphone-mock__notch {
-    top: 12px;
-    width: 104px;
-    height: 30px;
-    border-radius: 0 0 20px 20px;
-  }
+.bundle-strip {
+  display: flex;
+  gap: clamp(1rem, 2.6vw, 2rem);
+  overflow-x: auto;
+  padding: 0.35rem 0.15rem 0.7rem;
+  scroll-snap-type: x mandatory;
+}
 
-  .iphone-mock__screen {
-    border-radius: 38px;
-  }
+.bundle-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  scroll-snap-align: start;
+}
+
+.bundle-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 229, 0.44);
 }
 
 ::-webkit-scrollbar {

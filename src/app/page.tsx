@@ -13,6 +13,111 @@ type FeatureSectionProps = {
   reverse?: boolean;
 };
 
+type PhoneMockProps = {
+  screenSrc: string;
+  screenAlt: string;
+  priority?: boolean;
+  compact?: boolean;
+};
+
+const bundleScreens = [
+  {
+    label: "Significant Other",
+    imageSrc: "/images/screens/bundle-significant-other.png",
+    imageAlt: "Significant Other bundle screen",
+  },
+  {
+    label: "Early Dating",
+    imageSrc: "/images/screens/bundle-early-dating.png",
+    imageAlt: "Early Dating bundle screen",
+  },
+  {
+    label: "Date Night",
+    imageSrc: "/images/screens/bundle-date-night.png",
+    imageAlt: "Date Night bundle screen",
+  },
+  {
+    label: "Point Break",
+    imageSrc: "/images/screens/bundle-point-break.png",
+    imageAlt: "Point Break bundle screen",
+  },
+  {
+    label: "The Office",
+    imageSrc: "/images/screens/bundle-the-office.png",
+    imageAlt: "The Office bundle screen",
+  },
+  {
+    label: "No Strings Attached",
+    imageSrc: "/images/screens/bundle-no-strings.png",
+    imageAlt: "No Strings Attached bundle screen",
+  },
+  {
+    label: "Not Safe For Work",
+    imageSrc: "/images/screens/bundle-nsfw.png",
+    imageAlt: "Not Safe For Work bundle screen",
+  },
+];
+
+function PhoneMock({
+  screenSrc,
+  screenAlt,
+  priority = false,
+  compact = false,
+}: PhoneMockProps) {
+  return (
+    <div className={`phone-mock${compact ? " phone-mock--compact" : ""}`}>
+      <div className="phone-mock__screen">
+        <Image
+          src={screenSrc}
+          alt={screenAlt}
+          fill
+          sizes={compact ? "580px" : "760px"}
+          className="object-cover"
+          priority={priority}
+        />
+      </div>
+      <Image
+        src="/images/mocks/iPhone 17 Mock.png"
+        alt=""
+        fill
+        sizes={compact ? "580px" : "760px"}
+        className="phone-mock__frame"
+      />
+    </div>
+  );
+}
+
+function BundlesShowcase() {
+  return (
+    <section className="section-space">
+      <div className="site-shell">
+        <article className="mx-auto max-w-[680px] text-center">
+          <p className="kicker">Bundles</p>
+          <div className="gold-line mx-auto mt-4" />
+          <h2 className="section-title">A different energy for every night.</h2>
+          <p className="section-body mx-auto max-w-[560px]">
+            From soft truths to bold dares, each Bevy bundle sets its own tone
+            so the game fits your people, your mood, and your moment.
+          </p>
+        </article>
+
+        <div className="bundle-strip mt-10">
+          {bundleScreens.map((bundle) => (
+            <div key={bundle.label} className="bundle-item">
+              <PhoneMock
+                compact
+                screenSrc={bundle.imageSrc}
+                screenAlt={bundle.imageAlt}
+              />
+              <p className="bundle-label">{bundle.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FeatureSection({
   id,
   eyebrow,
@@ -84,7 +189,7 @@ export default function Home() {
         <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <Image
-              src="/images/illustrations/illustration3.png"
+              src="/images/illustrations/illustration2.png"
               alt=""
               fill
               className="editorial-img"
@@ -95,23 +200,25 @@ export default function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.34)_80%)]" />
           </div>
 
-          <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_auto]">
-            {/* Left — Hero copy */}
-            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <div className="flex items-center gap-3 fade-in">
-                <Image
-                  src="/images/logos/logo_derived_3_transparent.png"
-                  alt="Bevy"
-                  width={72}
-                  height={72}
-                  priority
-                />
-                <span className="text-[12px] font-medium uppercase tracking-[0.28em] text-white/45">
-                  Bevy
-                </span>
-              </div>
+          <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+            {/* Left — Logo, title & line */}
+            <div className="flex flex-col items-center text-center fade-in fade-in-d3">
+              <Image
+                src="/images/logos/logo_derived_3_transparent.png"
+                alt="Bevy"
+                width={160}
+                height={160}
+                priority
+              />
+              <span className="mt-6 text-[22px] font-medium uppercase tracking-[0.28em] text-white/45">
+                Bevy
+              </span>
+              <div className="mt-5 h-px w-[64px] bg-white/[0.16]" />
+            </div>
 
-              <p className="mt-8 text-[11px] font-medium tracking-[0.25em] uppercase text-white/42 fade-in fade-in-d1">
+            {/* Right — Title & description */}
+            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+              <p className="text-[11px] font-medium tracking-[0.25em] uppercase text-white/42 fade-in">
                 Truth or Dare, Reimagined
               </p>
               <h1 style={{ marginTop: 16 }} className="font-display text-[clamp(38px,6.2vw,74px)] font-normal leading-[1.1] text-white/92 fade-in fade-in-d1">
@@ -128,23 +235,6 @@ export default function Home() {
                 Behind every person you know is a conversation you
                 haven&rsquo;t had yet. Bevy helps you start it.
               </p>
-            </div>
-
-            {/* Right — iPhone 17 Pro Mockup */}
-            <div className="iphone-mock fade-in fade-in-d3">
-              <div className="iphone-mock__frame">
-                <div className="iphone-mock__notch" />
-                <div className="iphone-mock__screen">
-                  <Image
-                    src="/images/screens/hero-screen.png"
-                    alt="Bevy app welcome screen"
-                    fill
-                    sizes="280px"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </div>
             </div>
           </div>
 
@@ -179,7 +269,7 @@ export default function Home() {
               that stay with you.
             </>
           }
-          body="Every card in Bevy is crafted to go beyond the surface. Questions that make you pause. Dares that make you feel alive. Moments that bond you closer to the people around you."
+          body="Every card in Bevy is crafted to go beyond the surface. Truths that open the door. Dares that raise the stakes. Shared moments that pull people out of autopilot and into something real."
           imageSrc="/images/illustrations/illustration6.png"
           imageAlt="An intimate embrace"
         />
@@ -199,11 +289,19 @@ export default function Home() {
               the ordinary.
             </>
           }
-          body="House parties, date nights, long weekends away. Bevy turns any gathering into something electric. No awkward silences. No recycled questions. Just the right card at the right moment."
+          body="House parties, date nights, long weekends away. Bevy turns any gathering into something electric. From vulnerable truths to playful and daring challenges, the energy shifts with every card."
           imageSrc="/images/illustrations/illustration2.png"
           imageAlt="Couples dancing at night"
           reverse
         />
+
+        <BundlesShowcase />
+
+        <QuoteBreak>
+          &ldquo;Some truths need telling.
+          <br />
+          Some dares need taking.&rdquo;
+        </QuoteBreak>
 
         <FeatureSection
           eyebrow="Powered by AI"

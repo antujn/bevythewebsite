@@ -70,22 +70,18 @@ export default function Footer() {
             deserves more.
           </h2>
 
-          <p className="mt-6 max-w-[460px] text-[16px] font-light leading-[1.75] text-white/44">
-            Available on the App Store.
-          </p>
-
           <a
             href="https://apps.apple.com/app/id1553693490"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 inline-block transition-transform hover:scale-105 active:scale-95"
+            className="mt-9 inline-block transition-transform hover:scale-105 active:scale-95"
           >
             <Image
-              src="/images/social/appstore.png"
+              src="/images/social/appstore2.png"
               alt="Download on the App Store"
-              width={170}
+              width={180}
               height={54}
-              className="h-[46px] w-auto opacity-78 transition-opacity hover:opacity-100"
+              className="h-[48px] w-auto opacity-92 transition-opacity hover:opacity-100"
             />
           </a>
 
