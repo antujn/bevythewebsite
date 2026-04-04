@@ -66,7 +66,7 @@ export default function Header() {
           </Link>
 
           <span className="hidden text-[11px] font-medium uppercase tracking-[0.24em] text-white/40 lg:block">
-            An AI-Powered Experience
+            Truth or Dare, Reimagined
           </span>
 
           <button

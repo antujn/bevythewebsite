@@ -111,21 +111,23 @@ export default function Home() {
                 </span>
               </div>
 
-              <p className="mt-6 text-[11px] font-medium tracking-[0.25em] uppercase text-white/42 fade-in fade-in-d1">
-                An AI-Powered Experience
+              <p className="mt-8 text-[11px] font-medium tracking-[0.25em] uppercase text-white/42 fade-in fade-in-d1">
+                Truth or Dare, Reimagined
               </p>
-              <h1 className="mt-5 font-display text-[clamp(38px,6.2vw,74px)] font-normal leading-[1.1] text-white/92 fade-in fade-in-d1">
+              <h1 style={{ marginTop: 16 }} className="font-display text-[clamp(38px,6.2vw,74px)] font-normal leading-[1.1] text-white/92 fade-in fade-in-d1">
                 Go further,
                 <br />
                 feel more.
               </h1>
-              <p className="mt-6 max-w-[440px] text-[16px] font-light leading-[1.78] text-white/54 fade-in fade-in-d2">
-                Bevy transforms truth or dare into something worth remembering.
-                Over 1000 cards designed to spark connection, vulnerability, and
-                unforgettable moments between the people who matter most.
-              </p>
 
-              <div className="mt-9 h-px w-[120px] bg-white/[0.16] fade-in fade-in-d2" />
+              <div style={{ paddingTop: 12, paddingBottom: 12 }} className="fade-in fade-in-d2">
+                <div className="h-px w-[120px] bg-white/[0.16]" />
+              </div>
+
+              <p className="max-w-[440px] text-[16px] font-light leading-[1.78] text-white/54 fade-in fade-in-d2">
+                Behind every person you know is a conversation you
+                haven&rsquo;t had yet. Bevy helps you start it.
+              </p>
             </div>
 
             {/* Right — iPhone 17 Pro Mockup */}
