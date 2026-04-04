@@ -1,60 +1,58 @@
-import Link from "next/link";
+import type { ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import Footer from "./Footer";
 
 export default function LegalLayout({
   children,
   title,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   title: string;
 }) {
   return (
     <>
-      <nav className="fixed top-0 inset-x-0 z-50 bg-black/70 backdrop-blur-xl border-b border-white/[0.06]">
-        <div className="max-w-[1200px] mx-auto px-[max(24px,5vw)] py-[18px] flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-[10px]">
-            <Image src="/images/logos/logo_derived_3_transparent.png" alt="Bevy" width={32} height={32} />
-            <span className="text-[13px] font-semibold tracking-[0.12em] uppercase text-white/80">Bevy</span>
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.11] bg-[#090909]/88 backdrop-blur-xl">
+        <div className="site-shell flex h-[80px] items-center justify-between">
+          <Link href="/" prefetch={false} className="flex items-center gap-3">
+            <Image
+              src="/images/logos/logo_derived_3_transparent.png"
+              alt="Bevy"
+              width={34}
+              height={34}
+              priority
+            />
+            <span className="text-[12px] font-semibold uppercase tracking-[0.17em] text-white/78">
+              Bevy
+            </span>
           </Link>
-          <Link href="/" className="text-[11px] font-medium tracking-[0.16em] uppercase text-white/40 hover:text-white/80 transition-colors duration-300">
-            Home
+
+          <Link
+            href="/"
+            prefetch={false}
+            className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/42 transition-colors duration-300 hover:text-white/84"
+          >
+            Back Home
           </Link>
         </div>
       </nav>
 
-      <main className="pt-[120px] pb-[80px] px-[max(24px,5vw)]">
-        <div className="max-w-[680px] mx-auto">
-          <h1 className="font-display text-[clamp(28px,4vw,42px)] font-normal leading-[1.15] text-white/90 mb-[48px]">
-            {title}
-          </h1>
-          <div className="text-white/50 text-[14px] leading-[1.7] [&_h2]:text-white/80 [&_h2]:text-[18px] [&_h2]:font-semibold [&_h2]:mt-[40px] [&_h2]:mb-[16px] [&_h3]:text-white/70 [&_h3]:text-[16px] [&_h3]:font-semibold [&_h3]:mt-[32px] [&_h3]:mb-[12px] [&_p]:mb-[16px] [&_ul]:mb-[16px] [&_ul]:pl-[20px] [&_li]:mb-[6px] [&_a]:text-white/60 [&_a]:underline [&_a]:underline-offset-[3px] [&_a:hover]:text-white/90 [&_strong]:text-white/70 [&_strong]:font-semibold">
-            {children}
+      <main className="pb-20 pt-[118px] sm:pb-24 lg:pb-28">
+        <div className="site-shell">
+          <div className="mx-auto max-w-[860px]">
+            <p className="kicker">Legal</p>
+            <h1 className="mt-5 font-display text-[clamp(30px,4.1vw,48px)] font-normal leading-[1.12] text-white/92">
+              {title}
+            </h1>
+
+            <div className="mt-10 rounded-[2px] border border-white/[0.1] bg-black/24 px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+              <div className="legal-copy">{children}</div>
+            </div>
           </div>
         </div>
       </main>
 
-      <footer className="px-[max(24px,5vw)] pt-0 pb-[40px]">
-        <div className="rule-full" />
-        <div className="max-w-[1200px] mx-auto pt-[36px] flex flex-col items-center gap-[16px]">
-          <div className="flex items-center gap-[20px]">
-            <a href="https://www.instagram.com/bevytheapp" target="_blank" rel="noopener noreferrer" className="opacity-30 hover:opacity-60 transition-opacity">
-              <Image src="/images/social/instagram-white.png" alt="Instagram" width={16} height={16} />
-            </a>
-            <a href="https://www.tiktok.com/@bevytheapp" target="_blank" rel="noopener noreferrer" className="opacity-30 hover:opacity-60 transition-opacity">
-              <Image src="/images/social/tiktok.png" alt="TikTok" width={16} height={16} />
-            </a>
-            <a href="mailto:bevytheapp@gmail.com" className="opacity-30 hover:opacity-60 transition-opacity">
-              <Image src="/images/social/gmail.png" alt="Email" width={16} height={16} />
-            </a>
-          </div>
-          <div className="flex flex-wrap justify-center gap-x-[20px] gap-y-[8px]">
-            <Link href="/privacy" className="text-[10px] tracking-[0.1em] uppercase text-white/25 hover:text-white/50 transition-colors">Privacy</Link>
-            <Link href="/terms" className="text-[10px] tracking-[0.1em] uppercase text-white/25 hover:text-white/50 transition-colors">Terms</Link>
-            <Link href="/disclaimer" className="text-[10px] tracking-[0.1em] uppercase text-white/25 hover:text-white/50 transition-colors">Disclaimer</Link>
-          </div>
-          <p className="text-[10px] text-white/15">&copy; Anant Jain 2023&ndash;2026</p>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }
