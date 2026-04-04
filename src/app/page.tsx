@@ -65,12 +65,10 @@ function FeatureSection({
 
 function QuoteBreak({ children }: { children: ReactNode }) {
   return (
-    <section className="quote-space">
-      <div className="site-shell">
-        <div className="mx-auto max-w-[640px] text-center">
-          <div className="gold-line mx-auto" />
-          <p className="quote-copy">{children}</p>
-        </div>
+    <section className="quote-space flex items-center justify-center">
+      <div className="mx-auto w-full max-w-[640px] px-6 text-center">
+        <div className="gold-line mx-auto" />
+        <p className="quote-copy">{children}</p>
       </div>
     </section>
   );

@@ -78,9 +78,6 @@ a {
 }
 
 .quote-space {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   min-height: 40vh;
   padding-block: var(--quote-space);
 }
@@ -168,6 +165,7 @@ a {
   font-size: clamp(19px, 2.5vw, 30px);
   font-style: italic;
   line-height: 1.58;
+  text-align: center;
   color: rgba(244, 238, 229, 0.5);
 }
 
