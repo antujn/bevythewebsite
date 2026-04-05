@@ -7,7 +7,7 @@ const legalLinks = [
   { label: "Legal Disclaimer", href: "/disclaimer" },
   {
     label: "App Store",
-    href: "https://apps.apple.com/app/id1553693490",
+    href: "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
     external: true,
   },
 ];
@@ -16,17 +16,17 @@ const socialLinks = [
   {
     label: "Instagram",
     href: "https://www.instagram.com/bevytheapp",
-    icon: "/images/social/instagram-white.png",
+    icon: "/images/icons/instagram-white.png",
   },
   {
     label: "TikTok",
     href: "https://www.tiktok.com/@bevytheapp",
-    icon: "/images/social/tiktok.png",
+    icon: "/images/icons/tiktok-white.png",
   },
   {
     label: "Email",
     href: "mailto:bevytheapp@gmail.com",
-    icon: "/images/social/gmail.png",
+    icon: "/images/icons/gmail-grey.png",
   },
 ];
 
@@ -49,64 +49,33 @@ export default function Footer() {
         <div className="h-px w-full max-w-[980px] bg-white/[0.08]" />
 
         <div className="mx-auto flex w-full max-w-[760px] flex-1 flex-col items-center justify-center text-center">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/logos/logo_derived_3_transparent.png"
-              alt="Bevy"
-              width={58}
-              height={58}
-              className="opacity-74"
-            />
-            <span className="text-[12px] font-medium uppercase tracking-[0.28em] text-white/42">
-              Bevy
-            </span>
-          </div>
-
-          <div className="gold-line mt-9" />
-
-          <h2 className="mt-9 font-display text-[clamp(30px,4.5vw,56px)] font-normal leading-[1.12] text-white/90">
+          <p className="kicker">Get Bevy</p>
+          <h2 className="section-title" style={{ textAlign: 'center' }}>
             Your night
             <br />
             deserves more.
           </h2>
+          <div className="gold-line mt-4" style={{ marginInline: 'auto' }} />
+
+          <p className="section-body" style={{ textAlign: 'center', maxWidth: 440, marginInline: 'auto' }}>
+            Download Bevy and turn your next gathering into something
+            unforgettable.
+          </p>
 
           <a
-            href="https://apps.apple.com/app/id1553693490"
+            href="https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 inline-block transition-transform hover:scale-105 active:scale-95"
+            style={{ marginTop: 32 }}
+            className="transition-transform hover:scale-105 active:scale-95"
           >
             <Image
-              src="/images/social/appstore2.png"
+              src="/images/icons/appstore-dark.png"
               alt="Download on the App Store"
-              width={180}
-              height={54}
-              className="h-[48px] w-auto opacity-92 transition-opacity hover:opacity-100"
+              width={188}
+              height={63}
             />
           </a>
-
-          <div className="mt-9 flex items-center gap-4">
-            {socialLinks.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target={item.href.startsWith("http") ? "_blank" : undefined}
-                rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                aria-label={item.label}
-                className="group grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.02] transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.06]"
-              >
-                <span className="relative h-5 w-5">
-                  <Image
-                    src={item.icon}
-                    alt={item.label}
-                    fill
-                    sizes="20px"
-                    className="object-contain opacity-65 transition-opacity duration-300 group-hover:opacity-100"
-                  />
-                </span>
-              </a>
-            ))}
-          </div>
         </div>
 
         <div className="flex w-full max-w-[980px] flex-col items-center gap-8 pb-2 pt-10">
@@ -136,6 +105,29 @@ export default function Footer() {
               )
             )}
           </nav>
+
+          <div className="flex items-center gap-4">
+            {socialLinks.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={item.href.startsWith("http") ? "_blank" : undefined}
+                rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                aria-label={item.label}
+                className="group grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.02] transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.06]"
+              >
+                <span className="relative h-5 w-5">
+                  <Image
+                    src={item.icon}
+                    alt={item.label}
+                    fill
+                    sizes="20px"
+                    className="object-contain opacity-65 transition-opacity duration-300 group-hover:opacity-100"
+                  />
+                </span>
+              </a>
+            ))}
+          </div>
 
           <p className="text-[11px] tracking-[0.06em] text-white/22">
             &copy; 2026 Anant Jain. All rights reserved.

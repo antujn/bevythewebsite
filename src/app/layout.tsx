@@ -17,11 +17,11 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.bevytheapp.com"),
-  title: "Bevy — Go further, feel more.",
+  title: "Bevy — Truth or Dare. Reimagined.",
   description:
     "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards. Designed to deepen human connection.",
   openGraph: {
-    title: "Bevy — Go further, feel more.",
+    title: "Bevy — Truth or Dare. Reimagined.",
     description:
       "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards.",
     url: "https://www.bevytheapp.com",
@@ -32,20 +32,20 @@ export const metadata: Metadata = {
         url: "/images/illustrations/illustration3.png",
         width: 1200,
         height: 630,
-        alt: "Bevy — Go further, feel more.",
+        alt: "Bevy — Truth or Dare. Reimagined.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bevy — Go further, feel more.",
+    title: "Bevy — Truth or Dare. Reimagined.",
     description:
       "The modern, meaningful alternative to traditional truth or dare.",
     images: ["/images/illustrations/illustration3.png"],
   },
   icons: {
     icon: "/favicon.png",
-    apple: "/images/logos/logo_launch_screen.png",
+    apple: "/images/icons/bevy-logo.png",
   },
 };
 

@@ -54,7 +54,7 @@ export default function Header() {
         <div className="site-shell grid h-[84px] grid-cols-[1fr_auto_1fr] items-center">
           <Link href="/" prefetch={false} className="flex items-center gap-3 justify-self-start">
             <Image
-              src="/images/logos/logo_derived_3_transparent.png"
+              src="/images/icons/bevy-logo.png"
               alt="Bevy"
               width={36}
               height={36}
@@ -99,7 +99,7 @@ export default function Header() {
           ))}
           <div className="gold-line mt-4" />
           <a
-            href="https://apps.apple.com/app/id1553693490"
+            href="https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
