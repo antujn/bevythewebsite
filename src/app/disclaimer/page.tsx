@@ -57,7 +57,7 @@ export default function LegalDisclaimer() {
       <p>You agree that if you or anyone on your behalf makes a claim against the Releasees as a result of Bevy activities, including activities prompted by AI-generated content, YOU SHALL INDEMNIFY, REIMBURSE, and HOLD HARMLESS the Releasees from all injuries, costs, damages, claims, and incidental damages, including legal fees.</p>
 
       <h2>8. Third-Party Content and Services</h2>
-      <p>The Service may integrate with or link to third-party services, including AI providers, analytics services, and advertising networks. We are not responsible for the content, privacy practices, or terms of any third-party service.</p>
+      <p>The Service may integrate with or link to third-party services, including AI infrastructure providers (Modal), analytics services (Mixpanel), and subscription management services (RevenueCat). We are not responsible for the content, privacy practices, or terms of any third-party service. All third-party service providers are bound by data processing agreements.</p>
 
       <h2>9. Governing Law and Jurisdiction</h2>
       <p>This Legal Disclaimer shall be governed by and construed in accordance with the laws of England and Wales. Subject to the dispute resolution provisions in our Terms of Service, the courts of England and Wales shall have exclusive jurisdiction.</p>

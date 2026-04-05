@@ -83,7 +83,7 @@ export default function BundlesShowcase() {
             paddingTop: 80,
           }}
         >
-          <p className="kicker">Bundles</p>
+          <p className="kicker">The Collection</p>
           <h2 className="section-title">
             A different energy for every night.
           </h2>

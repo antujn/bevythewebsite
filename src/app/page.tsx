@@ -6,7 +6,6 @@ import QuoteBreak from "@/components/QuoteBreak";
 import BundlesShowcase from "@/components/BundlesShowcase";
 import ReviewsSection from "@/components/ReviewsSection";
 
-
 export default function Home() {
   return (
     <>
@@ -15,6 +14,7 @@ export default function Home() {
       <main>
         <HeroSection />
 
+        {/* 1. Emotional hook */}
         <FeatureSection
           id="s1"
           eyebrow="The Feeling"
@@ -30,6 +30,7 @@ export default function Home() {
           imageAlt="An intimate moment"
         />
 
+        {/* 2. What the cards do */}
         <FeatureSection
           eyebrow="The Experience"
           title={
@@ -51,6 +52,7 @@ export default function Home() {
           They&rsquo;re felt.&rdquo;
         </QuoteBreak>
 
+        {/* 3. Use cases */}
         <FeatureSection
           eyebrow="Game Night"
           title={
@@ -65,16 +67,7 @@ export default function Home() {
           imageAlt="Couples dancing at night"
         />
 
-        <BundlesShowcase />
-
-        <ReviewsSection />
-
-        <QuoteBreak>
-          &ldquo;Some truths need telling.
-          <br />
-          Some dares need taking.&rdquo;
-        </QuoteBreak>
-
+        {/* 4. How it works */}
         <FeatureSection
           eyebrow="Powered by AI"
           title={
@@ -87,8 +80,10 @@ export default function Home() {
           body="BevyAI learns the room. It adapts to your energy, your comfort level, your dynamic. Every prompt is emotionally considered, socially aware, and designed to land."
           imageSrc="/images/illustrations/illustration8.jpeg"
           imageAlt="A diverse group of friends"
+          reverse
         />
 
+        {/* 5. Trust building */}
         <FeatureSection
           eyebrow="Safe & Inclusive"
           title={
@@ -101,8 +96,19 @@ export default function Home() {
           body="Every card is thoughtfully crafted to be inclusive and respectful of all players. No cringe. No discomfort. Just honest, socially intelligent prompts designed for real people in real rooms."
           imageSrc="/images/illustrations/illustration4.png"
           imageAlt="A warm, inclusive gathering"
-          reverse
         />
+
+        <QuoteBreak>
+          &ldquo;Some truths need telling.
+          <br />
+          Some dares need taking.&rdquo;
+        </QuoteBreak>
+
+        {/* 6. Product depth */}
+        <BundlesShowcase />
+
+        {/* 7. Social proof */}
+        <ReviewsSection />
 
         <QuoteBreak>
           &ldquo;Ask the questions
@@ -110,8 +116,9 @@ export default function Home() {
           you&rsquo;ve always wanted to.&rdquo;
         </QuoteBreak>
 
+        {/* 8. Closing emotional appeal */}
         <FeatureSection
-          eyebrow="The People You Love"
+          eyebrow="The Social Catalyst"
           title={
             <>
               Made for
@@ -124,6 +131,7 @@ export default function Home() {
           body="Ten bundles. Over a thousand cards. From the first date to the twentieth anniversary. From Friday night with strangers to Sunday morning with your person. Bevy meets you wherever you are."
           imageSrc="/images/illustrations/illustration1.png"
           imageAlt="A sophisticated social gathering"
+          reverse
         />
       </main>
 
