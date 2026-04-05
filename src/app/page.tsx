@@ -71,16 +71,16 @@ function PhoneMock({
           src={screenSrc}
           alt={screenAlt}
           fill
-          sizes={compact ? "580px" : "760px"}
+          sizes={compact ? "300px" : "380px"}
           className="object-contain"
           priority={priority}
         />
       </div>
       <Image
-        src="/images/mocks/iPhone 17 Mock.png"
+        src="/images/mocks/iPhone 17 Pro Flat Mockup (Community).png"
         alt=""
         fill
-        sizes={compact ? "580px" : "760px"}
+        sizes={compact ? "300px" : "380px"}
         className="phone-mock__frame"
       />
     </div>
@@ -89,7 +89,7 @@ function PhoneMock({
 
 function BundlesShowcase() {
   return (
-    <section className="section-space relative overflow-hidden" style={{ paddingTop: 0, paddingBottom: 0 }}>
+    <section className="section-space relative overflow-hidden" style={{ paddingTop: 0, paddingBottom: 40 }}>
       <div className="absolute inset-0 -z-10">
         <Image
           src="/images/illustrations/illustration3.png"
@@ -112,7 +112,7 @@ function BundlesShowcase() {
         </article>
       </div>
 
-      <div className="bundle-strip mt-10">
+      <div className="bundle-strip" style={{ marginTop: 40 }}>
           {bundleScreens.map((bundle) => (
             <div key={bundle.label} className="bundle-item">
               <PhoneMock
