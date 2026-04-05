@@ -308,7 +308,6 @@ a {
 
 .bundle-strip {
   display: flex;
-  gap: clamp(1rem, 2.6vw, 2rem);
   overflow-x: auto;
   padding: 0.35rem 0.15rem 0.7rem;
   scroll-snap-type: x mandatory;
@@ -319,8 +318,12 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.7rem;
+  margin-left: -28%;
   scroll-snap-align: start;
+}
+
+.bundle-item:first-child {
+  margin-left: 0;
 }
 
 .bundle-label {

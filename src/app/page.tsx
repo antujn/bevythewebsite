@@ -89,19 +89,30 @@ function PhoneMock({
 
 function BundlesShowcase() {
   return (
-    <section className="section-space">
+    <section className="section-space relative overflow-hidden" style={{ paddingTop: 0, paddingBottom: 0 }}>
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/images/illustrations/illustration3.png"
+          alt=""
+          fill
+          className="editorial-img"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/60 to-[#050505]/90" />
+      </div>
       <div className="site-shell">
-        <article className="mx-auto max-w-[680px] text-center">
+        <article style={{ maxWidth: 680, marginInline: 'auto', textAlign: 'center', paddingTop: 80 }}>
           <p className="kicker">Bundles</p>
-          <div className="gold-line mx-auto mt-4" />
+          <div className="gold-line mt-4" style={{ marginInline: 'auto' }} />
           <h2 className="section-title">A different energy for every night.</h2>
-          <p className="section-body mx-auto max-w-[560px]">
+          <p className="section-body" style={{ maxWidth: 560, marginInline: 'auto' }}>
             From soft truths to bold dares, each Bevy bundle sets its own tone
             so the game fits your people, your mood, and your moment.
           </p>
         </article>
+      </div>
 
-        <div className="bundle-strip mt-10">
+      <div className="bundle-strip mt-10">
           {bundleScreens.map((bundle) => (
             <div key={bundle.label} className="bundle-item">
               <PhoneMock
@@ -109,11 +120,9 @@ function BundlesShowcase() {
                 screenSrc={bundle.imageSrc}
                 screenAlt={bundle.imageAlt}
               />
-              <p className="bundle-label">{bundle.label}</p>
             </div>
           ))}
         </div>
-      </div>
     </section>
   );
 }
@@ -279,7 +288,7 @@ export default function Home() {
               that stay with you.
             </>
           }
-          body="Every card in Bevy is crafted to go beyond the surface. Truths that open the door. Dares that raise the stakes. Shared moments that pull people out of autopilot and into something real."
+          body="Every card in Bevy is crafted to go beyond the surface. Questions that make you pause. Dares that make you feel alive. Moments that bond you closer to the people around you."
           imageSrc="/images/illustrations/illustration6.png"
           imageAlt="An intimate embrace"
         />
@@ -299,7 +308,7 @@ export default function Home() {
               the ordinary.
             </>
           }
-          body="House parties, date nights, long weekends away. Bevy turns any gathering into something electric. From vulnerable truths to playful and daring challenges, the energy shifts with every card."
+          body="House parties, date nights, long weekends away. Bevy turns any gathering into something electric. No awkward silences. No recycled questions. Just the right card at the right moment."
           imageSrc="/images/illustrations/illustration2.png"
           imageAlt="Couples dancing at night"
           reverse
