@@ -131,7 +131,7 @@ Two phone mocks displayed side-by-side with a `-60px` overlap:
 
 - Split into "Truths" and "Dares" subsections with labels
 - Phone mocks overlap with `-50px` negative margin for a stacked card effect
-- Background: `illustration3.png` with dark gradient overlay
+- No background image — relies on the site's dark base for contrast against the phone mocks
 - Ordered: 5 truth bundles, then 5 dare bundles
 
 ### Reviews Section

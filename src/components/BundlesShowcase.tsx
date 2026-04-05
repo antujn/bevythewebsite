@@ -1,4 +1,3 @@
-import Image from "next/image";
 import PhoneMock from "./PhoneMock";
 
 const truthBundles = [
@@ -60,20 +59,9 @@ const dareBundles = [
 export default function BundlesShowcase() {
   return (
     <section
-      className="section-space relative overflow-hidden"
+      className="section-space"
       style={{ paddingTop: 0, paddingBottom: 40 }}
     >
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/images/illustrations/illustration3.png"
-          alt=""
-          fill
-          className="editorial-img"
-          sizes="100vw"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/60 to-[#050505]/90" />
-      </div>
       <div className="site-shell">
         <article
           style={{
