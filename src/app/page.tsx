@@ -72,7 +72,7 @@ function PhoneMock({
           alt={screenAlt}
           fill
           sizes={compact ? "580px" : "760px"}
-          className="object-cover"
+          className="object-contain"
           priority={priority}
         />
       </div>
