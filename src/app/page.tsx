@@ -214,6 +214,15 @@ export default function Home() {
                 Bevy
               </span>
               <div className="mt-5 h-px w-[64px] bg-white/[0.16]" />
+              <a
+                href="https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ marginTop: 16, color: '#ffffff' }}
+                className="text-[11px] font-medium tracking-[0.25em] uppercase transition-colors hover:text-white/70"
+              >
+                ‹ Download ›
+              </a>
             </div>
 
             {/* Right — Title & description */}
@@ -235,6 +244,7 @@ export default function Home() {
                 Behind every person you know is a conversation you
                 haven&rsquo;t had yet. Bevy helps you start it.
               </p>
+
             </div>
           </div>
 
