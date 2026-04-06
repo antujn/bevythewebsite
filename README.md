@@ -5,6 +5,10 @@ Marketing website for the Bevy iOS app. Built with Next.js 16, React 19, TypeScr
 **Live:** Deployed on Vercel  
 **App Store:** [Bevy on the App Store](https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490)
 
+**Design inspiration:**
+- [Paired](https://www.paired.com/) — sticky scroll mechanics, feature card deck, scroll-driven tab switching, social proof placement
+- [Flo Health](https://flo.health/) — editorial tone, dark premium aesthetic, section pacing
+
 ---
 
 ## Tech Stack

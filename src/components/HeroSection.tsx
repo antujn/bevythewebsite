@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import PhoneMock from "./PhoneMock";
+import DownloadButton from "./DownloadButton";
 
 export default function HeroSection() {
   return (
@@ -38,20 +41,14 @@ export default function HeroSection() {
             games. AI&#8209;powered. 1000+ cards.
           </p>
 
-          <a
-            href="https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ marginTop: 32 }}
-            className="fade-in fade-in-d3"
-          >
-            <Image
-              src="/images/icons/appstore-dark.png"
-              alt="Download on the App Store"
-              width={188}
-              height={63}
-            />
-          </a>
+          <div className="hero-proof fade-in fade-in-d3">
+            <span className="hero-proof-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span className="hero-proof-text">4.7 &middot; 26 ratings on the App Store</span>
+          </div>
+
+          <div style={{ marginTop: 20 }} className="fade-in fade-in-d3">
+            <DownloadButton width={188} height={63} />
+          </div>
         </div>
 
         {/* Right — Two phone mocks */}

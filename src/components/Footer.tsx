@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import DownloadButton from "./DownloadButton";
 
 const legalLinks = [
   { label: "Privacy Policy", href: "/privacy" },
@@ -51,9 +54,7 @@ export default function Footer() {
         <div className="mx-auto flex w-full max-w-[760px] flex-1 flex-col items-center justify-center text-center">
           <p className="kicker">Get Bevy</p>
           <h2 className="section-title" style={{ textAlign: 'center' }}>
-            Your night
-            <br />
-            deserves more.
+            Try Bevy for free.
           </h2>
           <div className="gold-line mt-4" style={{ marginInline: 'auto' }} />
 
@@ -62,20 +63,9 @@ export default function Footer() {
             unforgettable.
           </p>
 
-          <a
-            href="https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ marginTop: 32 }}
-            className="transition-transform hover:scale-105 active:scale-95"
-          >
-            <Image
-              src="/images/icons/appstore-dark.png"
-              alt="Download on the App Store"
-              width={188}
-              height={63}
-            />
-          </a>
+          <div style={{ marginTop: 32 }}>
+            <DownloadButton width={188} height={63} />
+          </div>
         </div>
 
         <div className="flex w-full max-w-[980px] flex-col items-center gap-8 pb-2 pt-10">
