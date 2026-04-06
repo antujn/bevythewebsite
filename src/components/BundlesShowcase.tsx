@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import PhoneMock from "./PhoneMock";
 
 const truthBundles = [
@@ -56,7 +59,12 @@ const dareBundles = [
   },
 ];
 
+type Tab = "truths" | "dares";
+
 export default function BundlesShowcase() {
+  const [activeTab, setActiveTab] = useState<Tab>("truths");
+  const bundles = activeTab === "truths" ? truthBundles : dareBundles;
+
   return (
     <section
       className="section-space"
@@ -84,34 +92,34 @@ export default function BundlesShowcase() {
             so the game fits your people, your mood, and your moment.
           </p>
         </article>
+
+        <div className="bundle-tabs" style={{ marginTop: 40 }}>
+          <button
+            className={`bundle-tab${activeTab === "truths" ? " bundle-tab--active" : ""}`}
+            onClick={() => setActiveTab("truths")}
+          >
+            Truths
+            <span className="bundle-tab-count">{truthBundles.length}</span>
+          </button>
+          <button
+            className={`bundle-tab${activeTab === "dares" ? " bundle-tab--active" : ""}`}
+            onClick={() => setActiveTab("dares")}
+          >
+            Dares
+            <span className="bundle-tab-count">{dareBundles.length}</span>
+          </button>
+        </div>
       </div>
 
-      <h3 className="bundle-section-label" style={{ marginTop: 40 }}>
-        Truths
-      </h3>
-      <div className="bundle-strip">
-        {truthBundles.map((bundle) => (
-          <div key={bundle.label} className="bundle-item">
+      <div className="bundle-grid" style={{ marginTop: 32 }}>
+        {bundles.map((bundle) => (
+          <div key={bundle.label} className="bundle-card">
             <PhoneMock
               compact
               screenSrc={bundle.imageSrc}
               screenAlt={bundle.imageAlt}
             />
-          </div>
-        ))}
-      </div>
-
-      <h3 className="bundle-section-label" style={{ marginTop: 40 }}>
-        Dares
-      </h3>
-      <div className="bundle-strip">
-        {dareBundles.map((bundle) => (
-          <div key={bundle.label} className="bundle-item">
-            <PhoneMock
-              compact
-              screenSrc={bundle.imageSrc}
-              screenAlt={bundle.imageAlt}
-            />
+            <span className="bundle-card-label">{bundle.label}</span>
           </div>
         ))}
       </div>

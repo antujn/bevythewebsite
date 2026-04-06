@@ -1,55 +1,47 @@
-"use client";
-
-import { useState } from "react";
-
 const reviews = [
-  // Row 1 — diverse use cases, strongest voices
   {
     author: "DukeNeuk",
-    text: "I'm working at a hostel in Bali and one of my guests had the app. We started playing every morning and it brings the group together so effortlessly — complete strangers opening up like old friends. Give it a try with new people or old and get your party started!",
+    title: "Smart and Fun Game!",
+    text: "Bevy is so much fun! The prompts are hilarious and really help to break the ice in a crowd. I\u2019m working at a hostel in Bali and one of my guests had the app and I wanted to share the experience with other guests once she left. We play every morning and it brings the group together so effortlessly. Give it a try with new friends or old and get your party started!",
   },
   {
     author: "AnthonyJane24",
-    text: "This app is a fantastic way to get to know your partner on a deeper level. It asks things you'd never think to ask yourself. Answers you receive today may change in a year's time as well. I'd recommend this to any couple regardless of how long they've been together.",
+    title: "A wonderful game for partners",
+    text: "This app is a fantastic way to get to know your partner better. It offers insightful questions into things about your partner you may not know or understand. Answers you receive today may change in a years time as well. I highly recommend this to any couple regardless of the current length of their relationship.",
   },
   {
     author: "Niece.doll",
-    text: "The questions are unique and actually get more than one-word answers. I use it inside of dating apps when the conversation goes kinda stale — completely changes the energy. It's become my secret weapon for first dates.",
+    title: "Great game with smooth design",
+    text: "This is such a great game to get to know someone. The questions are unique and help you get more than one-word answers. I use it inside of dating apps when the conversation goes kinda stale. I purchased the Early Dating bundle and I enjoy it very much!",
   },
-  // Row 2 — more social proof, different angles
   {
-    author: "Angelina",
-    text: "A friend of mine was using it as a meditative introspection tool, which I thought was beautiful. I bought a couple of bundles and my friends and I played together — we ended up talking for hours about things we'd never brought up before.",
+    author: "Angelina, bird enthusiast",
+    title: "Not really a \u201Cgame\u201D but great",
+    text: "So I found out about it because a friend of mine was using it as a mediative introspection tool. I really liked some of the questions he showed me so I bought a couple of bundles. My friends and I played it together and had a lot of fun.",
+  },
+  {
+    author: "Remark Bil",
+    title: "New favourite",
+    text: "So fun! Best drinking game we have ever found and we\u2019ve tried quite a few!",
+  },
+  {
+    author: "jp2065",
+    title: "Can this shock you if you lie?",
+    text: "Hilarious app. My friends and I used it for a gals night and had so much fun.",
   },
   {
     author: "mollhds",
-    text: "First app I've found that actually has good truth or dare questions. Not the cringy stuff you find everywhere else. Great for pre-drinks or just having a proper laugh with your mates.",
+    title: "Very good questions",
+    text: "This is the first app I found which has really good truth or dare questions! I would recommend it to others, great for pre drinks or having a laugh with your mates.",
   },
   {
     author: "iMonkey.",
-    text: "Had some friends over last Friday before we went out and pulled this up on a whim. Everyone loved it. We almost didn't leave the house.",
-  },
-  // Hidden row — overflow
-  {
-    author: "J.Reeves",
-    text: "We play this every time we travel together now. The Point Break bundle is perfect for road trips — it turns those long drives into actual conversations instead of everyone being on their phones.",
-  },
-  {
-    author: "sophiamtz",
-    text: "Downloaded this for a girls' night and now it's a staple. The questions hit different — they're thoughtful without being heavy. You learn things about people you thought you already knew everything about.",
-  },
-  {
-    author: "carter.wb",
-    text: "My therapist actually recommended something like this for our couples sessions. Bevy does it better than anything she suggested. The Significant Other bundle is genuinely well written.",
+    title: "Good for predrinks",
+    text: "Used this with some friends I had over last Friday before we went out and everyone loved it.",
   },
 ];
 
-const VISIBLE_COUNT = 6;
-
 export default function ReviewsSection() {
-  const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? reviews : reviews.slice(0, VISIBLE_COUNT);
-
   return (
     <section className="section-space">
       <div className="site-shell">
@@ -63,28 +55,37 @@ export default function ReviewsSection() {
           <p className="kicker">Reviews</p>
           <h2 className="section-title">What people are saying.</h2>
           <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
+          <div className="rating-block">
+            <div className="rating-left">
+              <span className="rating-number">4.7</span>
+              <span className="rating-outof">out of 5</span>
+            </div>
+            <div className="rating-bars">
+              <div className="rating-row"><span className="rating-row-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><div className="rating-bar"><div className="rating-bar-fill" style={{ width: '81%' }} /></div></div>
+              <div className="rating-row"><span className="rating-row-stars">&#9733;&#9733;&#9733;&#9733;</span><div className="rating-bar"><div className="rating-bar-fill" style={{ width: '11%' }} /></div></div>
+              <div className="rating-row"><span className="rating-row-stars">&#9733;&#9733;&#9733;</span><div className="rating-bar"><div className="rating-bar-fill" style={{ width: '4%' }} /></div></div>
+              <div className="rating-row"><span className="rating-row-stars">&#9733;&#9733;</span><div className="rating-bar"><div className="rating-bar-fill" style={{ width: '0%' }} /></div></div>
+              <div className="rating-row"><span className="rating-row-stars">&#9733;</span><div className="rating-bar"><div className="rating-bar-fill" style={{ width: '4%' }} /></div></div>
+            </div>
+            <div className="rating-right">
+              <span className="rating-count">26</span>
+              <span className="rating-label">Ratings</span>
+            </div>
+          </div>
         </article>
 
-        <div className="reviews-grid">
-          {visible.map((review) => (
-            <blockquote key={review.author} className="review-card">
-              <div className="review-stars">★★★★★</div>
-              <p className="review-text">&ldquo;{review.text}&rdquo;</p>
-              <cite className="review-author">— {review.author}</cite>
-            </blockquote>
-          ))}
-        </div>
-
-        {reviews.length > VISIBLE_COUNT && (
-          <div style={{ textAlign: "center", marginTop: 32 }}>
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="review-toggle"
-            >
-              {expanded ? "Show less" : `Show ${reviews.length - VISIBLE_COUNT} more`}
-            </button>
+        <div className="reviews-marquee">
+          <div className="reviews-track">
+            {[...reviews, ...reviews].map((review, i) => (
+              <blockquote key={`${review.author}-${i}`} className="review-card">
+                <div className="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p className="review-title">{review.title}</p>
+                <p className="review-text">&ldquo;{review.text}&rdquo;</p>
+                <cite className="review-author">{review.author}</cite>
+              </blockquote>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
