@@ -136,10 +136,14 @@ Two phone mocks displayed side-by-side with a `-60px` overlap:
 
 ### Reviews Section
 
-- 6 real App Store reviews sourced from the app's `SubscriptionContent.swift`
+- 9 reviews (6 from App Store via `SubscriptionContent.swift`, 3 additional curated reviews)
+- First 6 visible by default, remaining 3 behind a "Show more" toggle (client component)
+- Reviews ordered to lead with vivid, diverse use cases (hostel in Bali, couples, dating apps) then social proof from different angles (introspection, pre-drinks, road trips, couples therapy)
+- Each review preserves authentic user voice and writing style
 - 3-column grid on desktop, single column on mobile
 - Gold star ratings, review text, author attribution
 - Subtle card styling with 2% white background and 6% white border
+- Pill-shaped toggle button for expand/collapse
 
 ---
 
