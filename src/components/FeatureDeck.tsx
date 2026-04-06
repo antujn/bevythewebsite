@@ -103,9 +103,6 @@ export default function FeatureDeck() {
               They&rsquo;re felt.
             </h2>
             <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
-            <p className="section-body" style={{ maxWidth: 520, marginInline: "auto" }}>
-              Six ways Bevy transforms any gathering into something real. From the emotional to the electric, every feature is designed to bring people closer.
-            </p>
           </article>
 
           {/* Tab pills */}

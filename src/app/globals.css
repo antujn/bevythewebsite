@@ -125,12 +125,13 @@ a {
 .feature-deck-section {
   position: relative;
   height: 600vh;
+  padding-top: 84px;
 }
 
 .fd-sticky-container {
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: 100px;
+  height: calc(100vh - 116px);
   display: flex;
   flex-direction: column;
   justify-content: center;
