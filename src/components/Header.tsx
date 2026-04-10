@@ -26,18 +26,16 @@ export default function Header() {
         <Link
           href="/"
           prefetch={false}
-          className={`flex items-center gap-3 justify-self-start transition-opacity duration-500 ${
-            scrolled ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+          className="flex items-center gap-3 justify-self-start"
         >
           <Image
             src="/images/icons/bevy-logo.png"
             alt="Bevy"
-            width={36}
-            height={36}
+            width={44}
+            height={44}
             priority
           />
-          <span className="hidden text-[11px] font-medium uppercase tracking-[0.24em] text-white/52 sm:block">
+          <span className="hidden text-[12px] font-semibold uppercase tracking-[0.2em] text-white/52 sm:block">
             Bevy
           </span>
         </Link>

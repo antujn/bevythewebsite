@@ -11,21 +11,13 @@ export default function HeroSection() {
       <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         {/* Left — Hero text */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-          <div className="flex items-center gap-3 fade-in">
-            <Image
-              src="/images/icons/bevy-logo.png"
-              alt="Bevy"
-              width={48}
-              height={48}
-              priority
-            />
-            <span className="text-[13px] font-medium uppercase tracking-[0.25em] text-white/40">
-              Bevy
-            </span>
+          <div className="hero-proof fade-in">
+            <span className="hero-proof-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span className="hero-proof-text">4.7 &middot; 26 ratings on the App Store</span>
           </div>
 
           <h1
-            style={{ marginTop: 28 }}
+            style={{ marginTop: 20 }}
             className="font-display text-[clamp(40px,6.5vw,78px)] font-normal leading-[1.05] text-white/92 fade-in fade-in-d1"
           >
             Truth or Dare.
@@ -38,15 +30,10 @@ export default function HeroSection() {
             className="max-w-[420px] text-[15px] font-light leading-[1.75] text-white/44 fade-in fade-in-d2"
           >
             The modern, meaningful alternative to traditional truth or dare
-            games. AI&#8209;powered. 1000+ cards.
+            games. 1000+ carefully crafted cards.
           </p>
 
-          <div className="hero-proof fade-in fade-in-d3">
-            <span className="hero-proof-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span className="hero-proof-text">4.7 &middot; 26 ratings on the App Store</span>
-          </div>
-
-          <div style={{ marginTop: 20 }} className="fade-in fade-in-d3">
+          <div style={{ marginTop: 24 }} className="fade-in fade-in-d3">
             <DownloadButton width={188} height={63} />
           </div>
         </div>
