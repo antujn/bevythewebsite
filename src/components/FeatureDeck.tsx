@@ -40,7 +40,7 @@ const features = [
     bg: "rgba(140, 160, 120, 0.08)",
   },
   {
-    tab: "The Catalyst",
+    tab: "Courage Catalyst",
     title: "Permission to make the first move.",
     body: "Bevy helps the room shift. It gives people permission to ask the deeper question, take the bolder dare, and open up without overthinking it. When a moment feels risky, the app carries the weight, so connection feels easier and more natural.",
     imageSrc: "/images/illustrations/features/illustration6.jpg",
