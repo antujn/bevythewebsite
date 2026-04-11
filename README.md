@@ -2,6 +2,7 @@
 
 Marketing website for the Bevy iOS app.
 
+- Live: [https://bevythewebsite.vercel.app/](https://bevythewebsite.vercel.app/)
 - App Store: [Bevy on the App Store](https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490)
 - Stack: Next.js 16 + React 19 + TypeScript + Tailwind CSS 4
 
@@ -112,6 +113,33 @@ npm run lint
 npm run build
 npm run start
 ```
+
+## Deployment (Vercel)
+
+Current production deployment:
+
+- [https://bevythewebsite.vercel.app/](https://bevythewebsite.vercel.app/)
+
+Steps to deploy on Vercel:
+
+1. Push your latest changes to GitHub.
+2. Go to [https://vercel.com/new](https://vercel.com/new).
+3. Import the `bevythewebsite` repository.
+4. Keep the default Vercel settings for Next.js:
+   - Framework Preset: `Next.js`
+   - Build Command: `next build`
+   - Output Directory: `.next` (default)
+5. Click **Deploy**.
+6. After deployment, open the generated URL and verify key routes:
+   - `/`
+   - `/privacy`
+   - `/terms`
+   - `/disclaimer`
+
+Optional production setup:
+
+- Add a custom domain in Vercel Project Settings > Domains.
+- Configure branch protection and auto-deploy from `main`.
 
 ## Asset Notes
 
