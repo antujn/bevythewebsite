@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import FeatureDeck from "@/components/FeatureDeck";
 import BundlesShowcase from "@/components/BundlesShowcase";
+import GameplaySection from "@/components/GameplaySection";
 import ReviewsSection from "@/components/ReviewsSection";
 
 export default function Home() {
@@ -16,6 +17,8 @@ export default function Home() {
         <FeatureDeck />
 
         <BundlesShowcase />
+
+        <GameplaySection />
 
         <ReviewsSection />
       </main>

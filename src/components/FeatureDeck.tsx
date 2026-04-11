@@ -53,6 +53,9 @@ export default function FeatureDeck() {
   const sectionRef = useRef<HTMLElement>(null);
   const manualOverride = useRef(false);
 
+  const ghostOne = features[(active + 1) % features.length];
+  const ghostTwo = features[(active + 2) % features.length];
+
   useEffect(() => {
     const onScroll = () => {
       if (manualOverride.current) return;
@@ -156,6 +159,16 @@ export default function FeatureDeck() {
           {/* Card */}
           <div className="fd-stack">
             <div
+              aria-hidden="true"
+              className="fd-card fd-card--ghost fd-card--ghost-2"
+              style={{ background: ghostTwo.bg }}
+            />
+            <div
+              aria-hidden="true"
+              className="fd-card fd-card--ghost fd-card--ghost-1"
+              style={{ background: ghostOne.bg }}
+            />
+            <div
               className="fd-card fd-card--base"
               style={{ background: features[active].bg }}
             >
@@ -169,7 +182,7 @@ export default function FeatureDeck() {
                   alt={features[active].tab}
                   fill
                   sizes="(min-width: 768px) 50vw, 100vw"
-                  className="editorial-img"
+                  className="fd-card-illustration"
                   priority={active === 0}
                 />
               </div>
