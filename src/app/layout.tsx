@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { DownloadProvider } from "@/components/DownloadContext";
 import "./globals.css";
 
@@ -57,6 +58,7 @@ export default function RootLayout({
     <html lang="en" className={`${plusJakarta.variable} ${playfair.variable}`}>
       <body>
         <DownloadProvider>{children}</DownloadProvider>
+        <Analytics />
       </body>
     </html>
   );
