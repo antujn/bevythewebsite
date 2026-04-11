@@ -69,7 +69,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
             </p>
             <div className="qr-code">
               <Image
-                src="/images/qrs/qr-white.png"
+                src="/images/qrs/qr-black.png"
                 alt="QR code to download Bevy"
                 width={200}
                 height={200}
@@ -81,7 +81,7 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
               rel="noopener noreferrer"
               className="qr-fallback"
             >
-              Or open in browser &rarr;
+              Or <span className="qr-fallback-link">open in browser</span> &rarr;
             </a>
           </div>
         </div>

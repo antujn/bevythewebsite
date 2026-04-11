@@ -37,13 +37,6 @@ export default function Footer() {
   return (
     <footer className="relative min-h-[88vh] overflow-hidden bg-[#060606]">
       <div className="absolute inset-0 -z-10">
-        <Image
-          src="/images/illustrations/illustration5.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="editorial-img opacity-24"
-        />
         <div className="absolute inset-0 bg-gradient-to-b from-[#060606]/84 via-[#060606]/58 to-[#060606]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
       </div>

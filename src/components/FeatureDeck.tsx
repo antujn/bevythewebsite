@@ -7,43 +7,43 @@ const features = [
   {
     tab: "The Feeling",
     title: "Go further, feel more.",
-    body: "Every card in Bevy is crafted to go beyond the surface. Questions that make you pause. Dares that make you feel alive. Moments that bond you closer to the people around you.",
-    imageSrc: "/images/illustrations/illustration1.jpg",
+    body: "Every card is emotionally considered, socially aware, and designed to land. Questions that bring out different feelings in you and in each other. Dares that get you moving, laughing, and fully in the moment. Moments that bond you closer to the people around you.",
+    imageSrc: "/images/illustrations/features/illustration1.jpg",
     bg: "rgba(164, 129, 82, 0.08)",
   },
   {
-    tab: "The Experience",
+    tab: "The Growth",
     title: "Conversations that stay with you.",
-    body: "Behind every person you know is a conversation you haven\u2019t had yet. Bevy helps you start it.",
-    imageSrc: "/images/illustrations/illustration2.jpg",
+    body: "The more you play, the more connected you become, with each other and with yourself. You notice new parts of who you are, and new sides of the people around you. You learn how to show up with different energies, in ways that feel socially aware and emotionally true. Bevy turns those moments into growth you can feel.",
+    imageSrc: "/images/illustrations/features/illustration2.jpg",
     bg: "rgba(180, 120, 100, 0.08)",
   },
   {
     tab: "Be Extraordinary",
     title: "Elevate the ordinary.",
-    body: "House parties, date nights, long weekends away. Bevy turns any gathering into something electric. No awkward silences. No recycled questions. Just the right card at the right moment.",
-    imageSrc: "/images/illustrations/illustration3.jpg",
+    body: "Made for the moments in between. Bevy turns ordinary moments into meaningful ones, then meaningful ones into unforgettable nights. No awkward silences. No recycled small talk. Just the right card at the exact right moment.",
+    imageSrc: "/images/illustrations/features/illustration3.jpg",
     bg: "rgba(140, 80, 80, 0.08)",
   },
   {
     tab: "Powered by AI",
     title: "Thoughtfully intelligent.",
-    body: "BevyAI learns the room. It adapts to your energy, your comfort level, your dynamic. Every prompt is emotionally considered, socially aware, and designed to land.",
-    imageSrc: "/images/illustrations/illustration4.jpg",
+    body: "BevyAI adapts the game to your preferences, energy, and comfort level so every session feels right for your group. And when there is no group, it steps in as your play partner for solo reflection and discovery.",
+    imageSrc: "/images/illustrations/features/illustration4.jpg",
     bg: "rgba(100, 130, 160, 0.08)",
   },
   {
     tab: "Safe & Inclusive",
     title: "Play without hesitation.",
-    body: "Every card is thoughtfully crafted to be inclusive and respectful of all players. No cringe. No discomfort. Just honest, socially intelligent prompts designed for real people in real rooms.",
-    imageSrc: "/images/illustrations/illustration5.jpg",
+    body: "Every card is thoughtfully crafted to be inclusive, respectful, and easy to say yes to. No cringe. No pressure. No moments that leave anyone behind. Just honest, socially intelligent prompts designed for real people in real rooms.",
+    imageSrc: "/images/illustrations/features/illustration5.jpg",
     bg: "rgba(140, 160, 120, 0.08)",
   },
   {
     tab: "The Catalyst",
-    title: "Made for the moments in between.",
-    body: "Ten bundles. Over a thousand cards. From the first date to the twentieth anniversary. From Friday night with strangers to Sunday morning with your person. Bevy meets you wherever you are.",
-    imageSrc: "/images/illustrations/illustration6.jpg",
+    title: "Permission to make the first move.",
+    body: "Bevy helps the room shift. It gives people permission to ask the deeper question, take the bolder dare, and open up without overthinking it. When a moment feels risky, the app carries the weight, so connection feels easier and more natural.",
+    imageSrc: "/images/illustrations/features/illustration6.jpg",
     bg: "rgba(160, 140, 100, 0.08)",
   },
 ];
@@ -81,18 +81,45 @@ export default function FeatureDeck() {
   }, []);
 
   const handleTabClick = (i: number) => {
+    const el = sectionRef.current;
+
     manualOverride.current = true;
     setActive(i);
+
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const sectionStartY = window.scrollY + rect.top;
+      const scrollableHeight = el.offsetHeight - window.innerHeight;
+
+      if (scrollableHeight > 0) {
+        const step = 1 / features.length;
+        const targetProgress = Math.min(0.999, i * step + step * 0.5);
+        const targetY = sectionStartY + scrollableHeight * targetProgress;
+
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      }
+    }
+
     setTimeout(() => {
       manualOverride.current = false;
-    }, 1500);
+    }, 600);
   };
 
   // Progress bar within section
   const progressPct = ((active + 1) / features.length) * 100;
 
   return (
-     <section id="s1" ref={sectionRef} className="feature-deck-section">
+     <section id="s1" ref={sectionRef} className="feature-deck-section relative">
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/images/illustrations/background/illustration8.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="editorial-img opacity-18"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/58 via-black/52 to-black/68" />
+      </div>
       <div className="fd-sticky-container">
         <div style={{ maxWidth: "var(--shell-max)", width: "100%", marginInline: "auto" }}>
           <article style={{ maxWidth: 680, marginInline: "auto", textAlign: "center", paddingBottom: 32 }}>

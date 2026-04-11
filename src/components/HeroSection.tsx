@@ -1,12 +1,70 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import PhoneMock from "./PhoneMock";
 import DownloadButton from "./DownloadButton";
 
+// All images in hero_mock folder
+const heroImages = [
+  "/images/screens/hero_mock/hero-screen.png",
+  "/images/screens/hero_mock/bundle-early-dating-1.png",
+  "/images/screens/hero_mock/bundle-early-dating-2.png",
+  "/images/screens/hero_mock/bundle-early-dating-3.png",
+  "/images/screens/hero_mock/bundle-house-party-1.png",
+  "/images/screens/hero_mock/bundle-house-party-2.png",
+  "/images/screens/hero_mock/bundle-house-party-3.png",
+  "/images/screens/hero_mock/bundle-nsfw-1.png",
+  "/images/screens/hero_mock/bundle-nsfw-2.png",
+  "/images/screens/hero_mock/bundle-nsfw-3.png",
+  "/images/screens/hero_mock/bundle-significant-other-1.png",
+  "/images/screens/hero_mock/bundle-significant-other-2.png",
+  "/images/screens/hero_mock/bundle-significant-other-3.png",
+];
+
 export default function HeroSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const nextImage = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+  }, []);
+
+  useEffect(() => {
+    // Preload all images
+    const preloadImages = async () => {
+      const promises = heroImages.map((src) => {
+        return new Promise<void>((resolve) => {
+          const img = new window.Image();
+          img.src = src;
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      });
+      await Promise.all(promises);
+      setIsLoaded(true);
+    };
+    preloadImages();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    const interval = setInterval(nextImage, 3000);
+    return () => clearInterval(interval);
+  }, [isLoaded, nextImage]);
+
   return (
     <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/images/illustrations/background/illustration7.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="editorial-img opacity-26"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/58 to-black/74" />
+      </div>
 
       <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         {/* Left — Hero text */}
@@ -41,17 +99,53 @@ export default function HeroSection() {
         {/* Right — Two phone mocks */}
         <div className="hero-mocks fade-in fade-in-d2">
           <div className="hero-mock-front">
-            <PhoneMock
-              screenSrc="/images/screens/hero-screen.png"
-              screenAlt="Bevy welcome screen"
-              priority
-            />
+            {/* Phone mock with crossfade screens */}
+            <div className="phone-mock">
+              <div className="phone-mock__screen">
+                {heroImages.map((src, index) => (
+                  <Image
+                    key={src}
+                    src={src}
+                    alt="Bevy app screen"
+                    fill
+                    sizes="380px"
+                    className={`object-contain transition-opacity duration-500 ease-in-out ${
+                      index === currentIndex ? "opacity-100" : "opacity-0"
+                    }`}
+                    priority={index === 0}
+                  />
+                ))}
+              </div>
+              <Image
+                src="/images/mockups/iphone-17-pro-mockup.png"
+                alt=""
+                fill
+                sizes="380px"
+                className="phone-mock__frame"
+                priority
+              />
+            </div>
           </div>
           <div className="hero-mock-back">
-            <PhoneMock
-              screenSrc="/images/screens/splash.png"
-              screenAlt="Bevy splash screen"
-            />
+            {/* Static splash screen */}
+            <div className="phone-mock">
+              <div className="phone-mock__screen">
+                <Image
+                  src="/images/screens/hero_mock/splash.png"
+                  alt="Bevy splash screen"
+                  fill
+                  sizes="380px"
+                  className="object-contain"
+                />
+              </div>
+              <Image
+                src="/images/mockups/iphone-17-pro-mockup.png"
+                alt=""
+                fill
+                sizes="380px"
+                className="phone-mock__frame"
+              />
+            </div>
           </div>
         </div>
       </div>
