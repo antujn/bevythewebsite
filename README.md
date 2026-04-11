@@ -5,6 +5,11 @@ Marketing website for the Bevy iOS app.
 - App Store: [Bevy on the App Store](https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490)
 - Stack: Next.js 16 + React 19 + TypeScript + Tailwind CSS 4
 
+## Design Inspiration
+
+- [Paired](https://www.paired.com/) - social proof framing, conversation-first storytelling, section pacing
+- [Flo Health](https://flo.health/) - editorial composition, premium dark aesthetic, guided scroll flow
+
 ## Tech Stack
 
 | Layer | Tech |
