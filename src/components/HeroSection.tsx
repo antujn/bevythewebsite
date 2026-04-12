@@ -1,56 +1,65 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import DownloadButton from "./DownloadButton";
 
-// All images in hero_mock folder
-const heroImages = [
-  "/images/screens/hero_mock/hero-screen.png",
-  "/images/screens/hero_mock/bundle-early-dating-1.png",
-  "/images/screens/hero_mock/bundle-early-dating-2.png",
-  "/images/screens/hero_mock/bundle-early-dating-3.png",
-  "/images/screens/hero_mock/bundle-house-party-1.png",
-  "/images/screens/hero_mock/bundle-house-party-2.png",
-  "/images/screens/hero_mock/bundle-house-party-3.png",
-  "/images/screens/hero_mock/bundle-nsfw-1.png",
-  "/images/screens/hero_mock/bundle-nsfw-2.png",
-  "/images/screens/hero_mock/bundle-nsfw-3.png",
-  "/images/screens/hero_mock/bundle-significant-other-1.png",
-  "/images/screens/hero_mock/bundle-significant-other-2.png",
-  "/images/screens/hero_mock/bundle-significant-other-3.png",
+const frontVideos = [
+  "/videos/alias-mode-significant-other.mov",
+  "/videos/alias-mode-nsfw.mov",
+  "/videos/alias-mode-early-dating.mov",
 ];
+
+const backVideo = "/videos/hero-screen.mov";
+const NEXT_VIDEO_DELAY_MS = 2000;
 
 export default function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isFrontAdvancing, setIsFrontAdvancing] = useState(false);
+  const [prevIndex, setPrevIndex] = useState<number | null>(null);
+  const cycleTimeoutRef = useRef<number | null>(null);
+  const fadeTimeoutRef = useRef<number | null>(null);
 
-  const nextImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % heroImages.length);
-  }, []);
+  const handleFrontVideoEnd = useCallback(() => {
+    if (isFrontAdvancing) return;
 
-  useEffect(() => {
-    // Preload all images
-    const preloadImages = async () => {
-      const promises = heroImages.map((src) => {
-        return new Promise<void>((resolve) => {
-          const img = new window.Image();
-          img.src = src;
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-        });
+    setIsFrontAdvancing(true);
+
+    if (cycleTimeoutRef.current !== null) {
+      window.clearTimeout(cycleTimeoutRef.current);
+    }
+
+    cycleTimeoutRef.current = window.setTimeout(() => {
+      setCurrentIndex((prev) => {
+        setPrevIndex(prev);
+        return (prev + 1) % frontVideos.length;
       });
-      await Promise.all(promises);
-      setIsLoaded(true);
-    };
-    preloadImages();
-  }, []);
+
+      if (fadeTimeoutRef.current !== null) {
+        window.clearTimeout(fadeTimeoutRef.current);
+      }
+
+      fadeTimeoutRef.current = window.setTimeout(() => {
+        setPrevIndex(null);
+        fadeTimeoutRef.current = null;
+      }, 700);
+
+      setIsFrontAdvancing(false);
+      cycleTimeoutRef.current = null;
+    }, NEXT_VIDEO_DELAY_MS);
+  }, [isFrontAdvancing]);
 
   useEffect(() => {
-    if (!isLoaded) return;
-    const interval = setInterval(nextImage, 3000);
-    return () => clearInterval(interval);
-  }, [isLoaded, nextImage]);
+    return () => {
+      if (cycleTimeoutRef.current !== null) {
+        window.clearTimeout(cycleTimeoutRef.current);
+      }
+
+      if (fadeTimeoutRef.current !== null) {
+        window.clearTimeout(fadeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
@@ -102,19 +111,29 @@ export default function HeroSection() {
             {/* Phone mock with crossfade screens */}
             <div className="phone-mock">
               <div className="phone-mock__screen">
-                {heroImages.map((src, index) => (
-                  <Image
-                    key={src}
-                    src={src}
-                    alt="Bevy app screen"
-                    fill
-                    sizes="380px"
-                    className={`object-contain transition-opacity duration-500 ease-in-out ${
-                      index === currentIndex ? "opacity-100" : "opacity-0"
-                    }`}
-                    priority={index === 0}
+                {prevIndex !== null && (
+                  <video
+                    src={frontVideos[prevIndex]}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    className="absolute inset-0 h-full w-full object-contain hero-video-fade-out"
                   />
-                ))}
+                )}
+                <video
+                  key={frontVideos[currentIndex]}
+                  src={frontVideos[currentIndex]}
+                  autoPlay
+                  muted
+                  playsInline
+                  preload="auto"
+                  onEnded={handleFrontVideoEnd}
+                  className={`absolute inset-0 h-full w-full object-contain ${
+                    prevIndex !== null ? "hero-video-fade-in" : ""
+                  }`}
+                />
               </div>
               <Image
                 src="/images/mockups/iphone-17-pro-mockup.png"
@@ -127,15 +146,17 @@ export default function HeroSection() {
             </div>
           </div>
           <div className="hero-mock-back">
-            {/* Static splash screen */}
+            {/* Background gameplay video */}
             <div className="phone-mock">
               <div className="phone-mock__screen">
-                <Image
-                  src="/images/screens/hero_mock/splash.png"
-                  alt="Bevy splash screen"
-                  fill
-                  sizes="380px"
-                  className="object-contain"
+                <video
+                  src={backVideo}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="h-full w-full object-contain"
                 />
               </div>
               <Image

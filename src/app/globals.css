@@ -618,6 +618,32 @@ a {
   margin-left: -60px;
 }
 
+@keyframes heroVideoFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes heroVideoFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.hero-video-fade-in {
+  animation: heroVideoFadeIn 700ms ease-in-out forwards;
+}
+
+.hero-video-fade-out {
+  animation: heroVideoFadeOut 700ms ease-in-out forwards;
+}
+
 /* ── Phone mock + bundle strip ────────────────── */
 
 .phone-mock {
@@ -793,8 +819,8 @@ a {
 }
 
 .bt-tab--active {
-  background: rgba(198, 166, 120, 0.06);
   border-left-color: var(--gold-soft);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .bt-tab-type {
@@ -818,7 +844,7 @@ a {
 }
 
 .bt-tab--active .bt-tab-label {
-  color: var(--text-main);
+  color: #fff;
 }
 
 .bt-tab-desc {
@@ -827,6 +853,10 @@ a {
   line-height: 1.65;
   color: var(--text-muted);
   animation: fadeSlideIn 300ms ease;
+}
+
+.bt-tab--active .bt-tab-desc {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 @keyframes fadeSlideIn {
