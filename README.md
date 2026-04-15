@@ -144,6 +144,6 @@ Optional production setup:
 ## Asset Notes
 
 - Feature images: `public/images/illustrations/features/illustration1.jpg` to `illustration6.jpg`
-- Background images: `public/images/illustrations/background/illustration7.jpg`, `illustration8.jpg`
+- Background images: `public/images/illustrations/backgrounds/illustration7.jpg`, `illustration8.jpg`
 - Hero rotating screens are defined in `HeroSection.tsx` (`heroImages` array)
 - Bundle screens and metadata (labels, copy, accents) are defined in `BundlesShowcase.tsx` (`bundles` array)

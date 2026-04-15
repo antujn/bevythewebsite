@@ -137,7 +137,7 @@ export default function BundlesShowcase() {
     <section className="section-space relative overflow-hidden" style={{ paddingBottom: 40 }}>
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/illustrations/background/illustration7.jpg"
+          src="/images/illustrations/backgrounds/illustration7.jpg"
           alt=""
           fill
           sizes="100vw"

@@ -204,11 +204,11 @@ const previewSlides: PreviewSlide[] = [
     subtitle: "Real App Store feedback from Bevy players.",
     reviewItems: [
       {
-        author: "Remark Bil",
+        author: "Cassidy C.",
         text: "So fun! Best drinking game we have ever found and we’ve tried quite a few!",
       },
       {
-        author: "iMonkey.",
+        author: "Wendy S.",
         text: "Used this with some friends I had over last Friday before we went out and everyone loved it.",
       },
     ],

@@ -65,7 +65,7 @@ export default function HeroSection() {
     <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/illustrations/background/illustration7.jpg"
+          src="/images/illustrations/backgrounds/illustration7.jpg"
           alt=""
           fill
           sizes="100vw"

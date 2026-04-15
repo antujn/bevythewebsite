@@ -82,7 +82,7 @@ export default function ReviewsSection() {
     >
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/illustrations/background/illustration7.jpg"
+          src="/images/illustrations/backgrounds/illustration7.jpg"
           alt=""
           fill
           sizes="100vw"

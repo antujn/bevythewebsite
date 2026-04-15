@@ -47,7 +47,7 @@ export default function GameplaySection() {
     <section className="section-space relative overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/illustrations/background/illustration8.jpg"
+          src="/images/illustrations/backgrounds/illustration8.jpg"
           alt=""
           fill
           sizes="100vw"
