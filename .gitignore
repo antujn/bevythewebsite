@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+appstore-previews/
 
 # debug
 npm-debug.log*

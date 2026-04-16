@@ -112,7 +112,21 @@ npm run dev
 npm run lint
 npm run build
 npm run start
+npx playwright install chromium
+npm run export:appstore-previews
 ```
+
+`npm run export:appstore-previews` writes slide images to `appstore-previews/` for:
+
+- `iphone-6.9` (`1320x2868`)
+- `iphone-6.5` (`1290x2796`)
+
+Optional env vars:
+
+- `APPSTORE_EXPORT_BASE_URL` - Use an already-running site URL instead of starting local dev.
+- `APPSTORE_EXPORT_PORT` - Port for local dev server (defaults to `3200`).
+- `APPSTORE_SLIDE_COUNT` - Number of preview slides to export (defaults to `10`).
+- `APPSTORE_BASE_WIDTH` / `APPSTORE_BASE_HEIGHT` - Base composition size before scaling (defaults to `280x606`, tuned to match the current preview modal composition).
 
 ## Deployment (Vercel)
 

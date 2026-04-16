@@ -1944,6 +1944,23 @@ a {
   background: rgba(198, 166, 120, 0.84);
 }
 
+.preview-export-root {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+.preview-export-root .preview-story {
+  width: min(100vw, 1242px);
+  height: min(100vh, 2688px);
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+}
+
 @media (max-width: 1024px) {
   .preview-modal {
     border-radius: 22px;
