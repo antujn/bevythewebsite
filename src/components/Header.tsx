@@ -1,16 +1,175 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDownload } from "./DownloadContext";
 import { previewSlides } from "./previewSlides";
 
+// iPhone 6.9" App Store required preview dimensions (portrait).
+const APPSTORE_TARGET_WIDTH = 1320;
+const APPSTORE_TARGET_HEIGHT = 2868;
+const HIDE_SUPPORTING_PHONE_IDS = new Set([
+  "modes",
+  "achievements",
+  "widget",
+  "custom",
+]);
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [isPreviewsOpen, setIsPreviewsOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const storyRefs = useRef<Array<HTMLElement | null>>([]);
   const { triggerDownload } = useDownload();
   const totalPreviews = previewSlides.length;
+
+  const downloadPreview = async (index: number) => {
+    const slide = previewSlides[index];
+    if (!slide || downloadingId) return;
+
+    // Look up by unique per-slide class rather than ref index to avoid any
+    // React ref-callback timing issues. Each slide gets `preview-story--<id>`.
+    const story =
+      (document.querySelector(
+        `.preview-story--${slide.id}`,
+      ) as HTMLElement | null) ?? storyRefs.current[index];
+    if (!story) return;
+
+    setDownloadingId(slide.id);
+
+    try {
+      const { domToCanvas } = await import("modern-screenshot");
+
+      if (typeof document !== "undefined" && document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+
+      // Skip nodes that aren't actually rendered (display: none). This is
+      // critical on slides like `achievements` and `widget` where the JSX
+      // renders a supporting phone mock that CSS immediately hides. Those
+      // hidden <img>s are often never decoded by the browser, so letting
+      // modern-screenshot touch them triggers a cold fetch and stalls for
+      // seconds.
+      const isNodeVisible = (node: Node): boolean => {
+        if (!(node instanceof HTMLElement)) return true;
+        // offsetParent is null when the element or an ancestor has
+        // display: none (except for position: fixed, which we accept).
+        if (node.offsetParent === null) {
+          const pos = window.getComputedStyle(node).position;
+          if (pos !== "fixed") return false;
+        }
+        return true;
+      };
+
+      // Only wait for images that are actually going to appear in the capture.
+      const images = Array.from(story.querySelectorAll("img")).filter(
+        isNodeVisible,
+      );
+      await Promise.all(
+        images.map((img) => {
+          if (img.complete && img.naturalWidth > 0) {
+            return Promise.resolve();
+          }
+          return new Promise<void>((resolve) => {
+            img.addEventListener(
+              "load",
+              () => resolve(),
+              { once: true },
+            );
+            img.addEventListener(
+              "error",
+              () => resolve(),
+              { once: true },
+            );
+          });
+        }),
+      );
+
+      // Capture at the element's natural modal size, then scale to App Store
+      // output dimensions. This keeps the original on-site composition stable.
+      const naturalWidth = story.offsetWidth;
+      const naturalHeight = story.offsetHeight;
+      const scale =
+        naturalWidth > 0
+          ? Math.max(2, APPSTORE_TARGET_WIDTH / naturalWidth)
+          : 3;
+
+      // Prevent dark edge halos: rounded corners/border/shadow can introduce
+      // semi-transparent edge pixels that flatten against black in JPEG.
+      // Temporarily remove visual chrome for the capture, then restore.
+      const prevInline = {
+        borderRadius: story.style.borderRadius,
+        border: story.style.border,
+        boxShadow: story.style.boxShadow,
+      };
+      story.style.borderRadius = "0";
+      story.style.border = "0";
+      story.style.boxShadow = "none";
+
+      // Capture the live element straight from the modal DOM. modern-screenshot
+      // uses the SVG foreignObject technique with a cloned snapshot internally,
+      // so it respects modern CSS (backdrop-filter, gradients, shadows,
+      // object-fit, etc.) where html2canvas falls over.
+      let rawCanvas: HTMLCanvasElement;
+      try {
+        rawCanvas = await domToCanvas(story, {
+          scale,
+          backgroundColor: "#000000",
+          width: naturalWidth,
+          height: naturalHeight,
+          // Skip the whole subtree for hidden nodes so modern-screenshot
+          // doesn't fetch / decode their images.
+          filter: isNodeVisible,
+          style: {
+            transform: "none",
+            margin: "0",
+            width: `${naturalWidth}px`,
+            height: `${naturalHeight}px`,
+          },
+        });
+      } finally {
+        story.style.borderRadius = prevInline.borderRadius;
+        story.style.border = prevInline.border;
+        story.style.boxShadow = prevInline.boxShadow;
+      }
+
+      const target = document.createElement("canvas");
+      target.width = APPSTORE_TARGET_WIDTH;
+      target.height = APPSTORE_TARGET_HEIGHT;
+      const ctx = target.getContext("2d");
+      if (!ctx) throw new Error("Could not get 2D context for target canvas");
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, target.width, target.height);
+      ctx.drawImage(
+        rawCanvas,
+        0,
+        0,
+        rawCanvas.width,
+        rawCanvas.height,
+        0,
+        0,
+        target.width,
+        target.height,
+      );
+
+      // JPEG at 0.92 keeps quality high but cuts file size dramatically vs PNG.
+      const dataUrl = target.toDataURL("image/jpeg", 0.92);
+
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = `bevy-preview-${slide.id}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Failed to download preview image", error);
+    } finally {
+      setDownloadingId(null);
+    }
+  };
 
   const openPreviews = () => {
     setPreviewIndex(0);
@@ -140,9 +299,24 @@ export default function Header() {
 
             <div className="preview-modal-top">
               <p className="preview-modal-kicker">App Store Preview Flow</p>
-              <p className="preview-modal-counter">
-                {previewIndex + 1} / {totalPreviews}
-              </p>
+              <div className="preview-modal-top-right">
+                <button
+                  type="button"
+                  className="preview-download-btn"
+                  onClick={() => downloadPreview(previewIndex)}
+                  disabled={
+                    downloadingId === previewSlides[previewIndex]?.id
+                  }
+                  aria-label={`Download preview ${previewIndex + 1} as image`}
+                >
+                  {downloadingId === previewSlides[previewIndex]?.id
+                    ? "Preparing..."
+                    : "Download"}
+                </button>
+                <p className="preview-modal-counter">
+                  {previewIndex + 1} / {totalPreviews}
+                </p>
+              </div>
             </div>
 
             <div className="preview-slider-wrap">
@@ -163,6 +337,9 @@ export default function Header() {
                   {previewSlides.map((slide, index) => (
                     <figure className="preview-slide" key={slide.id}>
                       <article
+                        ref={(node) => {
+                          storyRefs.current[index] = node;
+                        }}
                         className={`preview-story preview-story--${slide.theme} preview-story--${slide.id}`}
                       >
                         <Image
@@ -247,7 +424,8 @@ export default function Header() {
                                     />
                                   </div>
                                 </div>
-                                {slide.supportingImageSrcs?.slice(0, 2).map(
+                                {!HIDE_SUPPORTING_PHONE_IDS.has(slide.id) &&
+                                  slide.supportingImageSrcs?.slice(0, 2).map(
                                   (
                                     supportingSrc,
                                     supportingIndex,

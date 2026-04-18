@@ -1455,6 +1455,46 @@ a {
   justify-content: center;
 }
 
+.preview-modal-top-right {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.preview-download-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(244, 238, 229, 0.9);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.38rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.preview-download-btn:hover:not(:disabled) {
+  border-color: rgba(198, 166, 120, 0.55);
+  background: rgba(198, 166, 120, 0.18);
+  color: #f4eee5;
+}
+
+.preview-download-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.preview-download-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 .preview-story {
   --pv-overlay-top: rgba(15, 10, 9, 0.2);
   --pv-overlay-bottom: rgba(8, 6, 6, 0.86);
@@ -1773,6 +1813,16 @@ a {
   overflow: hidden;
 }
 
+/* Let the stage run all the way to the preview's bottom edge on slides with
+   a supporting bottom mock, so there's no empty band between the mock and
+   the rounded bottom of the card. */
+.preview-story--prompts .preview-story-content,
+.preview-story--party .preview-story-content,
+.preview-story--ai .preview-story-content,
+.preview-story--nsfw .preview-story-content {
+  padding-bottom: 0;
+}
+
 .preview-story--prompts .preview-phone-shell--main,
 .preview-story--prompts .preview-phone-shell--right,
 .preview-story--party .preview-phone-shell--main,
@@ -1826,7 +1876,7 @@ a {
 
 .preview-story--modes .preview-phone-shell--main .phone-mock.phone-mock--compact {
   transform: scale(1.44);
-  transform-origin: center;
+  transform-origin: top center;
 }
 
 .preview-story--achievements .preview-phone-shell--main {
@@ -1942,23 +1992,6 @@ a {
   width: 26px;
   border-color: rgba(198, 166, 120, 0.8);
   background: rgba(198, 166, 120, 0.84);
-}
-
-.preview-export-root {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: #000;
-}
-
-.preview-export-root .preview-story {
-  width: min(100vw, 1242px);
-  height: min(100vh, 2688px);
-  max-width: none;
-  aspect-ratio: auto;
-  border-radius: 0;
-  border: 0;
-  box-shadow: none;
 }
 
 @media (max-width: 1024px) {
