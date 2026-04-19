@@ -46,10 +46,10 @@ export const metadata: Metadata = {
       "The modern, meaningful alternative to traditional truth or dare.",
     images: ["/images/illustrations/illustration3.jpg"],
   },
-  icons: {
-    icon: "/favicon.png",
-    apple: "/images/icons/bevy-logo.png",
-  },
+  // Icons are supplied via Next.js file conventions:
+  //   src/app/icon.png       → <link rel="icon">
+  //   src/app/apple-icon.png → <link rel="apple-touch-icon">
+  //   src/app/manifest.ts    → <link rel="manifest">
 };
 
 export default function RootLayout({
