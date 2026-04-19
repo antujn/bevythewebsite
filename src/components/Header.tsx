@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useDownload } from "./DownloadContext";
 import { previewSlides } from "./previewSlides";
 
@@ -16,6 +17,7 @@ const HIDE_SUPPORTING_PHONE_IDS = new Set([
 ]);
 
 export default function Header() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [isPreviewsOpen, setIsPreviewsOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
@@ -188,6 +190,17 @@ export default function Header() {
     setPreviewIndex((prev) => (prev + 1) % totalPreviews);
   };
 
+  const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return;
+
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (window.location.hash !== "#hero") {
+      window.history.replaceState(null, "", "/#hero");
+    }
+  };
+
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", fn, { passive: true });
@@ -238,6 +251,7 @@ export default function Header() {
             href="/#hero"
             prefetch={false}
             className="flex items-center gap-3 justify-self-start"
+            onClick={handleBrandClick}
           >
             <Image
               src="/images/icons/bevy-logo.png"

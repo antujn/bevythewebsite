@@ -80,7 +80,7 @@ export default function HeroSection() {
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           <div className="hero-proof fade-in">
             <span className="hero-proof-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span className="hero-proof-text">4.7 &middot; 26 ratings on the App Store</span>
+            <span className="hero-proof-text">4.7 &middot; 25K+ downloads on the App Store</span>
           </div>
 
           <h1

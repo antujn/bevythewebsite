@@ -18,17 +18,17 @@ export default function LegalLayout({
 }) {
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.08] bg-[#090909]/92 backdrop-blur-xl">
-        <div className="site-shell flex h-[72px] items-center justify-between">
+      <nav className="fixed inset-x-0 top-0 z-[60] border-b border-white/[0.12] bg-[#090909]/88 backdrop-blur-xl">
+        <div className="site-shell flex h-[84px] items-center justify-between">
           <Link href="/" prefetch={false} className="flex items-center gap-3">
             <Image
               src="/images/icons/bevy-logo.png"
               alt="Bevy"
-              width={30}
-              height={30}
+              width={44}
+              height={44}
               priority
             />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.17em] text-white/60">
+            <span className="hidden text-[12px] font-semibold uppercase tracking-[0.2em] text-white/52 sm:block">
               Bevy
             </span>
           </Link>
@@ -36,14 +36,14 @@ export default function LegalLayout({
           <Link
             href="/"
             prefetch={false}
-            className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/36 transition-colors duration-300 hover:text-white/70"
+            className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/56 transition-colors duration-300 hover:text-white/90"
           >
             &larr; Back Home
           </Link>
         </div>
       </nav>
 
-      <main style={{ paddingTop: 120, paddingBottom: 100 }}>
+      <main style={{ paddingTop: 132, paddingBottom: 100 }}>
         <div className="site-shell">
           <article className="mx-auto max-w-[720px]">
             <header style={{ marginBottom: 48 }}>

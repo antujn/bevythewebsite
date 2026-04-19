@@ -94,7 +94,7 @@ export default function ReviewsSection() {
       </div>
       <div className="site-shell reviews-paired-stage">
         <div className="reviews-paired-pill" aria-label="Bevy social proof">
-          <span>Join 10,000+ players</span>
+          <span>Join 25K+ players around the globe</span>
         </div>
 
         <h2 id="reviews-heading" className="reviews-paired-title section-anchor-title">
