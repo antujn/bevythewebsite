@@ -39,6 +39,26 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Respect users who have reduced motion enabled at the OS level.
+   Framer-motion is handled globally via <MotionConfig reducedMotion="user">
+   in MotionProvider.tsx; this block covers the CSS-only animations:
+   smooth scroll (can be disorienting) + the lone fadeIn keyframe used
+   by modal overlays. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   min-height: 100dvh;
   background: #050505;
