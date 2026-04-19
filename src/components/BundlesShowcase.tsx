@@ -217,7 +217,6 @@ export default function BundlesShowcase() {
       id="bundles"
       className="section-space relative overflow-hidden"
       style={{ paddingBottom: 40 }}
-      onMouseEnter={handleInteraction}
       onKeyDown={handleKeyDown}
       tabIndex={-1}
     >
