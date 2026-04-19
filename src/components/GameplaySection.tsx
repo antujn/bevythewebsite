@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
+import { RevealIn, RevealGroup, RevealChild } from "./RevealIn";
 
 const gameplaySlides = [
   {
@@ -103,27 +104,44 @@ export default function GameplaySection() {
       </div>
 
       <div className="site-shell relative z-10">
-        <article style={{ maxWidth: 720, marginInline: "auto", textAlign: "center" }}>
-          <p className="kicker">The Gameplay</p>
-          <h2 id="gameplay-heading" className="section-title section-anchor-title">
-            An interface designed to feel intuitive and effortless.
-          </h2>
-          <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
-        </article>
+        <RevealGroup
+          stagger={0.12}
+          amount={0.4}
+          style={{ maxWidth: 720, marginInline: "auto", textAlign: "center" }}
+        >
+          <RevealChild>
+            <p className="kicker">The Gameplay</p>
+          </RevealChild>
+          <RevealChild>
+            <h2
+              id="gameplay-heading"
+              className="section-title section-anchor-title"
+            >
+              An interface designed to feel intuitive and effortless.
+            </h2>
+          </RevealChild>
+          <RevealChild preset="scale">
+            <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
+          </RevealChild>
+        </RevealGroup>
 
         <div className="gameplay-layout">
           <div className="gameplay-copy">
-            <div className="gameplay-tabs">
+            <RevealGroup stagger={0.05} delay={0.15} className="gameplay-tabs">
               {gameplaySlides.map((slide, i) => (
-                <button
-                  key={slide.label}
-                  className={`gameplay-tab${i === active ? " gameplay-tab--active" : ""}`}
-                  onClick={() => setActive(i)}
-                >
-                  {slide.label}
-                </button>
+                <RevealChild key={slide.label}>
+                  <motion.button
+                    className={`gameplay-tab${i === active ? " gameplay-tab--active" : ""}`}
+                    onClick={() => setActive(i)}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                  >
+                    {slide.label}
+                  </motion.button>
+                </RevealChild>
               ))}
-            </div>
+            </RevealGroup>
 
             {/* Text copy: crossfade + slight vertical slide when active changes */}
             <div className="gameplay-copy-stage">
@@ -151,6 +169,15 @@ export default function GameplaySection() {
 
           <div className="gameplay-mocks">
             <div className="gameplay-mock-front">
+              <RevealIn preset="fade" delay={0.1} duration={0.8}>
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
               <div className="phone-mock">
                 {/*
                   All slide videos are mounted simultaneously. Only the
@@ -200,9 +227,20 @@ export default function GameplaySection() {
                   className="phone-mock__frame"
                 />
               </div>
+                </motion.div>
+              </RevealIn>
             </div>
 
             <div className="gameplay-mock-back">
+              <RevealIn preset="fade" delay={0.25} duration={0.9}>
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{
+                    duration: 7.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
               <div className="phone-mock">
                 <div className="phone-mock__screen">
                   <video
@@ -223,6 +261,8 @@ export default function GameplaySection() {
                   className="phone-mock__frame"
                 />
               </div>
+                </motion.div>
+              </RevealIn>
             </div>
           </div>
         </div>

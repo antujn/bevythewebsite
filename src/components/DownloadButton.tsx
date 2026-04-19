@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "motion/react";
 import { useDownload } from "./DownloadContext";
 
 export default function DownloadButton({
@@ -15,10 +16,21 @@ export default function DownloadButton({
   const { triggerDownload } = useDownload();
 
   return (
-    <button
+    <motion.button
       onClick={triggerDownload}
-      className={`inline-flex cursor-pointer items-center justify-center border border-white/24 bg-white/[0.09] p-[5px] transition-[transform,border-color,background-color] duration-200 hover:scale-105 hover:border-white/36 hover:bg-white/[0.12] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35 ${className}`}
+      className={`inline-flex cursor-pointer items-center justify-center border border-white/24 bg-white/[0.09] p-[5px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/35 ${className}`}
       style={{ borderRadius: 9999 }}
+      whileHover={{
+        scale: 1.05,
+        borderColor: "rgba(255, 255, 255, 0.38)",
+        backgroundColor: "rgba(255, 255, 255, 0.14)",
+      }}
+      whileTap={{ scale: 0.95 }}
+      transition={{
+        type: "spring",
+        stiffness: 380,
+        damping: 22,
+      }}
     >
       <span className="block overflow-hidden" style={{ borderRadius: 9999 }}>
         <Image
@@ -26,8 +38,9 @@ export default function DownloadButton({
           alt="Download on the App Store"
           width={width}
           height={height}
+          draggable={false}
         />
       </span>
-    </button>
+    </motion.button>
   );
 }

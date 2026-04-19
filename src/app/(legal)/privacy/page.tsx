@@ -1,4 +1,3 @@
-import LegalLayout from "@/components/LegalLayout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicy() {
   return (
-    <LegalLayout title="Privacy Policy">
+    <>
       <p><strong>Effective date: 04/04/2026</strong></p>
 
       <h2>1. Introduction</h2>
@@ -118,6 +117,6 @@ export default function PrivacyPolicy() {
       <p>If you have any questions about this Privacy Policy, wish to exercise your data protection rights, or have a complaint, please contact us:</p>
       <p>By email: bevytheapp@gmail.com<br />Operator: Anant Jain<br />Location: London, United Kingdom</p>
       <p>For UK residents, you may lodge a complaint with the ICO: <a href="https://ico.org.uk/make-a-complaint/">https://ico.org.uk/make-a-complaint/</a>.</p>
-    </LegalLayout>
+    </>
   );
 }

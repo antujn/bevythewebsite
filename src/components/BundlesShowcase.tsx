@@ -55,8 +55,8 @@ const bundles: Bundle[] = [
       "Playful, hilarious and stimulating questions to ask your party-mates. Ideal to make new friends and banter with them.",
     imageSrc: "/images/bundles/bundle-house-party.png",
     imageAlt: "House Party bundle screen",
-    accent: "#1a1a1a",
-    accentBg: "rgba(26, 26, 26, 0.32)",
+    accent: "#000000",
+    accentBg: "rgba(0, 0, 0, 0.32)",
   },
   {
     label: "No Strings Attached",

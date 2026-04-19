@@ -3,8 +3,13 @@ import { type MouseEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 import { useDownload } from "./DownloadContext";
 import { previewSlides } from "./previewSlides";
+
+const NAV_HOVER_SPRING = { type: "spring" as const, stiffness: 400, damping: 24 };
+const NAV_LINK_CLASS =
+  "text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90";
 
 // iPhone 6.9" App Store required preview dimensions (portrait).
 const APPSTORE_TARGET_WIDTH = 1320;
@@ -271,49 +276,71 @@ export default function Header() {
           </Link>
 
           <nav className="hidden items-center gap-4 lg:flex">
-            <a href="#s1-anchor" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-              Experience
-            </a>
-            <a href="#bundles-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-              Collection
-            </a>
-            <a href="#gameplay-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-              Gameplay
-            </a>
-            <a href="#reviews-top" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-              Reviews
-            </a>
+            {[
+              { href: "#s1-anchor", label: "Experience" },
+              { href: "#bundles-heading", label: "Collection" },
+              { href: "#gameplay-heading", label: "Gameplay" },
+              { href: "#reviews-top", label: "Reviews" },
+            ].map((item) => (
+              <motion.a
+                key={item.href}
+                href={item.href}
+                className={NAV_LINK_CLASS}
+                whileHover={{ y: -2 }}
+                transition={NAV_HOVER_SPRING}
+              >
+                {item.label}
+              </motion.a>
+            ))}
           </nav>
 
           <div className="header-cta-group justify-self-end">
-            <button
+            <motion.button
               type="button"
               onClick={openPreviews}
               className="previews-btn"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              transition={NAV_HOVER_SPRING}
             >
               Previews
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               type="button"
               onClick={triggerDownload}
               className="try-free-btn"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              transition={NAV_HOVER_SPRING}
             >
               Try for free
-            </button>
+            </motion.button>
           </div>
         </div>
       </header>
 
-      {isPreviewsOpen && (
-        <div className="preview-modal-overlay" onClick={closePreviews}>
-          <div
-            className="preview-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Bevy app preview slides"
-            onClick={(event) => event.stopPropagation()}
+      <AnimatePresence>
+        {isPreviewsOpen && (
+          <motion.div
+            className="preview-modal-overlay"
+            onClick={closePreviews}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
           >
+            <motion.div
+              className="preview-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Bevy app preview slides"
+              onClick={(event) => event.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, y: 10 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
             <div className="preview-modal-top">
               <p className="preview-modal-kicker">App Store Preview Flow</p>
               <div className="preview-modal-top-right">
@@ -570,9 +597,10 @@ export default function Header() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

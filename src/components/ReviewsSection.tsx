@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { motion } from "motion/react";
 import { useDownload } from "./DownloadContext";
+import { RevealIn } from "./RevealIn";
 
 const appStoreReviews = [
   {
@@ -49,37 +50,78 @@ const appStoreReviews = [
 
 const featuredReviewIndices = [0, 1, 2, 3];
 
+// Each bubble enters from its own corner with a tiny overshoot pop.
+const BUBBLE_OFFSETS: Record<string, { x: number; y: number }> = {
+  "top-left": { x: -40, y: -20 },
+  "top-right": { x: 40, y: -20 },
+  "bottom-left": { x: -40, y: 20 },
+  "bottom-right": { x: 40, y: 20 },
+};
+
+// Stagger per-position so the 4 bubbles fan in sequentially.
+const BUBBLE_DELAYS: Record<string, number> = {
+  "top-left": 0.07,
+  "top-right": 0.15,
+  "bottom-left": 0.23,
+  "bottom-right": 0.31,
+};
+
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+function ReviewBubble({
+  review,
+  position,
+  anchorId,
+}: {
+  review: { author: string; text: string };
+  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  anchorId?: string;
+}) {
+  const offset = BUBBLE_OFFSETS[position];
+  const delay = BUBBLE_DELAYS[position];
+  return (
+    <motion.article
+      id={anchorId}
+      className={`reviews-bubble reviews-bubble--${position}${anchorId ? " reviews-anchor-target" : ""}`}
+      initial={{ opacity: 0, x: offset.x, y: offset.y, scale: 0.88 }}
+      whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{
+        duration: 0.7,
+        ease: EASE_OUT,
+        delay,
+        scale: {
+          type: "spring",
+          stiffness: 240,
+          damping: 18,
+          delay,
+        },
+      }}
+    >
+      <div className="reviews-bubble-card">
+        <p>{review.text}</p>
+      </div>
+      <div className="reviews-bubble-footer" aria-hidden="true">
+        <div className="reviews-bubble-tail-dots">
+          <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--big" />
+          <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--small" />
+        </div>
+        <div className="reviews-bubble-avatars">
+          <span className="reviews-bubble-username">{review.author}</span>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
 export default function ReviewsSection() {
   const { triggerDownload } = useDownload();
-  const featuredReviews = featuredReviewIndices.map((index) => appStoreReviews[index]);
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.22 }
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
+  const featuredReviews = featuredReviewIndices.map((i) => appStoreReviews[i]);
 
   return (
     <section
       id="reviews"
-      ref={sectionRef}
-      className={`reviews-paired relative overflow-hidden${isVisible ? " reviews-paired--visible" : ""}`}
+      className="reviews-paired relative overflow-hidden"
     >
       <span id="reviews-anchor" className="section-anchor-mid" aria-hidden />
       <div className="absolute inset-0 z-0">
@@ -92,79 +134,44 @@ export default function ReviewsSection() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
       </div>
+
       <div className="site-shell reviews-paired-stage">
-        <div className="reviews-paired-pill" aria-label="Bevy social proof">
-          <span>Join 25K+ players around the globe</span>
-        </div>
+        <RevealIn preset="scale" amount={0.35}>
+          <div className="reviews-paired-pill" aria-label="Bevy social proof">
+            <span>Join 25K+ players around the globe</span>
+          </div>
+        </RevealIn>
 
-        <h2 id="reviews-heading" className="reviews-paired-title section-anchor-title">
-          4.7 out of 5 on the App Store, from real players and real game
-          nights.
-        </h2>
+        <RevealIn delay={0.1} amount={0.35}>
+          <h2
+            id="reviews-heading"
+            className="reviews-paired-title section-anchor-title"
+          >
+            4.7 out of 5 on the App Store, from real players and real game
+            nights.
+          </h2>
+        </RevealIn>
 
-        <button className="reviews-paired-cta" onClick={triggerDownload}>
-          Try Bevy
-        </button>
+        <RevealIn delay={0.22} amount={0.35} preset="scale">
+          <motion.button
+            className="reviews-paired-cta"
+            onClick={triggerDownload}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.96, y: 0 }}
+            transition={{ type: "spring", stiffness: 380, damping: 22 }}
+          >
+            Try Bevy
+          </motion.button>
+        </RevealIn>
 
-        <article id="reviews-top" className="reviews-bubble reviews-bubble--top-left reviews-anchor-target">
-          <div className="reviews-bubble-card">
-            <p>{featuredReviews[0].text}</p>
-          </div>
-          <div className="reviews-bubble-footer" aria-hidden="true">
-            <div className="reviews-bubble-tail-dots">
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--big" />
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--small" />
-            </div>
-            <div className="reviews-bubble-avatars">
-              <span className="reviews-bubble-username">{featuredReviews[0].author}</span>
-            </div>
-          </div>
-        </article>
-
-        <article className="reviews-bubble reviews-bubble--top-right">
-          <div className="reviews-bubble-card">
-            <p>{featuredReviews[1].text}</p>
-          </div>
-          <div className="reviews-bubble-footer" aria-hidden="true">
-            <div className="reviews-bubble-tail-dots">
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--big" />
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--small" />
-            </div>
-            <div className="reviews-bubble-avatars">
-              <span className="reviews-bubble-username">{featuredReviews[1].author}</span>
-            </div>
-          </div>
-        </article>
-
-        <article className="reviews-bubble reviews-bubble--bottom-left">
-          <div className="reviews-bubble-card">
-            <p>{featuredReviews[2].text}</p>
-          </div>
-          <div className="reviews-bubble-footer" aria-hidden="true">
-            <div className="reviews-bubble-tail-dots">
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--big" />
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--small" />
-            </div>
-            <div className="reviews-bubble-avatars">
-              <span className="reviews-bubble-username">{featuredReviews[2].author}</span>
-            </div>
-          </div>
-        </article>
-
-        <article className="reviews-bubble reviews-bubble--bottom-right">
-          <div className="reviews-bubble-card">
-            <p>{featuredReviews[3].text}</p>
-          </div>
-          <div className="reviews-bubble-footer" aria-hidden="true">
-            <div className="reviews-bubble-tail-dots">
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--big" />
-              <span className="reviews-bubble-tail-dot reviews-bubble-tail-dot--small" />
-            </div>
-            <div className="reviews-bubble-avatars">
-              <span className="reviews-bubble-username">{featuredReviews[3].author}</span>
-            </div>
-          </div>
-        </article>
+        <ReviewBubble
+          review={featuredReviews[0]}
+          position="top-left"
+          anchorId="reviews-top"
+        />
+        <ReviewBubble review={featuredReviews[1]} position="top-right" />
+        <ReviewBubble review={featuredReviews[2]} position="bottom-left" />
+        <ReviewBubble review={featuredReviews[3]} position="bottom-right" />
       </div>
     </section>
   );

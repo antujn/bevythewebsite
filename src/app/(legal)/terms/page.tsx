@@ -1,4 +1,3 @@
-import LegalLayout from "@/components/LegalLayout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function TermsOfService() {
   return (
-    <LegalLayout title="Terms of Service">
+    <>
       <p><strong>Last updated: 04/04/2026</strong></p>
 
       <h2>1. Introduction</h2>
@@ -84,6 +83,6 @@ export default function TermsOfService() {
 
       <h2>24. Contact Us</h2>
       <p>By email: bevytheapp@gmail.com<br />Operator: Anant Jain<br />Location: London, United Kingdom</p>
-    </LegalLayout>
+    </>
   );
 }

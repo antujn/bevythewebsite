@@ -1,4 +1,3 @@
-import LegalLayout from "@/components/LegalLayout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function LegalDisclaimer() {
   return (
-    <LegalLayout title="Legal Disclaimer">
+    <>
       <p><strong>Last updated: 04/04/2026</strong></p>
       <h3>BEVY WAIVER AND RELEASE OF LIABILITY, ASSUMPTION OF RISK, AND INDEMNITY AGREEMENT</h3>
 
@@ -76,6 +75,6 @@ export default function LegalDisclaimer() {
 
       <h2>14. Contact Us</h2>
       <p>By email: bevytheapp@gmail.com<br />Operator: Anant Jain<br />Location: London, United Kingdom</p>
-    </LegalLayout>
+    </>
   );
 }
