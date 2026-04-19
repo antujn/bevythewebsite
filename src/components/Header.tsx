@@ -20,11 +20,11 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [isPreviewsOpen, setIsPreviewsOpen] = useState(false);
-  const [previewIndex, setPreviewIndex] = useState(0);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [isDownloadingAll, setIsDownloadingAll] = useState(false);
   const storyRefs = useRef<Array<HTMLElement | null>>([]);
+  const previewRailRef = useRef<HTMLDivElement | null>(null);
   const { triggerDownload } = useDownload();
-  const totalPreviews = previewSlides.length;
 
   const downloadPreview = async (index: number) => {
     const slide = previewSlides[index];
@@ -173,21 +173,27 @@ export default function Header() {
     }
   };
 
+  const downloadAllPreviews = async () => {
+    if (downloadingId || isDownloadingAll) return;
+
+    setIsDownloadingAll(true);
+    try {
+      for (let i = 0; i < previewSlides.length; i += 1) {
+        await downloadPreview(i);
+        // Small delay helps browsers register separate downloads.
+        await new Promise((resolve) => setTimeout(resolve, 120));
+      }
+    } finally {
+      setIsDownloadingAll(false);
+    }
+  };
+
   const openPreviews = () => {
-    setPreviewIndex(0);
     setIsPreviewsOpen(true);
   };
 
   const closePreviews = () => {
     setIsPreviewsOpen(false);
-  };
-
-  const goPrevPreview = () => {
-    setPreviewIndex((prev) => (prev - 1 + totalPreviews) % totalPreviews);
-  };
-
-  const goNextPreview = () => {
-    setPreviewIndex((prev) => (prev + 1) % totalPreviews);
   };
 
   const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -216,16 +222,6 @@ export default function Header() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsPreviewsOpen(false);
-        return;
-      }
-
-      if (event.key === "ArrowLeft") {
-        setPreviewIndex((prev) => (prev - 1 + totalPreviews) % totalPreviews);
-        return;
-      }
-
-      if (event.key === "ArrowRight") {
-        setPreviewIndex((prev) => (prev + 1) % totalPreviews);
       }
     };
 
@@ -235,7 +231,16 @@ export default function Header() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isPreviewsOpen, totalPreviews]);
+  }, [isPreviewsOpen]);
+
+  useEffect(() => {
+    if (!isPreviewsOpen) return;
+
+    const rail = previewRailRef.current;
+    if (!rail) return;
+
+    rail.scrollTo({ left: 0, behavior: "auto" });
+  }, [isPreviewsOpen]);
 
   return (
     <>
@@ -309,55 +314,40 @@ export default function Header() {
             aria-label="Bevy app preview slides"
             onClick={(event) => event.stopPropagation()}
           >
-            <button
-              type="button"
-              className="preview-modal-close"
-              aria-label="Close previews"
-              onClick={closePreviews}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 6L18 18M18 6L6 18" />
-              </svg>
-            </button>
-
             <div className="preview-modal-top">
               <p className="preview-modal-kicker">App Store Preview Flow</p>
               <div className="preview-modal-top-right">
                 <button
                   type="button"
                   className="preview-download-btn"
-                  onClick={() => downloadPreview(previewIndex)}
+                  onClick={downloadAllPreviews}
                   disabled={
-                    downloadingId === previewSlides[previewIndex]?.id
+                    isDownloadingAll || downloadingId !== null
                   }
-                  aria-label={`Download preview ${previewIndex + 1} as image`}
+                  aria-label="Download all previews as images"
                 >
-                  {downloadingId === previewSlides[previewIndex]?.id
-                    ? "Preparing..."
-                    : "Download"}
+                  {isDownloadingAll ? "Preparing..." : "Download All"}
                 </button>
-                <p className="preview-modal-counter">
-                  {previewIndex + 1} / {totalPreviews}
-                </p>
+                <button
+                  type="button"
+                  className="preview-modal-close"
+                  aria-label="Close previews"
+                  onClick={closePreviews}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 6L18 18M18 6L6 18" />
+                  </svg>
+                </button>
               </div>
             </div>
 
             <div className="preview-slider-wrap">
-              <button
-                type="button"
-                className="preview-nav preview-nav--prev"
-                aria-label="Previous preview"
-                onClick={goPrevPreview}
+              <div
+                className="preview-slider-window"
+                ref={previewRailRef}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d="M15 6L9 12L15 18" />
-                </svg>
-              </button>
-
-              <div className="preview-slider-window">
                 <div
                   className="preview-slider-track"
-                  style={{ transform: `translateX(-${previewIndex * 100}%)` }}
                 >
                   {previewSlides.map((slide, index) => (
                     <figure className="preview-slide" key={slide.id}>
@@ -579,29 +569,6 @@ export default function Header() {
                   ))}
                 </div>
               </div>
-
-              <button
-                type="button"
-                className="preview-nav preview-nav--next"
-                aria-label="Next preview"
-                onClick={goNextPreview}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d="M9 6L15 12L9 18" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="preview-dots" aria-label="Preview slide picker">
-              {previewSlides.map((slide, index) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  className={`preview-dot ${index === previewIndex ? "is-active" : ""}`}
-                  aria-label={`Show preview ${index + 1}`}
-                  onClick={() => setPreviewIndex(index)}
-                />
-              ))}
             </div>
           </div>
         </div>
