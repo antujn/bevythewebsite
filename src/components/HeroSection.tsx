@@ -62,7 +62,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative flex min-h-[100dvh] items-center overflow-hidden">
+    <section id="hero" className="relative flex min-h-[100dvh] items-center overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <Image
           src="/images/illustrations/backgrounds/illustration7.jpg"
@@ -89,7 +89,7 @@ export default function HeroSection() {
           >
             Truth or Dare.
             <br />
-            <span className="text-white/50">Reimagined.</span>
+            <span className="text-white/50 font-bold italic">Reimagined.</span>
           </h1>
 
           <p

@@ -17,6 +17,7 @@ const HIDE_SUPPORTING_PHONE_IDS = new Set([
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [isHeroInView, setIsHeroInView] = useState(true);
   const [isPreviewsOpen, setIsPreviewsOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -195,6 +196,23 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    const heroSection = document.getElementById("hero");
+    if (!heroSection) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0.24,
+      },
+    );
+
+    observer.observe(heroSection);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!isPreviewsOpen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -251,13 +269,30 @@ export default function Header() {
             </span>
           </Link>
 
-          <span
-            className={`hidden text-[11px] font-medium uppercase tracking-[0.24em] text-white/40 lg:block transition-opacity duration-500 ${
-              scrolled ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            Truth or Dare, Reimagined
-          </span>
+          {isHeroInView ? (
+            <nav className="hidden items-center gap-4 lg:flex">
+              <a href="#s1-anchor" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+                Experience
+              </a>
+              <a href="#bundles-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+                Collection
+              </a>
+              <a href="#gameplay-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+                Gameplay
+              </a>
+              <a href="#reviews-top" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+                Reviews
+              </a>
+            </nav>
+          ) : (
+            <span
+              className={`hidden text-[11px] font-medium uppercase tracking-[0.24em] text-white/40 lg:block transition-opacity duration-500 ${
+                scrolled ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              Truth or Dare, Reimagined
+            </span>
+          )}
 
           <div className="header-cta-group justify-self-end">
             <button
@@ -294,7 +329,9 @@ export default function Header() {
               aria-label="Close previews"
               onClick={closePreviews}
             >
-              &times;
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 6L18 18M18 6L6 18" />
+              </svg>
             </button>
 
             <div className="preview-modal-top">
@@ -326,7 +363,9 @@ export default function Header() {
                 aria-label="Previous preview"
                 onClick={goPrevPreview}
               >
-                &#8249;
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M15 6L9 12L15 18" />
+                </svg>
               </button>
 
               <div className="preview-slider-window">
@@ -351,7 +390,83 @@ export default function Header() {
                         />
 
                         <div className="preview-story-content">
-                          <h3 className="preview-story-title">{slide.title}</h3>
+                          <h3
+                            className={`preview-story-title ${
+                              slide.id === "hero" ||
+                              slide.id === "prompts" ||
+                              slide.id === "party" ||
+                              slide.id === "modes" ||
+                              slide.id === "ai" ||
+                              slide.id === "achievements" ||
+                              slide.id === "widget" ||
+                              slide.id === "custom" ||
+                              slide.id === "nsfw"
+                                ? "preview-story-title--hero"
+                                : ""
+                            }`}
+                          >
+                            {slide.id === "hero" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Start the</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">chemistry.</span>
+                              </>
+                            ) : slide.id === "prompts" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Cards that command</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">attention.</span>
+                              </>
+                            ) : slide.id === "party" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Turn up</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">the tension.</span>
+                              </>
+                            ) : slide.id === "modes" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Run the room</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">your way.</span>
+                              </>
+                            ) : slide.id === "ai" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">
+                                  Keep <span className="whitespace-nowrap">first dates</span>
+                                </span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">flowing.</span>
+                              </>
+                            ) : slide.id === "achievements" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Write cards that fit</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">your story.</span>
+                              </>
+                            ) : slide.id === "widget" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Never run out of</span>
+                                <span className="block font-sans font-extrabold">
+                                  <span className="font-display font-bold italic text-[#e9d8a6]">momentum</span>{" "}
+                                  <span className="whitespace-nowrap">with BevyAI.</span>
+                                </span>
+                              </>
+                            ) : slide.id === "custom" ? (
+                              <>
+                                <span className="block font-sans font-extrabold whitespace-nowrap">Fresh cards</span>
+                                <span className="block font-sans font-extrabold whitespace-nowrap">right to your</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6] whitespace-nowrap">
+                                  home screen.
+                                </span>
+                              </>
+                            ) : slide.id === "nsfw" ? (
+                              <>
+                                <span className="block font-sans font-extrabold">Pre-game energy in</span>
+                                <span className="block font-display font-bold italic text-[#e9d8a6]">one tap.</span>
+                              </>
+                            ) : slide.id === "dating" ? (
+                              <>
+                                <span className="block">A favorite at <span className="whitespace-nowrap">house parties</span></span>
+                                <span className="block">and <span className="whitespace-nowrap">pre-drinks.</span></span>
+                              </>
+                            ) : (
+                              slide.title
+                            )}
+                          </h3>
 
                           <div
                             className={`preview-story-stage ${
@@ -379,12 +494,12 @@ export default function Header() {
                                     height={36}
                                     className="preview-brand-logo"
                                   />
-                                  <p className="preview-brand-name">Bevy</p>
+                                  <p className="preview-brand-name font-display font-extrabold">Bevy</p>
                                 </div>
                               </div>
                             ) : slide.stageMode === "reviews" ? (
                               <div className="preview-reviews-stage">
-                                {slide.reviewItems?.slice(0, 2).map((review) => (
+                                {slide.reviewItems?.slice(0, 3).map((review) => (
                                   <article
                                     key={`${slide.id}-${review.author}`}
                                     className="preview-review-card"
@@ -393,7 +508,6 @@ export default function Header() {
                                       ★★★★★
                                     </p>
                                     <p className="preview-review-copy">“{review.text}”</p>
-                                    <p className="preview-review-author">- {review.author}</p>
                                   </article>
                                 ))}
                               </div>
@@ -486,7 +600,9 @@ export default function Header() {
                 aria-label="Next preview"
                 onClick={goNextPreview}
               >
-                &#8250;
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M9 6L15 12L9 18" />
+                </svg>
               </button>
             </div>
 

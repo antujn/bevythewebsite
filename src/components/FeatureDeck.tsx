@@ -113,6 +113,7 @@ export default function FeatureDeck() {
 
   return (
      <section id="s1" ref={sectionRef} className="feature-deck-section relative">
+      <span id="s1-anchor" className="section-anchor-mid section-anchor-mid--feature" aria-hidden />
       <div className="absolute inset-0 -z-10">
         <Image
           src="/images/illustrations/backgrounds/illustration8.jpg"

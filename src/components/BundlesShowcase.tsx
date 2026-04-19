@@ -134,7 +134,8 @@ export default function BundlesShowcase() {
   };
 
   return (
-    <section className="section-space relative overflow-hidden" style={{ paddingBottom: 40 }}>
+    <section id="bundles" className="section-space relative overflow-hidden" style={{ paddingBottom: 40 }}>
+      <span id="bundles-anchor" className="section-anchor-mid" aria-hidden />
       <div className="absolute inset-0 -z-10">
         <Image
           src="/images/illustrations/backgrounds/illustration7.jpg"
@@ -155,7 +156,7 @@ export default function BundlesShowcase() {
           }}
         >
           <p className="kicker">The Collection</p>
-          <h2 className="section-title">
+          <h2 id="bundles-heading" className="section-title section-anchor-title">
             A different energy for every night.
           </h2>
           <div className="gold-line mt-4" style={{ marginInline: "auto" }} />

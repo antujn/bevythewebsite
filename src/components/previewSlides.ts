@@ -159,7 +159,7 @@ export const previewSlides: PreviewSlide[] = [
     imageSrc: "/images/previews/screenshots/iphone/widget.png",
     imageObjectPosition: "50% 12%",
     eyebrow: "Outside The App",
-    title: "A fresh card delivered to your home screen every day.",
+    title: "Fresh cards, right to your home screen.",
     subtitle: "Daily prompts keep Bevy present between sessions.",
     focus: {
       label: "Widget surface",
@@ -194,16 +194,20 @@ export const previewSlides: PreviewSlide[] = [
     imageSrc: "/images/previews/screenshots/iphone/ai-chat.png",
     stageMode: "reviews",
     eyebrow: "Player Love",
-    title: "Loved at house parties and pre-drinks.",
+    title: "A favorite at house parties and pre-drinks.",
     subtitle: "Real App Store feedback from Bevy players.",
     reviewItems: [
       {
-        author: "Cassidy C.",
+        author: "Remark Bil",
         text: "So fun! Best drinking game we have ever found and we’ve tried quite a few!",
       },
       {
-        author: "Wendy S.",
+        author: "iMonkey.",
         text: "Used this with some friends I had over last Friday before we went out and everyone loved it.",
+      },
+      {
+        author: "jp2065",
+        text: "Hilarious app. My friends and I used it for a gals night and had so much fun.",
       },
     ],
     focus: {

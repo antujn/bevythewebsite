@@ -77,9 +77,11 @@ export default function ReviewsSection() {
 
   return (
     <section
+      id="reviews"
       ref={sectionRef}
       className={`reviews-paired relative overflow-hidden${isVisible ? " reviews-paired--visible" : ""}`}
     >
+      <span id="reviews-anchor" className="section-anchor-mid" aria-hidden />
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/illustrations/backgrounds/illustration7.jpg"
@@ -95,7 +97,7 @@ export default function ReviewsSection() {
           <span>Join 10,000+ players</span>
         </div>
 
-        <h2 className="reviews-paired-title">
+        <h2 id="reviews-heading" className="reviews-paired-title section-anchor-title">
           4.7 out of 5 on the App Store, from real players and real game
           nights.
         </h2>
@@ -104,7 +106,7 @@ export default function ReviewsSection() {
           Try Bevy
         </button>
 
-        <article className="reviews-bubble reviews-bubble--top-left">
+        <article id="reviews-top" className="reviews-bubble reviews-bubble--top-left reviews-anchor-target">
           <div className="reviews-bubble-card">
             <p>{featuredReviews[0].text}</p>
           </div>
