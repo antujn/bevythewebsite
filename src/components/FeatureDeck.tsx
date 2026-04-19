@@ -114,7 +114,8 @@ export default function FeatureDeck() {
   return (
      <section id="s1" ref={sectionRef} className="feature-deck-section relative">
       <span id="s1-anchor" className="section-anchor-mid section-anchor-mid--feature" aria-hidden />
-      <div className="fd-sticky-container">
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
+      <div className="fd-sticky-container relative z-10">
         <div style={{ maxWidth: "var(--shell-max)", width: "100%", marginInline: "auto" }}>
           <article style={{ maxWidth: 680, marginInline: "auto", textAlign: "center", paddingBottom: 32 }}>
             <p className="kicker">The Experience</p>

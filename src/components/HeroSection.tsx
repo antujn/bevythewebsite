@@ -63,9 +63,19 @@ export default function HeroSection() {
 
   return (
     <section id="hero" className="relative flex min-h-[100dvh] items-center overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/65 to-black/78" />
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/illustrations/illustration7.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="editorial-img opacity-50"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
+      </div>
 
-      <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+      <div className="site-shell relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         {/* Left — Hero text */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           <div className="hero-proof fade-in">

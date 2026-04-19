@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useDownload } from "./DownloadContext";
 
 const appStoreReviews = [
@@ -81,7 +82,16 @@ export default function ReviewsSection() {
       className={`reviews-paired relative overflow-hidden${isVisible ? " reviews-paired--visible" : ""}`}
     >
       <span id="reviews-anchor" className="section-anchor-mid" aria-hidden />
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/70 via-black/65 to-black/78" />
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/illustrations/illustration7.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="editorial-img opacity-50"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
+      </div>
       <div className="site-shell reviews-paired-stage">
         <div className="reviews-paired-pill" aria-label="Bevy social proof">
           <span>Join 25K+ players around the globe</span>

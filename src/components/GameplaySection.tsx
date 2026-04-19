@@ -46,9 +46,18 @@ export default function GameplaySection() {
   return (
     <section id="gameplay" className="section-space relative overflow-hidden">
       <span id="gameplay-anchor" className="section-anchor-mid" aria-hidden />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/65 to-black/78" />
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/illustrations/illustration8.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="editorial-img opacity-50"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
+      </div>
 
-      <div className="site-shell">
+      <div className="site-shell relative z-10">
         <article style={{ maxWidth: 720, marginInline: "auto", textAlign: "center" }}>
           <p className="kicker">The Gameplay</p>
           <h2 id="gameplay-heading" className="section-title section-anchor-title">An interface designed to feel intuitive and effortless.</h2>
