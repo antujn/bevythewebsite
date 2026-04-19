@@ -36,16 +36,29 @@ html {
 
 body {
   min-height: 100dvh;
-  background:
-    radial-gradient(120% 90% at 10% -10%, rgba(164, 129, 82, 0.16), transparent 56%),
-    radial-gradient(120% 75% at 100% 0%, rgba(255, 255, 255, 0.06), transparent 62%),
-    linear-gradient(180deg, #0b0b0b 0%, #060606 46%, #050505 100%);
+  background: #050505;
   color: var(--text-main);
   font-family: var(--font-plus-jakarta), system-ui, sans-serif;
   overflow-x: hidden;
   line-height: 1.62;
   font-weight: 300;
   letter-spacing: 0.01em;
+  position: relative;
+  isolation: isolate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.72), rgba(5, 5, 5, 0.72)),
+    url("/images/backgrounds/background2.png") center / cover no-repeat;
 }
 
 a {
@@ -1028,10 +1041,9 @@ a {
   margin-top: clamp(2rem, 4.5vw, 3.7rem);
   padding: clamp(4.6rem, 7.2vw, 6.1rem) 0 clamp(4.1rem, 6.5vw, 5.4rem);
   background:
-    radial-gradient(120% 85% at 50% -8%, rgba(198, 166, 120, 0.3), transparent 60%),
-    radial-gradient(90% 74% at 100% 100%, rgba(97, 0, 0, 0.22), transparent 68%),
-    radial-gradient(85% 70% at 0% 100%, rgba(0, 43, 0, 0.16), transparent 68%),
-    linear-gradient(180deg, #121016 0%, #0b0a0e 100%);
+    radial-gradient(120% 85% at 50% -8%, rgba(198, 166, 120, 0.08), transparent 60%),
+    radial-gradient(90% 74% at 100% 100%, rgba(97, 0, 0, 0.06), transparent 68%),
+    radial-gradient(85% 70% at 0% 100%, rgba(0, 43, 0, 0.04), transparent 68%);
   border-top-left-radius: 46% 10%;
   border-top-right-radius: 46% 10%;
   overflow: hidden;
@@ -1043,7 +1055,7 @@ a {
   inset: 0;
   background: radial-gradient(
     80% 60% at 50% 56%,
-    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03),
     transparent 74%
   );
   pointer-events: none;

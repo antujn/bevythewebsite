@@ -63,17 +63,7 @@ export default function HeroSection() {
 
   return (
     <section id="hero" className="relative flex min-h-[100dvh] items-center overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/images/illustrations/backgrounds/illustration7.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="editorial-img opacity-26"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/58 to-black/74" />
-      </div>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/65 to-black/78" />
 
       <div className="site-shell relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         {/* Left — Hero text */}

@@ -8,43 +8,43 @@ const features = [
     tab: "The Feeling",
     title: "Go further, feel more.",
     body: "Every card is emotionally considered, socially aware, and designed to land. Questions that bring out different feelings in you and in each other. Dares that get you moving, laughing, and fully in the moment. Moments that bond you closer to the people around you.",
-    imageSrc: "/images/illustrations/features/illustration1.jpg",
-    bg: "rgba(164, 129, 82, 0.08)",
+    imageSrc: "/images/illustrations/illustration1.jpg",
+    bg: "#1f1811",
   },
   {
     tab: "The Growth",
     title: "Conversations that stay with you.",
     body: "The more you play, the more connected you become, with each other and with yourself. You notice new parts of who you are, and new sides of the people around you. You learn how to show up with different energies, in ways that feel socially aware and emotionally true. Bevy turns those moments into growth you can feel.",
-    imageSrc: "/images/illustrations/features/illustration2.jpg",
-    bg: "rgba(180, 120, 100, 0.08)",
+    imageSrc: "/images/illustrations/illustration2.jpg",
+    bg: "#221613",
   },
   {
     tab: "Be Extraordinary",
     title: "Elevate the ordinary.",
     body: "Made for the moments in between. Bevy turns ordinary moments into meaningful ones, then meaningful ones into unforgettable nights. No awkward silences. No recycled small talk. Just the right card at the exact right moment.",
-    imageSrc: "/images/illustrations/features/illustration3.jpg",
-    bg: "rgba(140, 80, 80, 0.08)",
+    imageSrc: "/images/illustrations/illustration3.jpg",
+    bg: "#1c1313",
   },
   {
     tab: "Powered by AI",
     title: "Thoughtfully intelligent.",
     body: "BevyAI adapts the game to your preferences, energy, and comfort level so every session feels right for your group. And when there is no group, it steps in as your play partner for solo reflection and discovery.",
-    imageSrc: "/images/illustrations/features/illustration4.jpg",
-    bg: "rgba(100, 130, 160, 0.08)",
+    imageSrc: "/images/illustrations/illustration4.jpg",
+    bg: "#131a21",
   },
   {
     tab: "Safe & Inclusive",
     title: "Play without hesitation.",
     body: "Every card is thoughtfully crafted to be inclusive, respectful, and easy to say yes to. No cringe. No pressure. No moments that leave anyone behind. Just honest, socially intelligent prompts designed for real people in real rooms.",
-    imageSrc: "/images/illustrations/features/illustration5.jpg",
-    bg: "rgba(140, 160, 120, 0.08)",
+    imageSrc: "/images/illustrations/illustration5.jpg",
+    bg: "#182014",
   },
   {
     tab: "Courage Catalyst",
     title: "Permission to make the first move.",
     body: "Bevy helps the room shift. It gives people permission to ask the deeper question, take the bolder dare, and open up without overthinking it. When a moment feels risky, the app carries the weight, so connection feels easier and more natural.",
-    imageSrc: "/images/illustrations/features/illustration6.jpg",
-    bg: "rgba(160, 140, 100, 0.08)",
+    imageSrc: "/images/illustrations/illustration6.jpg",
+    bg: "#1f1a12",
   },
 ];
 
@@ -114,16 +114,6 @@ export default function FeatureDeck() {
   return (
      <section id="s1" ref={sectionRef} className="feature-deck-section relative">
       <span id="s1-anchor" className="section-anchor-mid section-anchor-mid--feature" aria-hidden />
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/images/illustrations/backgrounds/illustration8.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="editorial-img opacity-18"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/58 via-black/52 to-black/68" />
-      </div>
       <div className="fd-sticky-container">
         <div style={{ maxWidth: "var(--shell-max)", width: "100%", marginInline: "auto" }}>
           <article style={{ maxWidth: 680, marginInline: "auto", textAlign: "center", paddingBottom: 32 }}>

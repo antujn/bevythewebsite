@@ -136,16 +136,7 @@ export default function BundlesShowcase() {
   return (
     <section id="bundles" className="section-space relative overflow-hidden" style={{ paddingBottom: 40 }}>
       <span id="bundles-anchor" className="section-anchor-mid" aria-hidden />
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/images/illustrations/backgrounds/illustration7.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="editorial-img opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/62 via-black/52 to-black/70" />
-      </div>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/65 to-black/78" />
       <div className="site-shell">
         <article
           style={{

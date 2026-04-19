@@ -5,7 +5,7 @@ export default function TaglineSection() {
     <section className="relative flex min-h-[60vh] items-center overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/illustrations/illustration5.png"
+          src="/images/illustrations/illustration5.jpg"
           alt=""
           fill
           className="editorial-img"

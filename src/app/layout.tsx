@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/illustrations/illustration3.png",
+        url: "/images/illustrations/illustration3.jpg",
         width: 1200,
         height: 630,
         alt: "Bevy — Truth or Dare. Reimagined.",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "Bevy — Truth or Dare. Reimagined.",
     description:
       "The modern, meaningful alternative to traditional truth or dare.",
-    images: ["/images/illustrations/illustration3.png"],
+    images: ["/images/illustrations/illustration3.jpg"],
   },
   icons: {
     icon: "/favicon.png",
