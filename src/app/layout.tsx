@@ -58,6 +58,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${playfair.variable}`}>
       <body>
+        {/* Skip-link for keyboard users. Invisible until focused; lets
+            them jump past the header straight into the page content. */}
+        <a href="#main" className="skip-link">
+          Skip to main content
+        </a>
         <MotionProvider>
           <DownloadProvider>{children}</DownloadProvider>
         </MotionProvider>

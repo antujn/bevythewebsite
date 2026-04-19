@@ -39,6 +39,51 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Accessibility: keyboard focus ──────────────
+   Consistent gold-tinted outline for every keyboard-focused
+   interactive element. `:focus-visible` only fires for real keyboard
+   navigation, not mouse clicks, so sighted mouse users never see the
+   ring. Specific components (DownloadButton, dial items) override
+   this with their own styles where needed. */
+:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid rgba(198, 166, 120, 0.7);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Don't draw a focus ring on the <main> landmark itself — it's focused
+   programmatically by the skip-link but shouldn't be visually boxed. */
+main:focus,
+main:focus-visible {
+  outline: none;
+}
+
+/* Skip-link: hidden off-screen until it receives focus. When a
+   keyboard user tabs into the page, it slides down and becomes the
+   first focusable element. */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 200;
+  padding: 12px 20px;
+  background: #f4eee5;
+  color: #17120d;
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: top 220ms ease, box-shadow 220ms ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
 /* Respect users who have reduced motion enabled at the OS level.
    Framer-motion is handled globally via <MotionConfig reducedMotion="user">
    in MotionProvider.tsx; this block covers the CSS-only animations:

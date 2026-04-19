@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Header />
 
-      <main>
+      <main id="main" tabIndex={-1}>
         <HeroSection />
 
         <FeatureDeck />

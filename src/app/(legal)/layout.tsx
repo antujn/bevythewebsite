@@ -103,7 +103,11 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
       </motion.nav>
 
       <div className="relative z-10">
-        <main style={{ paddingTop: 132, paddingBottom: 100 }}>
+        <main
+          id="main"
+          tabIndex={-1}
+          style={{ paddingTop: 132, paddingBottom: 100 }}
+        >
           <div className="site-shell">
             <article className="mx-auto max-w-[720px]">
               <header style={{ marginBottom: 48 }}>
