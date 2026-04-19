@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-export type PreviewFocus = {
+type PreviewFocus = {
   label: string;
   detail: string;
   align?: "left" | "center" | "right";
@@ -8,7 +8,7 @@ export type PreviewFocus = {
   objectPosition?: CSSProperties["objectPosition"];
 };
 
-export type PreviewSlide = {
+type PreviewSlide = {
   id: string;
   theme: "crimson" | "amber" | "blue" | "gold" | "ember" | "night";
   backgroundSrc: string;

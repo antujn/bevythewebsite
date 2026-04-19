@@ -306,7 +306,7 @@ function MockDial({
   return (
     <div className="dial dial--mock">
       <motion.div
-        className="dial-track dial-track--mock"
+        className="dial-track"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.2}
@@ -430,9 +430,9 @@ function TextDial({
   };
 
   return (
-    <div className="dial dial--text">
+    <div className="dial">
       <motion.div
-        className="dial-track dial-track--text"
+        className="dial-track"
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.2}
