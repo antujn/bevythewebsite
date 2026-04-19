@@ -38,6 +38,41 @@ function getSiteUrl(): URL {
 
 const siteUrl = getSiteUrl();
 
+// https://schema.org/MobileApplication — helps Google surface the app
+// with rating + price in rich search results.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  name: "Bevy",
+  alternateName: "Bevy — Truth or Dare. Reimagined.",
+  description:
+    "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ carefully crafted cards. Designed to deepen human connection.",
+  applicationCategory: "GameApplication",
+  operatingSystem: "iOS",
+  url: siteUrl.toString(),
+  image: new URL("/opengraph-image", siteUrl).toString(),
+  downloadUrl:
+    "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
+  installUrl:
+    "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
+  author: {
+    "@type": "Person",
+    name: "Anant Jain",
+  },
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.7",
+    bestRating: "5",
+    ratingCount: "25000",
+  },
+};
+
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: "Bevy — Truth or Dare. Reimagined.",
@@ -73,6 +108,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${playfair.variable}`}>
       <body>
+        {/* JSON-LD structured data. Rendered inline so crawlers see it in
+            the initial HTML without waiting for JS. Using
+            dangerouslySetInnerHTML avoids React escaping the quotes
+            inside the stringified JSON. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {/* Skip-link for keyboard users. Invisible until focused; lets
             them jump past the header straight into the page content. */}
         <a href="#main" className="skip-link">
