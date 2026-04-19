@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 
 const gameplaySlides = [
   {
@@ -9,7 +10,7 @@ const gameplaySlides = [
     title: "Fast turn picking for real groups.",
     body: "Place fingers on screen and let Bevy select who goes next. Perfect for lively rooms where you want momentum, suspense, and zero setup friction.",
     points: ["Quick start flow", "Supports team energy", "Designed for in-person play"],
-    frontVideo: "/videos/finger-mode-early-dating.mov",
+    frontVideo: "/videos/finger-mode-significant-other.MP4",
   },
   {
     label: "Alias Game",
@@ -39,9 +40,53 @@ const gameModeScreen = "/videos/game-mode-screen.mov";
 export default function GameplaySection() {
   const [active, setActive] = useState(0);
 
+  // One ref per slide video so we can play/pause when active changes
+  // without remounting the element (which is what causes the flicker).
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+
   const handleFrontVideoEnd = useCallback(() => {
     setActive((prev) => (prev + 1) % gameplaySlides.length);
   }, []);
+
+  // Drive play/pause from `active`. Only the active video plays; others pause.
+  // Guard currentTime/play against pre-metadata races: if the video isn't
+  // ready yet, queue the play for when it becomes ready. This prevents the
+  // "nothing shows" state where play() silently fails on a fresh <video>.
+  useEffect(() => {
+    const tryPlay = (el: HTMLVideoElement) => {
+      // Reset only if metadata is loaded (avoids InvalidStateError).
+      if (el.readyState >= 1) {
+        try {
+          el.currentTime = 0;
+        } catch {
+          /* ignore */
+        }
+      }
+      const p = el.play();
+      if (p && typeof p.catch === "function") {
+        p.catch(() => {
+          // If play rejects (e.g. video not ready), retry once metadata is in.
+          const onReady = () => {
+            el.removeEventListener("loadedmetadata", onReady);
+            el.removeEventListener("canplay", onReady);
+            el.play().catch(() => {});
+          };
+          el.addEventListener("loadedmetadata", onReady, { once: true });
+          el.addEventListener("canplay", onReady, { once: true });
+        });
+      }
+    };
+
+    gameplaySlides.forEach((_, i) => {
+      const el = videoRefs.current[i];
+      if (!el) return;
+      if (i === active) {
+        tryPlay(el);
+      } else {
+        el.pause();
+      }
+    });
+  }, [active]);
 
   return (
     <section id="gameplay" className="section-space relative overflow-hidden">
@@ -60,7 +105,9 @@ export default function GameplaySection() {
       <div className="site-shell relative z-10">
         <article style={{ maxWidth: 720, marginInline: "auto", textAlign: "center" }}>
           <p className="kicker">The Gameplay</p>
-          <h2 id="gameplay-heading" className="section-title section-anchor-title">An interface designed to feel intuitive and effortless.</h2>
+          <h2 id="gameplay-heading" className="section-title section-anchor-title">
+            An interface designed to feel intuitive and effortless.
+          </h2>
           <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
         </article>
 
@@ -78,32 +125,72 @@ export default function GameplaySection() {
               ))}
             </div>
 
-            <h3 className="gameplay-title">{gameplaySlides[active].title}</h3>
-            <p className="gameplay-body">{gameplaySlides[active].body}</p>
-
-            <div className="gameplay-points">
-              {gameplaySlides[active].points.map((point) => (
-                <span key={point} className="gameplay-point">
-                  {point}
-                </span>
-              ))}
+            {/* Text copy: crossfade + slight vertical slide when active changes */}
+            <div className="gameplay-copy-stage">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={gameplaySlides[active].label}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <h3 className="gameplay-title">{gameplaySlides[active].title}</h3>
+                  <p className="gameplay-body">{gameplaySlides[active].body}</p>
+                  <div className="gameplay-points">
+                    {gameplaySlides[active].points.map((point) => (
+                      <span key={point} className="gameplay-point">
+                        {point}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
 
           <div className="gameplay-mocks">
             <div className="gameplay-mock-front">
               <div className="phone-mock">
+                {/*
+                  All slide videos are mounted simultaneously. Only the
+                  active one is visible (opacity 1) and playing. Others
+                  are kept loaded + paused, so switching is a pure
+                  GPU-composited opacity crossfade — no unmount, no
+                  network re-fetch, no black flash.
+                */}
                 <div className="phone-mock__screen">
-                  <video
-                    key={gameplaySlides[active].frontVideo}
-                    src={gameplaySlides[active].frontVideo}
-                    autoPlay
-                    muted
-                    playsInline
-                    preload="auto"
-                    onEnded={handleFrontVideoEnd}
-                    className="h-full w-full object-contain"
-                  />
+                  {gameplaySlides.map((slide, i) => (
+                    <motion.video
+                      key={slide.frontVideo}
+                      ref={(el) => {
+                        videoRefs.current[i] = el;
+                      }}
+                      src={slide.frontVideo}
+                      // autoPlay only on the initially-active video so its
+                      // first frame paints ASAP without waiting for an effect.
+                      autoPlay={i === 0}
+                      muted
+                      playsInline
+                      preload="auto"
+                      onEnded={i === active ? handleFrontVideoEnd : undefined}
+                      className="gameplay-video"
+                      initial={false}
+                      animate={{
+                        opacity: i === active ? 1 : 0,
+                        scale: i === active ? 1 : 1.02,
+                      }}
+                      transition={{
+                        opacity: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                        scale: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                      }}
+                      style={{
+                        // Keep inactive videos non-interactive and below the active one
+                        pointerEvents: i === active ? "auto" : "none",
+                        zIndex: i === active ? 2 : 1,
+                      }}
+                    />
+                  ))}
                 </div>
                 <Image
                   src="/images/mockups/iphone-17-pro-mockup.png"

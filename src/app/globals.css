@@ -137,7 +137,10 @@ a {
 
 .feature-deck-section {
   position: relative;
-  height: 600vh;
+  /* (N - 1) fly-off slots × ~100vh each. N = 6 → 500vh.
+     The last card lands on top at progress = 1 and the next section
+     begins; there is no extra scroll required to leave it. */
+  height: 500vh;
   padding-top: 84px;
 }
 
@@ -202,39 +205,40 @@ a {
   padding-bottom: 24px;
 }
 
+/* New: deck container reserves space for the absolutely-stacked cards */
+.fd-stack--deck {
+  min-height: 420px;
+  /* Perspective could be added if we want 3D feel; left 2D to match paired.com */
+}
+
 .fd-card {
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
-  transition: background 500ms ease;
 }
 
-.fd-card--ghost {
+/* Each stacked card is absolutely positioned so they all overlap in the deck */
+.fd-card--stacked {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  border-color: rgba(255, 255, 255, 0.05);
-  transition: transform 500ms ease, background 500ms ease, opacity 500ms ease;
+  /* Framer-motion writes transform on this element (y/rotate/opacity),
+     so do NOT put CSS transitions on transform here. */
+  will-change: transform, opacity;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
-.fd-card--ghost-1 {
-  z-index: 1;
-  transform: translate(-16px, -14px) rotate(-2.2deg) scale(1.012);
-  opacity: 0.72;
-}
-
-.fd-card--ghost-2 {
-  z-index: 0;
-  transform: translate(18px, 16px) rotate(2.4deg) scale(1.01);
-  opacity: 0.58;
-}
-
-.fd-card--base {
-  position: relative;
-  z-index: 2;
+/* Inner wrapper owns the "depth" transform (scale + y offset for cards
+   sitting behind the current one) so it doesn't conflict with the outer
+   fly-off transform. Also owns the 2-column grid layout. */
+.fd-card-depth {
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 420px;
+  transform: translateY(var(--fd-depth-y, 0px)) scale(var(--fd-depth-scale, 1));
+  transform-origin: 50% 0%;
+  opacity: var(--fd-depth-opacity, 1);
+  transition: none;
 }
 
 @media (max-width: 768px) {
@@ -242,13 +246,12 @@ a {
     padding-bottom: 0;
   }
 
-  .fd-card--ghost {
-    display: none;
+  .fd-stack--deck {
+    min-height: 520px;
   }
 
-  .fd-card--base {
+  .fd-card-depth {
     grid-template-columns: 1fr;
-    min-height: auto;
   }
 }
 
@@ -1030,6 +1033,26 @@ a {
   .gameplay-mock-back {
     transform: translateX(34px) translateY(-12px) rotate(4deg) scale(0.94);
   }
+}
+
+/* Gameplay / hero crossfading videos: each slide video is absolutely
+   positioned within `.phone-mock__screen` (which is already a positioned
+   ancestor with overflow: hidden), so they stack in the same slot and
+   can crossfade via motion opacity animations. */
+.gameplay-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+/* Copy column: reserve space during text crossfade so surrounding layout
+   doesn't jump between slides with different paragraph lengths. */
+.gameplay-copy-stage {
+  position: relative;
 }
 
 /* ── Reviews ────────────────────────────────── */

@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  type MotionValue,
+} from "motion/react";
 
 const features = [
   {
@@ -48,83 +55,211 @@ const features = [
   },
 ];
 
+const N = features.length;
+// Number of fly-off transitions = N - 1. The last card lands on top and stays,
+// so scroll progress is divided into (N - 1) equal fly-off slots.
+const FLY_SLOTS = N - 1;
+
+// ── Per-card motion-value derivation ─────────────────────────────
+// Cards 0..N-2 each own a fly-off slot of scroll progress
+// [i/FLY_SLOTS, (i+1)/FLY_SLOTS]. Within that slot, the card translates
+// up + rotates + fades out. Before its slot, the card sits in the deck
+// with a depth offset. The LAST card (index N-1) never flies off — it
+// only eases forward from its depth position as the previous card leaves.
+function useCardTransforms(progress: MotionValue<number>, i: number) {
+  const isLast = i === N - 1;
+  const slotStart = i / FLY_SLOTS;
+  const slotEnd = (i + 1) / FLY_SLOTS;
+
+  // translateY: while in slot, go from 0 → -120vh.
+  // Last card: pinned at 0 for the entire scroll range.
+  const y = useTransform(
+    progress,
+    isLast ? [0, 1] : [slotStart, slotEnd],
+    isLast ? ["0vh", "0vh"] : ["0vh", "-120vh"]
+  );
+
+  // rotate: small tilt as it flies off (alternate direction for variety).
+  // Last card: no rotation ever.
+  const flyRotate = i % 2 === 0 ? -6 : 6;
+  const rotate = useTransform(
+    progress,
+    isLast ? [0, 1] : [slotStart, slotEnd],
+    isLast ? [0, 0] : [0, flyRotate]
+  );
+
+  // opacity: fade out during the last ~45% of its slot.
+  // Last card: stays fully opaque.
+  const fadeStart = slotStart + (slotEnd - slotStart) * 0.55;
+  const opacity = useTransform(
+    progress,
+    isLast ? [0, 1] : [slotStart, fadeStart, slotEnd],
+    isLast ? [1, 1] : [1, 1, 0]
+  );
+
+  // Depth transforms — how the card sits behind the cards on top of it,
+  // BEFORE its own "arrival" (i.e. before the previous card flies off).
+  // For i=0 (top card from the start): always flat at rest.
+  // For i>0: stays pushed back (y: +offset, scale: <1, opacity dimmed)
+  // until the (i-1)th card has flown off.
+  const prevSlotStart = (i - 1) / FLY_SLOTS;
+  const prevSlotEnd = i / FLY_SLOTS;
+  const depthY = useTransform(
+    progress,
+    [0, prevSlotStart, prevSlotEnd],
+    i === 0 ? ["0px", "0px", "0px"] : ["28px", "28px", "0px"]
+  );
+  const depthScale = useTransform(
+    progress,
+    [0, prevSlotStart, prevSlotEnd],
+    i === 0 ? [1, 1, 1] : [0.94, 0.94, 1]
+  );
+  const depthOpacity = useTransform(
+    progress,
+    [0, prevSlotStart, prevSlotEnd],
+    i === 0 ? [1, 1, 1] : [0.55, 0.55, 1]
+  );
+
+  return { y, rotate, opacity, depthY, depthScale, depthOpacity };
+}
+
+function FeatureCard({
+  feature,
+  index,
+  progress,
+  onTop,
+}: {
+  feature: (typeof features)[number];
+  index: number;
+  progress: MotionValue<number>;
+  onTop: boolean;
+}) {
+  const { y, rotate, opacity, depthY, depthScale, depthOpacity } =
+    useCardTransforms(progress, index);
+
+  return (
+    <motion.div
+      className="fd-card fd-card--stacked"
+      style={{
+        background: feature.bg,
+        // Stacked ordering: lower index = on top
+        zIndex: N - index,
+        y,
+        rotate,
+        opacity,
+        // depth transforms apply via nested translate/scale using CSS vars
+        ["--fd-depth-y" as string]: depthY,
+        ["--fd-depth-scale" as string]: depthScale,
+        ["--fd-depth-opacity" as string]: depthOpacity,
+      }}
+      aria-hidden={!onTop}
+    >
+      <div className="fd-card-depth">
+        <div className="fd-card-copy">
+          <h2 className="fd-card-title">{feature.title}</h2>
+          <p className="fd-card-body">{feature.body}</p>
+        </div>
+        <div className="fd-card-media">
+          <Image
+            src={feature.imageSrc}
+            alt={feature.tab}
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="fd-card-illustration"
+            priority={index === 0}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function FeatureDeck() {
-  const [active, setActive] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const manualOverride = useRef(false);
+  const [active, setActive] = useState(0);
 
-  const ghostOne = features[(active + 1) % features.length];
-  const ghostTwo = features[(active + 2) % features.length];
+  // Track scroll progress through the tall section.
+  // offset: when the section's top hits the top of the viewport = 0,
+  // when the section's bottom hits the bottom of the viewport = 1.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
 
-  useEffect(() => {
-    const onScroll = () => {
-      if (manualOverride.current) return;
-      const el = sectionRef.current;
-      if (!el) return;
-
-      const rect = el.getBoundingClientRect();
-      const sectionTop = -rect.top;
-      const scrollableHeight = el.offsetHeight - window.innerHeight;
-
-      if (sectionTop < 0 || scrollableHeight <= 0) {
-        setActive(0);
-        return;
-      }
-
-      const progress = Math.max(0, Math.min(1, sectionTop / scrollableHeight));
-      const idx = Math.min(
-        features.length - 1,
-        Math.floor(progress * features.length)
-      );
-      setActive(idx);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Derive active index from scroll progress for the tabs + progress bar.
+  // The "active" card is whichever card is currently on top of the stack.
+  // Progress 0      → card 0 on top
+  // Progress k/(N-1) → card k on top (for k = 0..N-1)
+  // Progress 1      → last card on top
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const idx = Math.min(N - 1, Math.max(0, Math.floor(v * FLY_SLOTS + 0.0001)));
+    setActive((prev) => (prev === idx ? prev : idx));
+  });
 
   const handleTabClick = (i: number) => {
     const el = sectionRef.current;
+    if (!el) return;
 
-    manualOverride.current = true;
-    setActive(i);
+    const rect = el.getBoundingClientRect();
+    const sectionStartY = window.scrollY + rect.top;
+    const scrollableHeight = el.offsetHeight - window.innerHeight;
+    if (scrollableHeight <= 0) return;
 
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      const sectionStartY = window.scrollY + rect.top;
-      const scrollableHeight = el.offsetHeight - window.innerHeight;
-
-      if (scrollableHeight > 0) {
-        const step = 1 / features.length;
-        const targetProgress = Math.min(0.999, i * step + step * 0.5);
-        const targetY = sectionStartY + scrollableHeight * targetProgress;
-
-        window.scrollTo({ top: targetY, behavior: "smooth" });
-      }
+    // Scroll to ~20% into the target card's slot — the card is on top
+    // and hasn't started flying off yet. For the last card there is no
+    // fly-off slot, so land at progress = 1 (its final resting state).
+    let targetProgress: number;
+    if (i === N - 1) {
+      targetProgress = 0.999;
+    } else {
+      const step = 1 / FLY_SLOTS;
+      targetProgress = Math.min(0.999, i * step + step * 0.2);
     }
+    const targetY = sectionStartY + scrollableHeight * targetProgress;
 
-    setTimeout(() => {
-      manualOverride.current = false;
-    }, 600);
+    window.scrollTo({ top: targetY, behavior: "smooth" });
   };
 
-  // Progress bar within section
-  const progressPct = ((active + 1) / features.length) * 100;
+  const progressPct = ((active + 1) / N) * 100;
 
   return (
-     <section id="s1" ref={sectionRef} className="feature-deck-section relative">
-      <span id="s1-anchor" className="section-anchor-mid section-anchor-mid--feature" aria-hidden />
+    <section
+      id="s1"
+      ref={sectionRef}
+      className="feature-deck-section relative"
+    >
+      <span
+        id="s1-anchor"
+        className="section-anchor-mid section-anchor-mid--feature"
+        aria-hidden
+      />
       <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
       <div className="fd-sticky-container relative z-10">
-        <div style={{ maxWidth: "var(--shell-max)", width: "100%", marginInline: "auto" }}>
-          <article style={{ maxWidth: 680, marginInline: "auto", textAlign: "center", paddingBottom: 32 }}>
+        <div
+          style={{
+            maxWidth: "var(--shell-max)",
+            width: "100%",
+            marginInline: "auto",
+          }}
+        >
+          <article
+            style={{
+              maxWidth: 680,
+              marginInline: "auto",
+              textAlign: "center",
+              paddingBottom: 32,
+            }}
+          >
             <p className="kicker">The Experience</p>
             <h2 className="section-title">
               The best nights aren&rsquo;t planned.
               <br />
               They&rsquo;re felt.
             </h2>
-            <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
+            <div
+              className="gold-line mt-4"
+              style={{ marginInline: "auto" }}
+            />
           </article>
 
           {/* Tab pills */}
@@ -148,37 +283,17 @@ export default function FeatureDeck() {
             />
           </div>
 
-          {/* Card */}
-          <div className="fd-stack">
-            <div
-              aria-hidden="true"
-              className="fd-card fd-card--ghost fd-card--ghost-2"
-              style={{ background: ghostTwo.bg }}
-            />
-            <div
-              aria-hidden="true"
-              className="fd-card fd-card--ghost fd-card--ghost-1"
-              style={{ background: ghostOne.bg }}
-            />
-            <div
-              className="fd-card fd-card--base"
-              style={{ background: features[active].bg }}
-            >
-              <div className="fd-card-copy">
-                <h2 className="fd-card-title">{features[active].title}</h2>
-                <p className="fd-card-body">{features[active].body}</p>
-              </div>
-              <div className="fd-card-media">
-                <Image
-                  src={features[active].imageSrc}
-                  alt={features[active].tab}
-                  fill
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  className="fd-card-illustration"
-                  priority={active === 0}
-                />
-              </div>
-            </div>
+          {/* Card deck — all N cards rendered, each drives its own transforms */}
+          <div className="fd-stack fd-stack--deck">
+            {features.map((f, i) => (
+              <FeatureCard
+                key={f.tab}
+                feature={f}
+                index={i}
+                progress={scrollYProgress}
+                onTop={i === active}
+              />
+            ))}
           </div>
         </div>
       </div>

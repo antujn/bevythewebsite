@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { motion } from "motion/react";
 import DownloadButton from "./DownloadButton";
 
 const frontVideos = [
@@ -11,52 +12,76 @@ const frontVideos = [
 ];
 
 const backVideo = "/videos/hero-screen.mov";
-const NEXT_VIDEO_DELAY_MS = 2000;
+
+// How long to linger on the current video after it has ended before
+// advancing to the next one (keeps the final frame visible briefly).
+const LINGER_AFTER_END_MS = 2000;
 
 export default function HeroSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFrontAdvancing, setIsFrontAdvancing] = useState(false);
-  const [prevIndex, setPrevIndex] = useState<number | null>(null);
-  const cycleTimeoutRef = useRef<number | null>(null);
-  const fadeTimeoutRef = useRef<number | null>(null);
+  const [active, setActive] = useState(0);
+
+  // Guard against multiple onEnded firings during the linger window
+  const advancingRef = useRef(false);
+  const advanceTimeoutRef = useRef<number | null>(null);
+  // One ref per front video so we can imperatively play/pause without remount.
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 
   const handleFrontVideoEnd = useCallback(() => {
-    if (isFrontAdvancing) return;
+    if (advancingRef.current) return;
+    advancingRef.current = true;
 
-    setIsFrontAdvancing(true);
-
-    if (cycleTimeoutRef.current !== null) {
-      window.clearTimeout(cycleTimeoutRef.current);
+    if (advanceTimeoutRef.current !== null) {
+      window.clearTimeout(advanceTimeoutRef.current);
     }
 
-    cycleTimeoutRef.current = window.setTimeout(() => {
-      setCurrentIndex((prev) => {
-        setPrevIndex(prev);
-        return (prev + 1) % frontVideos.length;
-      });
+    advanceTimeoutRef.current = window.setTimeout(() => {
+      setActive((prev) => (prev + 1) % frontVideos.length);
+      advancingRef.current = false;
+      advanceTimeoutRef.current = null;
+    }, LINGER_AFTER_END_MS);
+  }, []);
 
-      if (fadeTimeoutRef.current !== null) {
-        window.clearTimeout(fadeTimeoutRef.current);
+  // Drive play/pause from `active`. Only the active video plays; others
+  // stay loaded + paused for instant crossfade. Robust against pre-metadata
+  // races where play() would otherwise silently fail.
+  useEffect(() => {
+    const tryPlay = (el: HTMLVideoElement) => {
+      if (el.readyState >= 1) {
+        try {
+          el.currentTime = 0;
+        } catch {
+          /* ignore */
+        }
       }
+      const p = el.play();
+      if (p && typeof p.catch === "function") {
+        p.catch(() => {
+          const onReady = () => {
+            el.removeEventListener("loadedmetadata", onReady);
+            el.removeEventListener("canplay", onReady);
+            el.play().catch(() => {});
+          };
+          el.addEventListener("loadedmetadata", onReady, { once: true });
+          el.addEventListener("canplay", onReady, { once: true });
+        });
+      }
+    };
 
-      fadeTimeoutRef.current = window.setTimeout(() => {
-        setPrevIndex(null);
-        fadeTimeoutRef.current = null;
-      }, 700);
-
-      setIsFrontAdvancing(false);
-      cycleTimeoutRef.current = null;
-    }, NEXT_VIDEO_DELAY_MS);
-  }, [isFrontAdvancing]);
+    frontVideos.forEach((_, i) => {
+      const el = videoRefs.current[i];
+      if (!el) return;
+      if (i === active) {
+        tryPlay(el);
+      } else {
+        el.pause();
+      }
+    });
+  }, [active]);
 
   useEffect(() => {
     return () => {
-      if (cycleTimeoutRef.current !== null) {
-        window.clearTimeout(cycleTimeoutRef.current);
-      }
-
-      if (fadeTimeoutRef.current !== null) {
-        window.clearTimeout(fadeTimeoutRef.current);
+      if (advanceTimeoutRef.current !== null) {
+        window.clearTimeout(advanceTimeoutRef.current);
       }
     };
   }, []);
@@ -108,32 +133,42 @@ export default function HeroSection() {
         {/* Right — Two phone mocks */}
         <div className="hero-mocks fade-in fade-in-d2">
           <div className="hero-mock-front">
-            {/* Phone mock with crossfade screens */}
+            {/*
+              All front videos are mounted simultaneously. Only the active
+              one is visible + playing. The others stay loaded and paused
+              so switching is a pure GPU-composited opacity crossfade —
+              no unmount, no re-fetch, no first-frame stall inside the fade.
+            */}
             <div className="phone-mock">
               <div className="phone-mock__screen">
-                {prevIndex !== null && (
-                  <video
-                    src={frontVideos[prevIndex]}
-                    autoPlay
+                {frontVideos.map((src, i) => (
+                  <motion.video
+                    key={src}
+                    ref={(el) => {
+                      videoRefs.current[i] = el;
+                    }}
+                    src={src}
+                    autoPlay={i === 0}
                     muted
-                    loop
                     playsInline
                     preload="auto"
-                    className="absolute inset-0 h-full w-full object-contain hero-video-fade-out"
+                    onEnded={i === active ? handleFrontVideoEnd : undefined}
+                    className="gameplay-video"
+                    initial={false}
+                    animate={{
+                      opacity: i === active ? 1 : 0,
+                      scale: i === active ? 1 : 1.02,
+                    }}
+                    transition={{
+                      opacity: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                      scale: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+                    }}
+                    style={{
+                      pointerEvents: i === active ? "auto" : "none",
+                      zIndex: i === active ? 2 : 1,
+                    }}
                   />
-                )}
-                <video
-                  key={frontVideos[currentIndex]}
-                  src={frontVideos[currentIndex]}
-                  autoPlay
-                  muted
-                  playsInline
-                  preload="auto"
-                  onEnded={handleFrontVideoEnd}
-                  className={`absolute inset-0 h-full w-full object-contain ${
-                    prevIndex !== null ? "hero-video-fade-in" : ""
-                  }`}
-                />
+                ))}
               </div>
               <Image
                 src="/images/mockups/iphone-17-pro-mockup.png"
