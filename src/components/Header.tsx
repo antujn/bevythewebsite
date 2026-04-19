@@ -17,7 +17,6 @@ const HIDE_SUPPORTING_PHONE_IDS = new Set([
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [isHeroInView, setIsHeroInView] = useState(true);
   const [isPreviewsOpen, setIsPreviewsOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -196,23 +195,6 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const heroSection = document.getElementById("hero");
-    if (!heroSection) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeroInView(entry.isIntersecting);
-      },
-      {
-        threshold: 0.24,
-      },
-    );
-
-    observer.observe(heroSection);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     if (!isPreviewsOpen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -253,7 +235,7 @@ export default function Header() {
       >
         <div className="site-shell grid h-[84px] grid-cols-[1fr_auto_1fr] items-center">
           <Link
-            href="/"
+            href="/#hero"
             prefetch={false}
             className="flex items-center gap-3 justify-self-start"
           >
@@ -269,30 +251,20 @@ export default function Header() {
             </span>
           </Link>
 
-          {isHeroInView ? (
-            <nav className="hidden items-center gap-4 lg:flex">
-              <a href="#s1-anchor" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-                Experience
-              </a>
-              <a href="#bundles-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-                Collection
-              </a>
-              <a href="#gameplay-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-                Gameplay
-              </a>
-              <a href="#reviews-top" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
-                Reviews
-              </a>
-            </nav>
-          ) : (
-            <span
-              className={`hidden text-[11px] font-medium uppercase tracking-[0.24em] text-white/40 lg:block transition-opacity duration-500 ${
-                scrolled ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              Truth or Dare, Reimagined
-            </span>
-          )}
+          <nav className="hidden items-center gap-4 lg:flex">
+            <a href="#s1-anchor" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+              Experience
+            </a>
+            <a href="#bundles-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+              Collection
+            </a>
+            <a href="#gameplay-heading" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+              Gameplay
+            </a>
+            <a href="#reviews-top" className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90">
+              Reviews
+            </a>
+          </nav>
 
           <div className="header-cta-group justify-self-end">
             <button
