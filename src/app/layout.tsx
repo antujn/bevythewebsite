@@ -18,8 +18,28 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+/**
+ * Derive the canonical site URL from Vercel's automatic env vars so we
+ * don't hardcode a domain that isn't wired up yet. Preference order:
+ *   1. VERCEL_PROJECT_PRODUCTION_URL — the production deployment's URL
+ *      (stable across preview branches)
+ *   2. VERCEL_URL — the current deployment (e.g. preview URL)
+ *   3. localhost for `next dev` / local builds
+ */
+function getSiteUrl(): URL {
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);
+  }
+  if (process.env.VERCEL_URL) {
+    return new URL(`https://${process.env.VERCEL_URL}`);
+  }
+  return new URL("http://localhost:3000");
+}
+
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.bevytheapp.com"),
+  metadataBase: siteUrl,
   title: "Bevy — Truth or Dare. Reimagined.",
   description:
     "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards. Designed to deepen human connection.",
@@ -27,24 +47,19 @@ export const metadata: Metadata = {
     title: "Bevy — Truth or Dare. Reimagined.",
     description:
       "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards.",
-    url: "https://www.bevytheapp.com",
+    // Relative URL resolves against metadataBase above.
+    url: "/",
     siteName: "Bevy",
     type: "website",
-    images: [
-      {
-        url: "/images/illustrations/illustration3.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Bevy — Truth or Dare. Reimagined.",
-      },
-    ],
+    // og:image tags are injected by src/app/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
     title: "Bevy — Truth or Dare. Reimagined.",
     description:
       "The modern, meaningful alternative to traditional truth or dare.",
-    images: ["/images/illustrations/illustration3.jpg"],
+    // Twitter will reuse og:image when twitter:image isn't specified,
+    // so the same generated share card covers both.
   },
   // Icons are supplied via Next.js file conventions:
   //   src/app/icon.png       → <link rel="icon">
