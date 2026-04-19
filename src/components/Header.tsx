@@ -29,6 +29,8 @@ export default function Header() {
   const [isDownloadingAll, setIsDownloadingAll] = useState(false);
   const storyRefs = useRef<Array<HTMLElement | null>>([]);
   const previewRailRef = useRef<HTMLDivElement | null>(null);
+  const previewsTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
   const { triggerDownload } = useDownload();
 
   const downloadPreview = async (index: number) => {
@@ -221,20 +223,64 @@ export default function Header() {
   useEffect(() => {
     if (!isPreviewsOpen) return;
 
+    // Lock background scroll while the modal is open
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    // Remember where focus came from so we can restore it on close.
+    // Snapshot the trigger ref now too (React warns about reading it in
+    // the cleanup function otherwise).
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const triggerAtOpen = previewsTriggerRef.current;
+
+    // Move focus into the modal: prefer the close button so Escape/Enter
+    // is a one-tap dismiss for keyboard users.
+    const modal = modalRef.current;
+    const closeBtn = modal?.querySelector<HTMLButtonElement>(
+      ".preview-modal-close",
+    );
+    // Defer so the element is actually mounted + visible before focusing
+    const focusTimer = window.setTimeout(() => closeBtn?.focus(), 0);
+
+    const FOCUSABLE_SELECTOR =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])';
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsPreviewsOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !modal) return;
+
+      // Focus trap: cycle Tab/Shift+Tab within the modal's focusables
+      const focusables = Array.from(
+        modal.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      ).filter((el) => !el.hasAttribute("aria-hidden"));
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey) {
+        if (active === first || !modal.contains(active)) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (active === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
+      window.clearTimeout(focusTimer);
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
+      // Restore focus to the element that opened the modal
+      (previouslyFocused ?? triggerAtOpen)?.focus();
     };
   }, [isPreviewsOpen]);
 
@@ -296,12 +342,16 @@ export default function Header() {
 
           <div className="header-cta-group justify-self-end">
             <motion.button
+              ref={previewsTriggerRef}
               type="button"
               onClick={openPreviews}
               className="previews-btn"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               transition={NAV_HOVER_SPRING}
+              aria-haspopup="dialog"
+              aria-expanded={isPreviewsOpen}
+              aria-controls="previews-modal"
             >
               Previews
             </motion.button>
@@ -331,6 +381,8 @@ export default function Header() {
             transition={{ duration: 0.22 }}
           >
             <motion.div
+              ref={modalRef}
+              id="previews-modal"
               className="preview-modal"
               role="dialog"
               aria-modal="true"
