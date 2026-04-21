@@ -392,16 +392,25 @@ function MockDial({
         })}
       </motion.div>
 
-      {/* Dot indicators */}
+      {/* Dot indicators. Each button is a 24×24 hit target (meets WCAG
+          touch-target min) with the visible dot rendered as an inner span
+          so we can keep it small without sacrificing tap-ability. */}
       <div className="dial-dots">
         {bundles.map((b, i) => (
           <button
             key={b.label}
+            type="button"
             className={`dial-dot${i === active ? " dial-dot--active" : ""}`}
-            style={i === active ? { background: b.accent } : undefined}
             onClick={() => onSelect(i)}
             aria-label={`Go to ${b.label}`}
-          />
+            aria-pressed={i === active}
+          >
+            <span
+              className="dial-dot-mark"
+              style={i === active ? { background: b.accent } : undefined}
+              aria-hidden
+            />
+          </button>
         ))}
       </div>
     </div>
@@ -457,7 +466,10 @@ function TextDial({
               className={`dial-item dial-item--text${isActive ? " dial-item--text-active" : ""}`}
               role="button"
               tabIndex={visible ? 0 : -1}
-              aria-label={`Select ${bundle.label}`}
+              // No aria-label — the visible type pill + title text
+              // naturally become the accessible name. An aria-label like
+              // "Select X" would mismatch the visible text and violate
+              // WCAG 2.5.3 (Label in Name).
               aria-pressed={isActive}
               onTap={() => onSelect(i)}
               onKeyDown={(e) => {

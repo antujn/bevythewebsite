@@ -11,13 +11,16 @@ import {
 } from "motion/react";
 import DownloadButton from "./DownloadButton";
 
+// Base paths without extension — each video is served as both .webm
+// (VP9, smaller, modern browsers) and .mp4 (H.264, universal fallback)
+// via <source> children below, so the browser picks what it supports.
 const frontVideos = [
-  "/videos/alias-mode-significant-other.mov",
-  "/videos/alias-mode-nsfw.mov",
-  "/videos/alias-mode-early-dating.mov",
+  "/videos/alias-mode-significant-other",
+  "/videos/alias-mode-nsfw",
+  "/videos/alias-mode-early-dating",
 ];
 
-const backVideo = "/videos/hero-screen.mov";
+const backVideo = "/videos/hero-screen";
 
 // How long to linger on the current video after it has ended before
 // advancing to the next one (keeps the final frame visible briefly).
@@ -288,16 +291,18 @@ export default function HeroSection() {
             >
               <div className="phone-mock">
                 <div className="phone-mock__screen">
-                  {frontVideos.map((src, i) => (
+                  {frontVideos.map((base, i) => (
                     <motion.video
-                      key={src}
+                      key={base}
                       ref={(el) => {
                         videoRefs.current[i] = el;
                       }}
-                      src={src}
                       autoPlay={i === 0}
                       muted
                       playsInline
+                      // Fully preload all slides so crossfades are instant
+                      // and never wait on network when the active video
+                      // hands off to the next.
                       preload="auto"
                       onEnded={i === active ? handleFrontVideoEnd : undefined}
                       className="gameplay-video"
@@ -314,7 +319,10 @@ export default function HeroSection() {
                         pointerEvents: i === active ? "auto" : "none",
                         zIndex: i === active ? 2 : 1,
                       }}
-                    />
+                    >
+                      <source src={`${base}.webm`} type="video/webm" />
+                      <source src={`${base}.mp4`} type="video/mp4" />
+                    </motion.video>
                   ))}
                 </div>
                 <Image
@@ -360,14 +368,16 @@ export default function HeroSection() {
               <div className="phone-mock">
                 <div className="phone-mock__screen">
                   <video
-                    src={backVideo}
                     autoPlay
                     muted
                     loop
                     playsInline
                     preload="auto"
                     className="h-full w-full object-contain"
-                  />
+                  >
+                    <source src={`${backVideo}.webm`} type="video/webm" />
+                    <source src={`${backVideo}.mp4`} type="video/mp4" />
+                  </video>
                 </div>
                 <Image
                   src="/images/mockups/iphone-17-pro-mockup.png"

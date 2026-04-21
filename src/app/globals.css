@@ -58,6 +58,81 @@ main:focus-visible {
   outline: none;
 }
 
+/* ── Not-found (/404) page ─────────────────────
+   Scoped styles for the 404 so the button + sublinks render reliably
+   regardless of Tailwind content-path picking up a new file. */
+.nf-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 18px 10px;
+  border: 0;
+  background: none;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(249, 242, 232, 0.82);
+  cursor: pointer;
+  transition: color 220ms ease, transform 220ms ease;
+}
+
+.nf-cta:hover {
+  color: #fff;
+  transform: translateX(1px);
+}
+
+.nf-cta__arrow {
+  display: inline-block;
+  font-size: 1.18em;
+  font-weight: 900;
+  line-height: 1;
+  transform: translateY(-0.02em);
+}
+
+.nf-cta--ghost {
+  color: rgba(244, 238, 229, 0.66);
+}
+
+.nf-cta--ghost:hover {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.nf-sublink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(244, 238, 229, 0.58);
+  transition: color 220ms ease, transform 220ms ease;
+}
+
+.nf-sublink:hover {
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateX(1px);
+}
+
+@media (max-width: 640px) {
+  .nf-cta {
+    padding: 12px 12px 9px;
+    letter-spacing: 0.14em;
+  }
+
+  .nf-sublink {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+}
+
 /* Skip-link: hidden off-screen until it receives focus. When a
    keyboard user tabs into the page, it slides down and becomes the
    first focusable element. */
@@ -128,7 +203,7 @@ body::before {
   pointer-events: none;
   background:
     linear-gradient(180deg, rgba(5, 5, 5, 0.72), rgba(5, 5, 5, 0.72)),
-    url("/images/backgrounds/background2.png") center / cover no-repeat;
+    url("/images/backgrounds/background2.jpg") center / cover no-repeat;
 }
 
 a {
@@ -694,34 +769,50 @@ a {
   margin: 0;
 }
 
-/* Dot indicators under the mock dial */
+/* Dot indicators under the mock dial.
+   The button itself is a 24x24 hit target (WCAG 2.5.5 minimum) so
+   taps land comfortably; the visible dot is a 7px inner <span> so
+   the row still reads as a discreet row of dots visually. */
 .dial-dots {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 8px;
+  bottom: 0;
   display: flex;
-  gap: 6px;
+  gap: 0;
   justify-content: center;
   z-index: 15;
 }
 
 .dial-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+  width: 24px;
+  height: 24px;
   border: none;
-  background: rgba(255, 255, 255, 0.18);
+  background: transparent;
   cursor: pointer;
   padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* Visible dot inside each 24x24 tap target. Sized large enough that
+   with WCAG's required 24px center-to-center spacing, the dots still
+   read as a tight compact row (10px dot → 14px visible gap, vs a 7px
+   dot → 17px visible gap). */
+.dial-dot-mark {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
   transition: background 200ms ease, transform 200ms ease;
 }
 
-.dial-dot:hover {
+.dial-dot:hover .dial-dot-mark {
   background: rgba(255, 255, 255, 0.36);
 }
 
-.dial-dot--active {
+.dial-dot--active .dial-dot-mark {
   transform: scale(1.45);
 }
 

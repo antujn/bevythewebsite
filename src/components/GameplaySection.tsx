@@ -5,42 +5,44 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { RevealIn, RevealGroup, RevealChild } from "./RevealIn";
 
+// Base paths without extension — each video is served as both .webm
+// and .mp4 (see <source> tags below) so the browser picks what it
+// can decode. See P2 conversion notes: sizes dropped ~70% vs .mov.
 const gameplaySlides = [
   {
     label: "Finger Game",
     title: "Fast turn picking for real groups.",
     body: "Place fingers on screen and let Bevy select who goes next. Perfect for lively rooms where you want momentum, suspense, and zero setup friction.",
     points: ["Quick start flow", "Supports team energy", "Designed for in-person play"],
-    frontVideo: "/videos/finger-mode-significant-other.MP4",
+    frontVideo: "/videos/finger-mode-significant-other",
   },
   {
     label: "Alias Game",
     title: "Play in character with score tracking.",
     body: "Give everyone a fun alias, rotate turns through cards, and let the built-in scoreboard carry the game night arc from warm-up to final winner.",
     points: ["Alias identity setup", "Built-in scoreboard", "Great for parties and dates"],
-    frontVideo: "/videos/alias-mode-significant-other.mov",
+    frontVideo: "/videos/alias-mode-significant-other",
   },
   {
     label: "BevyAI Play",
     title: "A play partner when no group is around.",
     body: "BevyAI adapts to your preferences and comfort level, then serves meaningful prompts for solo sessions, reflection, or low-pressure practice.",
     points: ["Adaptive prompt flow", "Comfort-aware pacing", "Great for solo introspection"],
-    frontVideo: "/videos/ai-chat-early-dating.mov",
+    frontVideo: "/videos/ai-chat-significant-other",
   },
   {
     label: "Achievements",
     title: "Progress that keeps the game alive.",
     body: "Unlock milestones across bundles and game styles. Achievements reward consistency, creativity, and bold gameplay, giving players reasons to return.",
     points: ["Milestone unlocks", "Bundle progression", "Long-term replay loop"],
-    frontVideo: "/videos/settings-achievements.mov",
+    frontVideo: "/videos/settings-achievements",
   },
 ];
 
-const gameModeScreen = "/videos/game-mode-screen.mov";
+const gameModeScreen = "/videos/game-mode-screen";
 
 export default function GameplaySection() {
   const [active, setActive] = useState(0);
-
   // One ref per slide video so we can play/pause when active changes
   // without remounting the element (which is what causes the flicker).
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
@@ -193,7 +195,6 @@ export default function GameplaySection() {
                       ref={(el) => {
                         videoRefs.current[i] = el;
                       }}
-                      src={slide.frontVideo}
                       // autoPlay only on the initially-active video so its
                       // first frame paints ASAP without waiting for an effect.
                       autoPlay={i === 0}
@@ -216,7 +217,10 @@ export default function GameplaySection() {
                         pointerEvents: i === active ? "auto" : "none",
                         zIndex: i === active ? 2 : 1,
                       }}
-                    />
+                    >
+                      <source src={`${slide.frontVideo}.webm`} type="video/webm" />
+                      <source src={`${slide.frontVideo}.mp4`} type="video/mp4" />
+                    </motion.video>
                   ))}
                 </div>
                 <Image
@@ -244,14 +248,16 @@ export default function GameplaySection() {
               <div className="phone-mock">
                 <div className="phone-mock__screen">
                   <video
-                    src={gameModeScreen}
                     autoPlay
                     muted
                     loop
                     playsInline
                     preload="auto"
                     className="h-full w-full object-contain"
-                  />
+                  >
+                    <source src={`${gameModeScreen}.webm`} type="video/webm" />
+                    <source src={`${gameModeScreen}.mp4`} type="video/mp4" />
+                  </video>
                 </div>
                 <Image
                   src="/images/mockups/iphone-17-pro-mockup.png"
