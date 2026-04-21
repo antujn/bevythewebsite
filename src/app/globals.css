@@ -2266,7 +2266,7 @@ a {
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(24, 18, 14, 0.16), rgba(5, 5, 6, 0.22));
   backdrop-filter: blur(10px);
-  animation: fadeIn 300ms ease;
+  /* Motion handles enter/exit via AnimatePresence in DownloadContext. */
 }
 
 .qr-modal {
@@ -2339,6 +2339,34 @@ a {
 
 .qr-fallback:hover {
   color: var(--text-main);
+}
+
+/* Primary variant used when the fallback link IS the main action
+   (e.g. on the iPhone-only modal for Android users). */
+.qr-fallback--primary {
+  margin-top: 1.4rem;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(198, 166, 120, 0.14);
+  border: 1px solid rgba(198, 166, 120, 0.4);
+  color: var(--gold-soft);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+
+.qr-fallback--primary:hover {
+  background: rgba(198, 166, 120, 0.22);
+  border-color: rgba(198, 166, 120, 0.6);
+  color: #f4eee5;
+}
+
+.qr-fallback--primary .qr-fallback-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(244, 238, 229, 0.5);
 }
 
 ::-webkit-scrollbar {
