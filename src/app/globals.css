@@ -58,6 +58,260 @@ main:focus-visible {
   outline: none;
 }
 
+/* ── FAQ card rail ─────────────────────────────
+   Horizontal rail of playable, flippable FAQ cards. Each card is a
+   <button> with two absolutely-positioned faces (front = question,
+   back = answer) rotated on the Y axis. Motion animates the rotateY
+   on tap for a deck-of-cards feel that mirrors the actual app. */
+
+.faq-rail-viewport {
+  margin-top: clamp(2.4rem, 5vw, 3.4rem);
+  /* Perspective lives on the scrolling viewport so the 3D flip has
+     consistent depth regardless of horizontal scroll position. */
+  perspective: 1400px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  /* Soft fades at the rail edges so peeking cards feel like they
+     continue off-screen rather than abruptly clipping. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+}
+
+.faq-rail-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.faq-rail {
+  display: flex;
+  gap: 24px;
+  /* Vertical padding only; horizontal "padding" is delivered by the
+     ::before / ::after spacers below so that scroll-snap treats the
+     first and last card identically (equal gutter on both sides). */
+  padding: 32px 0;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.faq-rail::before,
+.faq-rail::after {
+  content: "";
+  flex-shrink: 0;
+  width: clamp(24px, 8vw, 96px);
+}
+
+/* The slot is the actual flex item + scroll-snap target. It owns the
+   width / aspect ratio. Motion does entrance (y/rotateZ) on the slot,
+   so the button inside stays free to handle flip + hover transforms. */
+.faq-card-slot {
+  flex-shrink: 0;
+  width: min(320px, 78vw);
+  aspect-ratio: 2 / 3;
+  scroll-snap-align: center;
+  /* So the hover-lift on the inner card doesn't get clipped. */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.faq-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  /* Motion writes transform (rotateY) on this element. preserve-3d
+     lets the child faces render with their own Z-depth. */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.faq-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 26px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  text-align: left;
+  box-shadow:
+    0 26px 44px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.faq-card-front {
+  /* Accent color comes from inline style per item. */
+  color: rgba(244, 238, 229, 0.94);
+}
+
+/* Dark diagonal wash over the accent so colors feel more muted
+   and editorial. Tuned to visibly tone down saturation without
+   compromising text legibility. */
+.faq-card-front::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    155deg,
+    rgba(0, 0, 0, 0.28) 0%,
+    rgba(0, 0, 0, 0.46) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Front-face children sit above the overlay. */
+.faq-card-front > * {
+  position: relative;
+  z-index: 1;
+}
+
+.faq-card-back {
+  background:
+    linear-gradient(
+      160deg,
+      rgba(18, 16, 22, 0.96) 0%,
+      rgba(8, 7, 10, 0.98) 100%
+    );
+  color: rgba(244, 238, 229, 0.92);
+  transform: rotateY(180deg);
+}
+
+.faq-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.faq-card-chip {
+  display: inline-block;
+  padding: 5px 11px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 229, 0.88);
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.faq-card-chip--answer {
+  background: rgba(198, 166, 120, 0.16);
+  color: var(--gold-soft);
+}
+
+.faq-card-index {
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(244, 238, 229, 0.46);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Question and answer sit at the top of the card (right after the
+   top row), matching the Bevy app's prompt-card layout where the
+   text hugs the top half. `.faq-card-foot` uses margin-top: auto
+   to push itself to the bottom so the card footprint stays filled. */
+.faq-card-q {
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(20px, 2.1vw, 24px);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.faq-card-a {
+  margin: 0;
+  /* Natural height: text sits at the top. Scroll stays as a safety
+     fallback if a future answer exceeds the card. */
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(244, 238, 229, 0.82);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(198, 166, 120, 0.28) transparent;
+}
+
+.faq-card-a::-webkit-scrollbar {
+  width: 3px;
+}
+
+.faq-card-a::-webkit-scrollbar-thumb {
+  background: rgba(198, 166, 120, 0.28);
+  border-radius: 2px;
+}
+
+.faq-card-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.faq-card-back .faq-card-foot {
+  border-top-color: rgba(198, 166, 120, 0.16);
+}
+
+.faq-card-hint {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 229, 0.5);
+}
+
+.faq-card-arrow {
+  font-size: 16px;
+  color: rgba(244, 238, 229, 0.58);
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* Inline link inside FAQ answers: subtle gold accent, underlined
+   so it's obviously clickable within a paragraph. */
+.faq-link {
+  color: var(--gold-soft);
+  text-decoration: underline;
+  text-decoration-color: rgba(198, 166, 120, 0.45);
+  text-underline-offset: 3px;
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+
+.faq-link:hover {
+  color: #e8c99f;
+  text-decoration-color: #e8c99f;
+}
+
+@media (max-width: 640px) {
+  .faq-rail {
+    padding: 28px 0;
+    gap: 18px;
+  }
+  .faq-rail::before,
+  .faq-rail::after {
+    width: 20px;
+  }
+  .faq-card-face {
+    padding: 22px 22px 20px;
+    gap: 16px;
+  }
+}
+
 /* ── Not-found (/404) page ─────────────────────
    Scoped styles for the 404 so the button + sublinks render reliably
    regardless of Tailwind content-path picking up a new file. */

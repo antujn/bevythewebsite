@@ -327,6 +327,7 @@ export default function Header() {
               { href: "#bundles-heading", label: "Collection" },
               { href: "#gameplay-heading", label: "Gameplay" },
               { href: "#reviews-top", label: "Reviews" },
+              { href: "#faq-heading", label: "FAQ" },
             ].map((item) => (
               <motion.a
                 key={item.href}
