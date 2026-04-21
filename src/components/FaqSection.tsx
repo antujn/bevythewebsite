@@ -7,31 +7,31 @@ import { RevealChild, RevealGroup } from "./RevealIn";
 const APP_STORE_URL =
   "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490";
 
+// All FAQ cards share the Significant Other bundle's deep red to
+// match the brand's primary accent. Kept as a single constant so it
+// can be swapped (e.g. back to bundle-per-card) in one edit.
+const CARD_ACCENT = "#610000";
+
 type FaqItem = {
   q: string;
   /** Plain-text answer used by the JSON-LD FAQPage schema. */
   a: string;
   /** Optional rich renderable version for the UI (with links etc.). */
   render?: ReactNode;
-  /** Solid accent color for the card front. Drawn from the bundle palette. */
-  accent: string;
 };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
     q: "Who is Bevy for?",
     a: "Couples looking for deeper conversation, friend groups tired of the same twenty recycled prompts, daters trying to move past small talk, and anyone who wants a card game that leans on real conversation. You can also play quietly. BevyAI\u2019s chat lets you scroll prompts and get thoughtful answers one at a time.",
-    accent: "#610000",
   },
   {
     q: "What makes Bevy different from other Truth or Dare apps?",
     a: "Every card is hand-written and reviewed for tone, inclusivity, and social intelligence. No recycled internet lists, no cringe prompts, no dares that leave someone out. Ten bundles are tuned to specific moods (Significant Other, Date Night, House Party, NSFW, and more), so you pick the vibe upfront. The writing draws on TikTok trends, Reddit threads, and shows like Love Island and The Office, aiming for the opposite of what you remember from middle-school truth or dare.",
-    accent: "#001f2a",
   },
   {
     q: "Is it safe and inclusive?",
     a: "Yes. Every card is written to be inclusive across identities, orientations, and comfort levels. NSFW bundles are separate and opt-in, so you pick the intensity upfront. You can exclude any card from your deck and it won\u2019t come back. Nothing asks anyone to do something illegal, dangerous, or degrading. If a card ever misses the mark, you can report it in-app.",
-    accent: "#3c3c00",
   },
   {
     q: "Is it free?",
@@ -54,27 +54,22 @@ const FAQ_ITEMS: FaqItem[] = [
         for the latest pricing and plans.
       </>
     ),
-    accent: "#613500",
   },
   {
     q: "Do I need to create an account?",
     a: "No. No signup, no email, no login. Your preferences and any custom cards you write live on your device. Analytics are anonymous, and the AI only sees a numeric prompt ID, never your answers, your conversations, or any content you create.",
-    accent: "#00424d",
   },
   {
     q: "Can I play solo?",
     a: "Yes. The BevyAI chat tab is a single-player experience: pick any bundle, scroll through its prompts, tap the one you want, and BevyAI answers as if you asked it the question. There\u2019s no separate \u201csolo mode\u201d. You\u2019re just using the same library without anyone across the table.",
-    accent: "#002b00",
   },
   {
     q: "How does BevyAI work?",
     a: "BevyAI answers prompts. You choose a prebuilt card from any of the ten bundles, tap it, and BevyAI reads back a thoughtful answer. It costs one token per reply. Each reply sends only the card\u2019s numeric prompt ID to our backend. No card text, no custom content, no history, and no personal information. Custom cards you write yourself stay local and aren\u2019t answered by BevyAI yet.",
-    accent: "#1a2530",
   },
   {
     q: "How old do I need to be?",
     a: "Bevy is intended for users 18 and up. Apple rates the app 13+ because the built-in bundles include infrequent mature themes, but our Terms of Service require all users to be at least 18. NSFW bundles go further in that direction. If you\u2019re under 18, please use a different app.",
-    accent: "#1a1a1a",
   },
 ];
 
@@ -210,7 +205,7 @@ function FaqCard({
         {/* Front — the question */}
         <div
           className="faq-card-face faq-card-front"
-          style={{ background: item.accent }}
+          style={{ background: CARD_ACCENT }}
         >
           <div className="faq-card-top">
             <span className="faq-card-chip">Truth</span>

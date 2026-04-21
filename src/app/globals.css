@@ -58,6 +58,30 @@ main:focus-visible {
   outline: none;
 }
 
+/* ── Scroll progress bar ───────────────────────
+   Thin gold strip anchored just below the 84px nav, scaled by the
+   page's scrollYProgress. transform-origin: 0 makes the fill grow
+   from left edge to right. */
+.scroll-progress-bar {
+  position: fixed;
+  top: 84px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 55;
+  pointer-events: none;
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    90deg,
+    rgba(198, 166, 120, 0.38) 0%,
+    var(--gold-soft) 45%,
+    #e8c99f 100%
+  );
+  /* Subtle glow below the bar so it lifts off the nav's bottom edge. */
+  box-shadow: 0 2px 12px rgba(232, 201, 159, 0.22);
+  will-change: transform;
+}
+
 /* ── FAQ card rail ─────────────────────────────
    Horizontal rail of playable, flippable FAQ cards. Each card is a
    <button> with two absolutely-positioned faces (front = question,
@@ -72,6 +96,15 @@ main:focus-visible {
   overflow-x: auto;
   overflow-y: visible;
   scrollbar-width: none;
+  /* Only claim horizontal gestures — vertical swipes fall through to
+     the page so the FAQ doesn't stall the reader on their way to the
+     footer. Without this, mobile browsers treat any touch starting
+     on this element as ambiguous and briefly pause vertical scroll. */
+  touch-action: pan-x;
+  /* Keep horizontal overscroll contained to this rail so a vigorous
+     horizontal swipe doesn't trigger browser-level navigation
+     (back/forward gestures on iOS Safari). */
+  overscroll-behavior-x: contain;
   /* Soft fades at the rail edges so peeking cards feel like they
      continue off-screen rather than abruptly clipping. */
   mask-image: linear-gradient(
