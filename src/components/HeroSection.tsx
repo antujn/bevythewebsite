@@ -159,7 +159,7 @@ export default function HeroSection() {
           className="editorial-img"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
       </motion.div>
 
       {/* Hero content — scroll-linked translate + fade */}

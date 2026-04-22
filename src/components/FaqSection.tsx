@@ -99,7 +99,7 @@ export default function FaqSection() {
       <span id="faq-anchor" className="section-anchor-mid" aria-hidden />
       <div
         aria-hidden
-        className="absolute inset-0 z-0 bg-gradient-to-b from-black/52 via-black/48 to-black/58"
+        className="absolute inset-0 z-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48"
       />
 
       <div className="relative z-10">
