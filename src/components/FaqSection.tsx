@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { RevealChild, RevealGroup } from "./RevealIn";
 
 import { APP_STORE_URL } from "@/lib/appStore";
+import { faqItems, buildFaqPageJsonLd, type FaqItem } from "@/lib/faq";
 
 // All FAQ cards share the crimson brand anchor — the same value used
 // by the Significant Other bundle and the --crimson design token in
@@ -13,66 +14,41 @@ import { APP_STORE_URL } from "@/lib/appStore";
 // changes, also update `--crimson` in `src/app/globals.css`.
 const CARD_ACCENT = "#6b0f10";
 
-type FaqItem = {
-  q: string;
-  /** Plain-text answer used by the JSON-LD FAQPage schema. */
-  a: string;
-  /** Optional rich renderable version for the UI (with links etc.). */
-  render?: ReactNode;
+/**
+ * Per-question rich JSX overrides for the homepage card rail. The
+ * plain-text `a` field in the shared catalog is canonical (and used
+ * by FAQPage JSON-LD, /faq, /llms-full.txt); this map just enriches
+ * specific answers inline with links / non-breaking hyphens / etc.
+ * If a question isn't in this map, the plain `a` string is rendered
+ * as-is.
+ */
+const FAQ_RENDER_OVERRIDES: Record<string, ReactNode> = {
+  "Is it free?": (
+    <>
+      The core app is free, with a starter bundle and a 7&#8209;day trial of
+      Bevy Premium Edition on first install. Subscribe to Premium for access
+      to every bundle and extra daily BevyAI tokens. Tokens are a separate
+      currency used for BevyAI replies and can be purchased in packs.
+      Purchased tokens never expire. No ads, ever. Check the{" "}
+      <a
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="faq-link"
+      >
+        App Store listing
+      </a>{" "}
+      for the latest pricing and plans.
+    </>
+  ),
 };
 
-const FAQ_ITEMS: FaqItem[] = [
-  {
-    q: "Who is Bevy for?",
-    a: "Couples looking for deeper conversation, friend groups tired of the same twenty recycled prompts, daters trying to move past small talk, and anyone who wants a card game that leans on real conversation. You can also play quietly. BevyAI\u2019s chat lets you scroll prompts and get thoughtful answers one at a time.",
-  },
-  {
-    q: "What makes Bevy different from other Truth or Dare apps?",
-    a: "Every card is hand-written and reviewed for tone, inclusivity, and social intelligence. No recycled internet lists, no cringe prompts, no dares that leave someone out. Ten bundles are tuned to specific moods (Significant Other, Date Night, House Party, NSFW, and more), so you pick the vibe upfront. The writing draws on TikTok trends, Reddit threads, and shows like Love Island and The Office, aiming for the opposite of what you remember from middle-school truth or dare.",
-  },
-  {
-    q: "Is it safe and inclusive?",
-    a: "Yes. Every card is written to be inclusive across identities, orientations, and comfort levels. NSFW bundles are separate and opt-in, so you pick the intensity upfront. You can exclude any card from your deck and it won\u2019t come back. Nothing asks anyone to do something illegal, dangerous, or degrading. If a card ever misses the mark, you can report it in-app.",
-  },
-  {
-    q: "Is it free?",
-    a: "The core app is free, with a starter bundle and a 7-day trial of Bevy Premium Edition on first install. Subscribe to Premium for access to every bundle and extra daily BevyAI tokens. Tokens are a separate currency used for BevyAI replies and can be purchased in packs. Purchased tokens never expire. No ads, ever. Check the App Store listing for the latest pricing and plans.",
-    render: (
-      <>
-        The core app is free, with a starter bundle and a 7&#8209;day trial of
-        Bevy Premium Edition on first install. Subscribe to Premium for access
-        to every bundle and extra daily BevyAI tokens. Tokens are a separate
-        currency used for BevyAI replies and can be purchased in packs.
-        Purchased tokens never expire. No ads, ever. Check the{" "}
-        <a
-          href={APP_STORE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="faq-link"
-        >
-          App Store listing
-        </a>{" "}
-        for the latest pricing and plans.
-      </>
-    ),
-  },
-  {
-    q: "Do I need to create an account?",
-    a: "No. No signup, no email, no login. Your preferences and any custom cards you write live on your device. Analytics are anonymous, and the AI only sees a numeric prompt ID, never your answers, your conversations, or any content you create.",
-  },
-  {
-    q: "Can I play solo?",
-    a: "Yes. The BevyAI chat tab is a single-player experience: pick any bundle, scroll through its prompts, tap the one you want, and BevyAI answers as if you asked it the question. There\u2019s no separate \u201csolo mode\u201d. You\u2019re just using the same library without anyone across the table.",
-  },
-  {
-    q: "How does BevyAI work?",
-    a: "BevyAI answers prompts. You choose a prebuilt card from any of the ten bundles, tap it, and BevyAI reads back a thoughtful answer. It costs one token per reply. Each reply sends only the card\u2019s numeric prompt ID to our backend. No card text, no custom content, no history, and no personal information. Custom cards you write yourself stay local and aren\u2019t answered by BevyAI yet.",
-  },
-  {
-    q: "How old do I need to be?",
-    a: "Bevy is intended for users 18 and up. Apple rates the app 13+ because the built-in bundles include infrequent mature themes, but our Terms of Service require all users to be at least 18. NSFW bundles go further in that direction. If you\u2019re under 18, please use a different app.",
-  },
-];
+/** Consumed by the rail; pairs shared items with any rich overrides. */
+type FaqCardItem = FaqItem & { render?: ReactNode };
+const FAQ_ITEMS: FaqCardItem[] = faqItems.map((item) => ({
+  ...item,
+  render: FAQ_RENDER_OVERRIDES[item.q],
+}));
 
 const FLIP_SPRING = {
   type: "spring" as const,
@@ -81,18 +57,10 @@ const FLIP_SPRING = {
   mass: 0.9,
 };
 
-// Schema.org FAQPage so Google can surface Q&A directly in search
-// results. The text must match the visible answer text, so we always
-// read from the plain-text `a:` field (never from `render`).
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ_ITEMS.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+// Schema.org FAQPage built from the shared catalog. Homepage emits it
+// here and /faq emits its own copy — duplicate emission is fine per
+// Google's guidance because the `mainEntity` content is identical.
+const jsonLd = buildFaqPageJsonLd();
 
 export default function FaqSection() {
   return (
@@ -163,7 +131,7 @@ function FaqCard({
   index,
   total,
 }: {
-  item: FaqItem;
+  item: FaqCardItem;
   index: number;
   total: number;
 }) {

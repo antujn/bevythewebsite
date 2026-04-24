@@ -39,37 +39,88 @@ function getSiteUrl(): URL {
 
 const siteUrl = getSiteUrl();
 
-// https://schema.org/MobileApplication — helps Google surface the app
-// with rating + price in rich search results.
+// A single `@graph` emitting every top-level entity the site wants
+// search engines + LLMs to recognise:
+//
+//   MobileApplication  — the product. Rating + price + download URL.
+//   Organization       — the publisher. Entity-linking target for
+//                        "who makes Bevy" type queries.
+//   Person             — the creator. Entity-linking target for
+//                        author/founder queries.
+//   WebSite            — enables sitelinks search box in Google
+//                        and gives LLMs a stable canonical URL.
+//
+// Emitting as a single JSON-LD block (vs four separate <script> tags)
+// lets search engines resolve cross-references via `@id` — e.g. the
+// `MobileApplication.author` points at the `Person`'s `@id` below.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "MobileApplication",
-  name: "Bevy",
-  alternateName: APP_FULL_NAME,
-  description:
-    "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ carefully crafted cards. Designed to deepen human connection.",
-  applicationCategory: "GameApplication",
-  operatingSystem: "iOS",
-  url: siteUrl.toString(),
-  image: new URL("/opengraph-image", siteUrl).toString(),
-  downloadUrl: APP_STORE_URL,
-  installUrl: APP_STORE_URL,
-  author: {
-    "@type": "Person",
-    name: "Anant Jain",
-  },
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-    availability: "https://schema.org/InStock",
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.7",
-    bestRating: "5",
-    ratingCount: "25000",
-  },
+  "@graph": [
+    {
+      "@type": "MobileApplication",
+      "@id": `${siteUrl.toString()}#product`,
+      name: "Bevy",
+      alternateName: APP_FULL_NAME,
+      description:
+        "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ carefully crafted cards. Designed to deepen human connection.",
+      applicationCategory: "GameApplication",
+      operatingSystem: "iOS",
+      url: siteUrl.toString(),
+      image: new URL("/opengraph-image", siteUrl).toString(),
+      downloadUrl: APP_STORE_URL,
+      installUrl: APP_STORE_URL,
+      author: { "@id": `${siteUrl.toString()}#creator` },
+      publisher: { "@id": `${siteUrl.toString()}#organization` },
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.7",
+        bestRating: "5",
+        ratingCount: "25000",
+      },
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl.toString()}#organization`,
+      name: "Bevy",
+      url: siteUrl.toString(),
+      logo: new URL("/icon-512.png", siteUrl).toString(),
+      founder: { "@id": `${siteUrl.toString()}#creator` },
+      email: "bevytheapp@gmail.com",
+      sameAs: [
+        "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
+        "https://www.instagram.com/bevytheapp",
+        "https://www.tiktok.com/@bevytheapp",
+      ],
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteUrl.toString()}#creator`,
+      name: "Anant Jain",
+      jobTitle: "Founder",
+      worksFor: { "@id": `${siteUrl.toString()}#organization` },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "London",
+        addressCountry: "GB",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl.toString()}#website`,
+      url: siteUrl.toString(),
+      name: "Bevy",
+      description:
+        "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards. Designed to deepen human connection.",
+      publisher: { "@id": `${siteUrl.toString()}#organization` },
+      inLanguage: "en-US",
+    },
+  ],
 };
 
 export const metadata: Metadata = {

@@ -19,6 +19,16 @@ const SEGMENT_TITLES: Record<string, string> = {
   disclaimer: "Legal Disclaimer",
 };
 
+/**
+ * ISO date (YYYY-MM-DD) of the last material revision to the legal
+ * copy. Bump whenever /privacy, /terms, or /disclaimer is substantively
+ * edited — LLMs and Google both read this as a freshness signal and
+ * the number also feeds the Article JSON-LD's `dateModified` below.
+ * The page-body `<strong>Effective date: …</strong>` lines are the
+ * human-facing twin of this constant; keep the two in sync.
+ */
+const LEGAL_LAST_UPDATED = "2026-04-04";
+
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
 /**
@@ -69,11 +79,33 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
     ],
   };
 
+  // Article JSON-LD with `dateModified` — freshness signal for both
+  // Google and LLMs. Using the shared LEGAL_LAST_UPDATED constant so
+  // all three legal routes stay in sync and bumping the date is a
+  // single-line change.
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    dateModified: LEGAL_LAST_UPDATED,
+    datePublished: LEGAL_LAST_UPDATED,
+    author: { "@type": "Person", name: "Anant Jain" },
+    publisher: {
+      "@type": "Organization",
+      name: "Bevy",
+      url: "/",
+    },
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
       {/*
         Legal-page dim overlay. Uses wine-tinted blacks (matches the
