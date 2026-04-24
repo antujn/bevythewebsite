@@ -48,7 +48,10 @@ export const previewSlides: PreviewSlide[] = [
     backgroundSrc: "/images/previews/backgrounds/background2.jpeg",
     imageSrc: "/images/previews/screenshots/iphone/bundle-significant-other-2.png",
     imageObjectPosition: "50% 24%",
-    supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-significant-other-3.png"],
+    // Supporting uses sig-other-1 now that sig-other-3 was retired;
+    // still shows a distinct card face from the same deck so the dual-
+    // phone composition reads as "one bundle, two prompt variations."
+    supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-significant-other-1.png"],
     supportingImageObjectPositions: ["50% 24%"],
     eyebrow: "Prompt Design",
     title: "Cards that command attention.",
@@ -65,7 +68,10 @@ export const previewSlides: PreviewSlide[] = [
     id: "party",
     theme: "crimson",
     backgroundSrc: "/images/previews/backgrounds/background3.jpeg",
-    imageSrc: "/images/previews/screenshots/iphone/bundle-nsfw-3.png",
+    // Primary flipped from the retired nsfw-3 to nsfw-1; nsfw-2 keeps
+    // its supporting role so the slide still shows two NSFW prompts
+    // side-by-side.
+    imageSrc: "/images/previews/screenshots/iphone/bundle-nsfw-1.png",
     imageObjectPosition: "50% 40%",
     supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-nsfw-2.png"],
     supportingImageObjectPositions: ["50% 40%"],
@@ -102,7 +108,9 @@ export const previewSlides: PreviewSlide[] = [
     backgroundSrc: "/images/previews/backgrounds/background5.jpeg",
     imageSrc: "/images/previews/screenshots/iphone/bundle-early-dating-1.png",
     imageObjectPosition: "50% 24%",
-    supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-early-dating-3.png"],
+    // Supporting flipped from the retired early-dating-3 to -2, still
+    // in the early-dating bundle so the duo reads as one deck.
+    supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-early-dating-2.png"],
     supportingImageObjectPositions: ["50% 24%"],
     eyebrow: "Date Night",
     title: "Keep first dates flowing.",
@@ -121,7 +129,10 @@ export const previewSlides: PreviewSlide[] = [
     backgroundSrc: "/images/previews/backgrounds/background6.jpeg",
     imageSrc: "/images/previews/screenshots/iphone/user-custom-card.png",
     imageObjectPosition: "50% 56%",
-    supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-significant-other-3.png"],
+    // Supporting swapped from the retired sig-other-3 to -2; pairs the
+    // custom-card primary with a real sig-other prompt so the slide
+    // reads as "write your own / alongside the stock deck."
+    supportingImageSrcs: ["/images/previews/screenshots/iphone/bundle-significant-other-2.png"],
     supportingImageObjectPositions: ["50% 56%"],
     eyebrow: "Personalize",
     title: "Write cards that fit your story.",
