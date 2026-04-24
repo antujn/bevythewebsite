@@ -174,20 +174,24 @@ main:focus-visible {
 .faq-rail-viewport {
   margin-top: clamp(2.4rem, 5vw, 3.4rem);
   overflow-x: auto;
-  overflow-y: visible;
+  /* `hidden` (not `visible`) is the iOS-Safari-correct value for a
+     horizontal-only scroll container. Counter-intuitive: you'd think
+     `visible` means "I don't scroll vertically, let the page have
+     it" — in practice iOS sees a `visible` + `overflow-x: auto`
+     element as "maybe scrollable in some weird way" and conservatively
+     holds onto vertical touches. Flipping to `hidden` tells iOS
+     unambiguously "no vertical scroll lives here, bubble it up." The
+     32px of vertical padding inside `.faq-rail` gives cards ample
+     room for their -6px hover lift without clipping. */
+  overflow-y: hidden;
   scrollbar-width: none;
-  /* Explicit permission for both pan axes.
-     - pan-x: this element has overflow-x: auto, consumes horizontal
-       swipes for rail scrolling.
-     - pan-y: this element has overflow-y: visible (nothing to
-       consume), so vertical swipes bubble up to the document body
-       and the page scrolls as expected.
-     Without pan-y listed, iOS Safari blocks vertical gestures that
-     start inside the rail — the bug the user kept hitting. */
+  /* pan-x: this element handles horizontal rail scroll.
+     pan-y: nothing to consume vertically here (hidden overflow),
+             so vertical gestures fall through to the document. */
   touch-action: pan-x pan-y;
   /* Horizontal overscroll contained — prevents iOS Safari's
-     back/forward gesture from firing on a vigorous horizontal swipe.
-     Vertical overscroll defaults to `auto` so the page can still
+     back/forward gesture from firing on a vigorous horizontal
+     swipe. Vertical defaults to `auto` so the page can still
      rubber-band at its natural edges. */
   overscroll-behavior-x: contain;
   /* Soft fades at the rail edges so peeking cards feel like they
@@ -267,6 +271,16 @@ main:focus-visible {
      lets the child faces render with their own Z-depth. */
   transform-style: preserve-3d;
   will-change: transform;
+  /* The card is a framer-motion `motion.button` with `whileTap` +
+     `whileHover` handlers. Without an explicit touch-action, motion
+     can call setPointerCapture on pointerdown, trapping subsequent
+     vertical pans on the card itself and breaking page scroll.
+     `manipulation` = pan-x + pan-y + pinch-zoom (just disables
+     double-tap-to-zoom, which is irrelevant for a tap-to-flip card).
+     Lets motion's tap gesture work while still releasing the touch
+     to the browser's scroll engine when the user pans instead of
+     taps. */
+  touch-action: manipulation;
 }
 
 .faq-card-face {
