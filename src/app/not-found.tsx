@@ -16,6 +16,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import NotFoundBeacon from "@/components/NotFoundBeacon";
 
 type RouteCard = {
   chip: string;
@@ -81,6 +82,13 @@ function buildRailCards(offset: number): RouteCard[] {
 export default function NotFound() {
   return (
     <main id="main" tabIndex={-1} className="relative min-h-[100dvh] overflow-clip">
+      {/*
+        Client-only flag-setter. Tells the next page the user lands on
+        (via browser back from here) to force a reload so motion hooks
+        reinitialise cleanly. See NotFoundBeacon + BfcacheGuard for
+        the full rationale.
+      */}
+      <NotFoundBeacon />
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <Image
           src="/images/backgrounds/background2.jpg"
