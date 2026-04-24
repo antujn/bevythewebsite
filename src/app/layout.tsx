@@ -154,13 +154,21 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   // Search-engine ownership verification. Each key emits one
-  // `<meta name="<engine>-site-verification" content="…">` tag.
+  // `<meta name="<engine>-site-verification" content="…">` tag
+  // (except `other`, which emits raw `<meta name="…">` pairs for
+  // engines that don't follow the `-site-verification` convention).
   // Required once per engine during property setup, then kept
-  // permanently so Google/Bing/etc. can re-verify ownership even
-  // if the DNS path ever changes. Add more engines here (`yandex`,
-  // `me` for Yahoo, `other`) as they're wired up.
+  // permanently so Google / Bing / etc. can re-verify ownership
+  // even if the DNS path ever changes.
   verification: {
+    // Google Search Console → Google organic search + AI Overviews.
     google: "Qsx0a-M_V5rL1stjWh4LvUkAVktJn5pDJwJgyY46pU4",
+    // Bing Webmaster Tools → Bing organic search. Also the backing
+    // index for ChatGPT's web-browsing tool, so being verified here
+    // specifically improves visibility in LLM-cited results.
+    other: {
+      "msvalidate.01": "897FE365FC3C66BEB588D3923663B139",
+    },
   },
   // Give crawlers (including AI crawlers like GPTBot and Google-Extended)
   // explicit permission to use the full page content — no snippet length
