@@ -1,23 +1,106 @@
 @import "tailwindcss";
 
+/* ============================================================
+ * BEVY DESIGN TOKENS — Unified Palette
+ * ----------------------------------------------------------------
+ * Mood board: Devil Wears Prada (blood-red monochrome, orange-red
+ * title) + "The best nights aren't planned. They're felt." (wine-
+ * black gradient with rose italic). A cinematic, editorial red
+ * family with ember/rust as the single warm accent. No gold.
+ *
+ * Palette contract:
+ *   Background → deep wine-black (not pure black)
+ *   Text       → cream/almond (#f4eee5) at four opacity tiers
+ *   Accent     → ember/rust (#d9523a) — primary warmth, replaces
+ *                all prior gold usage (scroll bar, links, CTAs,
+ *                chips, focus rings, etc.)
+ *   Crimson    → deep wine red (#6b0f10) — brand primary for
+ *                FAQ, bundles, radial blooms, 404 red cards
+ *   Rose       → softer red italic (#c14c4c) — editorial italic
+ *                accent in titles (matches the reference poster
+ *                and "They're felt." italic)
+ *
+ * Every prior gold value (198,166,120 / 232,201,159 / #e8c99f /
+ * #e9d8a6 / #f4cf78 / #f0d4ad / #c6a678) resolves to the ember
+ * family below. `--gold-soft` is kept as a legacy alias pointing
+ * to `--ember-soft` so any stray reference still renders coherent.
+ * ============================================================ */
+
 @theme inline {
-  --color-background: #0a0a0a;
+  --color-background: #0d0505;
   --color-foreground: #f4eee5;
   --font-sans: var(--font-plus-jakarta);
   --font-display: var(--font-playfair);
 }
 
 :root {
+  /* ── Layout ─────────────────────────────── */
   --shell-max: 1220px;
   --shell-gutter: clamp(1.25rem, 3.6vw, 4.25rem);
   --section-space: clamp(4.25rem, 7.4vw, 7.5rem);
   --quote-space: clamp(3.4rem, 5.8vw, 5.3rem);
   --split-gap: clamp(2.5rem, 4.8vw, 5rem);
+
+  /* ── Background ramp (wine-black) ───────── */
+  --bg-base: #0d0505;      /* body */
+  --bg-raised: #140707;    /* elevated surfaces */
+  --bg-nav: #160808;       /* scrolled nav, legal header */
+  --bg-panel: #1a0a0a;     /* modals, glass surfaces */
+
+  /* ── Cream text ramp ────────────────────── */
+  --cream: #f4eee5;
   --text-main: rgba(244, 238, 229, 0.92);
   --text-sub: rgba(244, 238, 229, 0.72);
   --text-muted: rgba(244, 238, 229, 0.5);
   --text-soft: rgba(244, 238, 229, 0.34);
-  --gold-soft: rgba(198, 166, 120, 0.55);
+
+  /* ── Ember / rust accent (replaces gold) ── */
+  --ember: #d9523a;                            /* primary ember */
+  --ember-bright: #e86848;                     /* hover / peak */
+  --ember-deep: #b8432b;                       /* darker ember */
+  --ember-soft: rgba(217, 82, 58, 0.55);       /* brand accent var (was --gold-soft) */
+
+  /* Ember alpha ramp (for tinted bgs, borders, glows) */
+  --ember-a08: rgba(217, 82, 58, 0.08);
+  --ember-a12: rgba(217, 82, 58, 0.12);
+  --ember-a16: rgba(217, 82, 58, 0.16);
+  --ember-a22: rgba(217, 82, 58, 0.22);
+  --ember-a32: rgba(217, 82, 58, 0.32);
+  --ember-a45: rgba(217, 82, 58, 0.45);
+  --ember-a60: rgba(217, 82, 58, 0.60);
+  --ember-a70: rgba(217, 82, 58, 0.70);
+
+  /* ── Crimson (deep wine reds) ──────────── */
+  --crimson: #6b0f10;           /* brand primary red */
+  --crimson-bright: #8a1418;
+  --crimson-deep: #3d0808;
+  --rose: #c14c4c;              /* editorial italic accent */
+
+  /* ── Dark text on light surfaces ────────── */
+  --on-cream: #170707;
+  --on-ember: #1a0404;
+
+  /* ── Legacy alias (keep so stray refs still work) ── */
+  --gold-soft: var(--ember-soft);
+
+  /* ── Universal section dim overlay ────────
+     Replaces the copy-pasted `bg-gradient-to-b from-black/48 via-
+     black/42 to-black/48` used in six components. The warm wine
+     tint in each stop softens the illustration underneath and
+     ties every section to the brand's cinematic red atmosphere. */
+  --section-overlay: linear-gradient(
+    180deg,
+    rgba(13, 5, 5, 0.52) 0%,
+    rgba(20, 7, 8, 0.42) 50%,
+    rgba(30, 8, 10, 0.58) 100%
+  );
+}
+
+/* Utility class that any section can use instead of hand-rolling
+   its own dark-gradient backdrop. Renders the universal
+   --section-overlay as a full-bleed positioned child. */
+.section-overlay {
+  background: var(--section-overlay);
 }
 
 *,
@@ -40,13 +123,13 @@ html {
 }
 
 /* ── Accessibility: keyboard focus ──────────────
-   Consistent gold-tinted outline for every keyboard-focused
+   Consistent ember-tinted outline for every keyboard-focused
    interactive element. `:focus-visible` only fires for real keyboard
    navigation, not mouse clicks, so sighted mouse users never see the
    ring. Specific components (DownloadButton, dial items) override
    this with their own styles where needed. */
 :where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid rgba(198, 166, 120, 0.7);
+  outline: 2px solid var(--ember-a70);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -73,12 +156,12 @@ main:focus-visible {
   transform-origin: 0 50%;
   background: linear-gradient(
     90deg,
-    rgba(198, 166, 120, 0.38) 0%,
+    rgba(217, 82, 58, 0.38) 0%,
     var(--gold-soft) 45%,
-    #e8c99f 100%
+    #e86848 100%
   );
   /* Subtle glow below the bar so it lifts off the nav's bottom edge. */
-  box-shadow: 0 2px 12px rgba(232, 201, 159, 0.22);
+  box-shadow: 0 2px 12px rgba(232, 104, 72, 0.28);
   will-change: transform;
 }
 
@@ -96,11 +179,16 @@ main:focus-visible {
   overflow-x: auto;
   overflow-y: visible;
   scrollbar-width: none;
-  /* Only claim horizontal gestures — vertical swipes fall through to
-     the page so the FAQ doesn't stall the reader on their way to the
-     footer. Without this, mobile browsers treat any touch starting
-     on this element as ambiguous and briefly pause vertical scroll. */
-  touch-action: pan-x;
+  /* Allow BOTH axes of touch panning. Without `pan-y` explicitly
+     permitted, mobile browsers treat vertical swipes starting on
+     this element as blocked gestures — the page refuses to scroll
+     while the user's finger is inside the rail. With both axes
+     allowed, horizontal swipes route to this element (which has
+     overflow-x: auto and scrolls the rail) while vertical swipes
+     bubble up to the body (this element has overflow-y: visible, so
+     there's nothing here to consume them) and the page scrolls as
+     expected. */
+  touch-action: pan-x pan-y;
   /* Keep horizontal overscroll contained to this rail so a vigorous
      horizontal swipe doesn't trigger browser-level navigation
      (back/forward gestures on iOS Safari). */
@@ -212,11 +300,14 @@ main:focus-visible {
 }
 
 .faq-card-back {
+  /* Wine-tinted dark back face (was a neutral purple-grey).
+     Pulls the back of the flip card into the same warm cinematic
+     atmosphere as everything else. */
   background:
     linear-gradient(
       160deg,
-      rgba(18, 16, 22, 0.96) 0%,
-      rgba(8, 7, 10, 0.98) 100%
+      rgba(22, 10, 12, 0.96) 0%,
+      rgba(10, 6, 7, 0.98) 100%
     );
   color: rgba(244, 238, 229, 0.92);
   transform: rotateY(180deg);
@@ -242,7 +333,7 @@ main:focus-visible {
 }
 
 .faq-card-chip--answer {
-  background: rgba(198, 166, 120, 0.16);
+  background: rgba(217, 82, 58, 0.18);
   color: var(--gold-soft);
 }
 
@@ -275,7 +366,7 @@ main:focus-visible {
   line-height: 1.6;
   color: rgba(244, 238, 229, 0.82);
   scrollbar-width: thin;
-  scrollbar-color: rgba(198, 166, 120, 0.28) transparent;
+  scrollbar-color: rgba(217, 82, 58, 0.32) transparent;
 }
 
 .faq-card-a::-webkit-scrollbar {
@@ -283,7 +374,7 @@ main:focus-visible {
 }
 
 .faq-card-a::-webkit-scrollbar-thumb {
-  background: rgba(198, 166, 120, 0.28);
+  background: rgba(217, 82, 58, 0.32);
   border-radius: 2px;
 }
 
@@ -298,7 +389,7 @@ main:focus-visible {
 }
 
 .faq-card-back .faq-card-foot {
-  border-top-color: rgba(198, 166, 120, 0.16);
+  border-top-color: rgba(217, 82, 58, 0.18);
 }
 
 .faq-card-hint {
@@ -320,14 +411,14 @@ main:focus-visible {
 .faq-link {
   color: var(--gold-soft);
   text-decoration: underline;
-  text-decoration-color: rgba(198, 166, 120, 0.45);
+  text-decoration-color: rgba(217, 82, 58, 0.45);
   text-underline-offset: 3px;
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }
 
 .faq-link:hover {
-  color: #e8c99f;
-  text-decoration-color: #e8c99f;
+  color: #e86848;
+  text-decoration-color: #e86848;
 }
 
 @media (max-width: 640px) {
@@ -348,6 +439,196 @@ main:focus-visible {
 /* ── Not-found (/404) page ─────────────────────
    Scoped styles for the 404 so the button + sublinks render reliably
    regardless of Tailwind content-path picking up a new file. */
+.nf-stage {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.nf-ghost {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  pointer-events: none;
+  text-align: center;
+  z-index: 1;
+}
+
+.nf-ghost__code {
+  font-size: clamp(170px, 26vw, 420px);
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.16);
+}
+
+.nf-rails {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.5vw, 1.2rem);
+  padding-inline: clamp(1rem, 4vw, 5rem);
+  height: 100%;
+  overflow: hidden;
+}
+
+.nf-rail {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  align-items: center;
+}
+
+.nf-rail-track {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 1.5vw, 1.15rem);
+  padding-block: 1.2rem;
+  will-change: transform;
+}
+
+.nf-rail--0 .nf-rail-track {
+  animation: nf-rail-up-1 22s linear infinite;
+}
+
+.nf-rail--1 .nf-rail-track {
+  animation: nf-rail-down-1 24s linear infinite;
+}
+
+.nf-rail--2 .nf-rail-track {
+  animation: nf-rail-up-2 21s linear infinite;
+}
+
+.nf-rail--3 .nf-rail-track {
+  animation: nf-rail-down-2 25s linear infinite;
+}
+
+@keyframes nf-rail-up-1 {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-50% - 0.6rem));
+  }
+}
+
+@keyframes nf-rail-up-2 {
+  from {
+    transform: translateY(calc(-6%));
+  }
+  to {
+    transform: translateY(calc(-56% - 0.6rem));
+  }
+}
+
+@keyframes nf-rail-down-1 {
+  from {
+    transform: translateY(calc(-50% - 0.6rem));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes nf-rail-down-2 {
+  from {
+    transform: translateY(calc(-56% - 0.6rem));
+  }
+  to {
+    transform: translateY(calc(-6%));
+  }
+}
+
+.nf-rail-card {
+  border-radius: 20px;
+  padding: 14px;
+  width: min(100%, 270px);
+  aspect-ratio: 2 / 3;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  box-shadow:
+    0 24px 40px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.nf-rail-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 28px 46px rgba(0, 0, 0, 0.52),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Red/charcoal pair for the 404 rail cards. Red draws from the
+   crimson brand anchor; charcoal stays cool to provide contrast
+   inside the same warm wine-black atmosphere. */
+.nf-rail-card--red {
+  background: linear-gradient(
+    155deg,
+    rgba(107, 15, 16, 0.94),
+    rgba(61, 8, 8, 0.98)
+  );
+}
+
+.nf-rail-card--charcoal {
+  background: linear-gradient(
+    155deg,
+    rgba(34, 22, 24, 0.94),
+    rgba(16, 10, 12, 0.98)
+  );
+}
+
+.nf-rail-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nf-rail-card__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 5px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.nf-rail-card__index {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.nf-rail-card__title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(18px, 1.65vw, 22px);
+  line-height: 1.22;
+  color: rgba(244, 238, 229, 0.94);
+}
+
+.nf-rail-card__cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(232, 104, 72, 0.92);
+}
+
 .nf-cta {
   display: inline-flex;
   align-items: center;
@@ -362,7 +643,7 @@ main:focus-visible {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(249, 242, 232, 0.82);
+  color: rgba(244, 238, 229, 0.82);
   cursor: pointer;
   transition: color 220ms ease, transform 220ms ease;
 }
@@ -378,6 +659,24 @@ main:focus-visible {
   font-weight: 900;
   line-height: 1;
   transform: translateY(-0.02em);
+}
+
+.nf-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(232, 104, 72, 0.92);
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.nf-card-link:hover {
+  color: #f4eee5;
+  transform: translateX(1px);
 }
 
 .nf-cta--ghost {
@@ -409,6 +708,50 @@ main:focus-visible {
 }
 
 @media (max-width: 640px) {
+  .nf-rails {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding-inline: 12px;
+  }
+
+  .nf-rail {
+    height: 100%;
+  }
+
+  .nf-rail-track {
+    gap: 10px;
+    padding-block: 0.8rem;
+  }
+
+  .nf-rail-card {
+    width: min(100%, 190px);
+    aspect-ratio: 2 / 3;
+    min-height: 0;
+    border-radius: 16px;
+    padding: 11px;
+    gap: 10px;
+  }
+
+  .nf-rail-card__title {
+    font-size: clamp(14px, 3.9vw, 17px);
+  }
+
+  .nf-rail-card__chip {
+    padding: 4px 8px;
+    letter-spacing: 0.16em;
+  }
+
+  .nf-ghost__code {
+    font-size: clamp(128px, 34vw, 190px);
+  }
+
+  .nf-rail--0 .nf-rail-track,
+  .nf-rail--1 .nf-rail-track,
+  .nf-rail--2 .nf-rail-track,
+  .nf-rail--3 .nf-rail-track {
+    animation-duration: 20s;
+  }
+
   .nf-cta {
     padding: 12px 12px 9px;
     letter-spacing: 0.14em;
@@ -430,7 +773,7 @@ main:focus-visible {
   z-index: 200;
   padding: 12px 20px;
   background: #f4eee5;
-  color: #17120d;
+  color: var(--on-cream);
   font-family: var(--font-plus-jakarta), system-ui, sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -468,7 +811,7 @@ main:focus-visible {
 
 body {
   min-height: 100dvh;
-  background: #050505;
+  background: var(--bg-base);
   color: var(--text-main);
   font-family: var(--font-plus-jakarta), system-ui, sans-serif;
   overflow-x: hidden;
@@ -479,6 +822,11 @@ body {
   isolation: isolate;
 }
 
+/* Fixed-position backdrop: a subtle wine-black gradient layered over
+   the hero background texture. Replaces the flat black overlay so
+   the whole page reads like a cinematic, low-lit room (top of the
+   viewport nearly black, easing into a warmer wine tone toward the
+   bottom — directly inspired by the "Best Nights" reference). */
 body::before {
   content: "";
   position: fixed;
@@ -489,7 +837,12 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(5, 5, 5, 0.72), rgba(5, 5, 5, 0.72)),
+    linear-gradient(
+      180deg,
+      rgba(13, 5, 5, 0.82) 0%,
+      rgba(22, 8, 10, 0.84) 55%,
+      rgba(40, 10, 14, 0.82) 100%
+    ),
     url("/images/backgrounds/background2.jpg") center / cover no-repeat;
 }
 
@@ -499,12 +852,72 @@ a {
 }
 
 ::selection {
-  background: rgba(125, 85, 40, 0.45);
+  background: rgba(217, 82, 58, 0.42);
   color: #fff;
 }
 
 .font-display {
   font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+}
+
+/* ── Accent italic / "couplet" styling ─────────
+ *
+ * Inspired by the "Best Nights" editorial couplet (cream serif
+ * premise + rose-red italic serif payoff). Applied to the second
+ * half of split section titles across the site so every headline
+ * reads like a small two-line poem.
+ *
+ * Usage:
+ *   <h2 class="section-title">
+ *     Cream premise, ending with a space
+ *     <span class="title-accent">sensory payoff.</span>
+ *   </h2>
+ *
+ * Or with an explicit break:
+ *   <h2 class="section-title">
+ *     Cream premise
+ *     <br />
+ *     <span class="title-accent">sensory payoff.</span>
+ *   </h2>
+ *
+ * The span inherits the parent's font-family (Playfair Display via
+ * .section-title / .font-display) and size; this utility only
+ * overrides style + color. Keep the punctuation inside the span so
+ * the period / question mark picks up the rose tone too. */
+.title-accent {
+  font-style: italic;
+  color: var(--rose);
+  /* Playfair Display's italic glyphs are slightly narrower than the
+     upright — a touch of letter-spacing keeps the couplet visually
+     balanced against the cream line above it. */
+  letter-spacing: -0.005em;
+}
+
+/* ── Preview-story variant ─────────────────────
+ *
+ * The App Store preview slides (rendered inside the Previews modal
+ * and downloadable as JPEGs for App Store Connect) sit over
+ * background photos with strong red/crimson elements — the default
+ * rose (#c14c4c) blends into those backgrounds and the couplet
+ * payoff gets lost.
+ *
+ * For preview stories only, the italic accent shifts to a pale
+ * cream-gold that reads as "highlighted" against every theme
+ * (crimson, amber, ember, gold, blue, night) without breaking
+ * the warm brand family. Ship-specific legibility move: we want
+ * these previews to look like magazine covers on a newsstand.
+ *
+ * Main-site couplets (hero, features, bundles, gameplay, reviews,
+ * faq, footer CTA) stay rose — they don't sit over the same high-
+ * contrast red photographic backgrounds. */
+.preview-story-title .title-accent,
+.preview-brand-tagline .title-accent {
+  color: #e8c99f;
+  /* Subtle warm glow behind the italic text so it still reads
+     clearly even on the darkest crimson slide background. */
+  text-shadow:
+    0 9px 22px rgba(0, 0, 0, 0.42),
+    0 2px 6px rgba(13, 5, 5, 0.55);
 }
 
 .editorial-img {
@@ -569,7 +982,7 @@ a {
 
 .fd-tab--active {
   color: var(--text-main);
-  background: rgba(198, 166, 120, 0.08);
+  background: rgba(217, 82, 58, 0.10);
 }
 
 .fd-progress {
@@ -783,16 +1196,16 @@ a {
 }
 
 .legal-copy a {
-  color: rgba(232, 201, 159, 0.7);
+  color: rgba(232, 104, 72, 0.78);
   text-decoration: underline;
-  text-decoration-color: rgba(232, 201, 159, 0.25);
+  text-decoration-color: rgba(232, 104, 72, 0.32);
   text-underline-offset: 3px;
   transition: color 220ms ease, text-decoration-color 220ms ease;
 }
 
 .legal-copy a:hover {
-  color: rgba(232, 201, 159, 1);
-  text-decoration-color: rgba(232, 201, 159, 0.6);
+  color: rgba(232, 104, 72, 1);
+  text-decoration-color: rgba(232, 104, 72, 0.6);
 }
 
 .legal-copy strong {
@@ -819,9 +1232,9 @@ a {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--gold-soft) 18%,
-    rgba(232, 201, 159, 0.74) 52%,
-    var(--gold-soft) 84%,
+    var(--ember-soft) 18%,
+    rgba(232, 104, 72, 0.82) 52%,
+    var(--ember-soft) 84%,
     transparent 100%
   );
 }
@@ -838,7 +1251,7 @@ a {
 .hero-proof-stars {
   font-size: 14px;
   letter-spacing: 0.02em;
-  color: #e8c99f;
+  color: #e86848;
 }
 
 .hero-proof-text {
@@ -937,9 +1350,13 @@ a {
   }
 }
 
-/* Mock dial gets extra bottom space for the dot indicators */
-.dial--mock {
-  padding-bottom: 40px;
+/* Text (description) dial reserves extra space on its right edge
+   for the vertical column of dot indicators. The dots live with
+   the text dial (not the mock dial) so they sit at the far-right
+   of the whole layout on desktop, visually signalling a picker
+   for the full bundle stack. See .dial-dots below. */
+.dial--text {
+  padding-right: 40px;
 }
 
 /* The draggable track fills the dial so a drag gesture can start
@@ -982,7 +1399,7 @@ a {
 /* Keyboard focus ring — only shown for real keyboard navigation, not
    on mouse/touch focus. */
 .dial-item:focus-visible {
-  outline: 2px solid rgba(198, 166, 120, 0.6);
+  outline: 2px solid rgba(217, 82, 58, 0.6);
   outline-offset: 4px;
   border-radius: 8px;
 }
@@ -1056,18 +1473,22 @@ a {
   margin: 0;
 }
 
-/* Dot indicators under the mock dial.
+/* Dot indicators along the right edge of the text-description dial
+   (i.e. the far-right of the bundles layout on desktop).
    The button itself is a 24x24 hit target (WCAG 2.5.5 minimum) so
-   taps land comfortably; the visible dot is a 7px inner <span> so
-   the row still reads as a discreet row of dots visually. */
+   taps land comfortably; the visible dot is a 10px inner <span>
+   which, stacked vertically at 24px centers, reads as a tight
+   compact column visually. */
 .dial-dots {
   position: absolute;
-  left: 0;
+  top: 0;
   right: 0;
   bottom: 0;
   display: flex;
+  flex-direction: column;
   gap: 0;
   justify-content: center;
+  align-items: center;
   z-index: 15;
 }
 
@@ -1084,8 +1505,8 @@ a {
 
 /* Visible dot inside each 24x24 tap target. Sized large enough that
    with WCAG's required 24px center-to-center spacing, the dots still
-   read as a tight compact row (10px dot → 14px visible gap, vs a 7px
-   dot → 17px visible gap). */
+   read as a tight compact column (10px dot → 14px visible gap, vs a
+   7px dot → 17px visible gap). */
 .dial-dot-mark {
   display: block;
   width: 10px;
@@ -1164,8 +1585,8 @@ a {
 
 .gameplay-tab--active {
   color: var(--text-main);
-  border-color: rgba(232, 201, 159, 0.6);
-  background: rgba(198, 166, 120, 0.12);
+  border-color: rgba(232, 104, 72, 0.6);
+  background: rgba(217, 82, 58, 0.14);
 }
 
 .gameplay-title {
@@ -1271,10 +1692,15 @@ a {
   position: relative;
   margin-top: clamp(2rem, 4.5vw, 3.7rem);
   padding: clamp(4.6rem, 7.2vw, 6.1rem) 0 clamp(4.1rem, 6.5vw, 5.4rem);
+  /* Three radial blooms layered for a warm, cinematic reviews
+     backdrop: ember from the top (like stage lights), crimson
+     from the bottom-right (wine pour), and a deeper ember-rust
+     from the bottom-left. All three live inside the same red
+     family — no contrasting green. */
   background:
-    radial-gradient(120% 85% at 50% -8%, rgba(198, 166, 120, 0.08), transparent 60%),
-    radial-gradient(90% 74% at 100% 100%, rgba(97, 0, 0, 0.06), transparent 68%),
-    radial-gradient(85% 70% at 0% 100%, rgba(0, 43, 0, 0.04), transparent 68%);
+    radial-gradient(120% 85% at 50% -8%, rgba(217, 82, 58, 0.10), transparent 60%),
+    radial-gradient(90% 74% at 100% 100%, rgba(107, 15, 16, 0.10), transparent 68%),
+    radial-gradient(85% 70% at 0% 100%, rgba(184, 67, 43, 0.06), transparent 68%);
   border-top-left-radius: 46% 10%;
   border-top-right-radius: 46% 10%;
   overflow: hidden;
@@ -1322,7 +1748,11 @@ a {
 
 .reviews-paired-title {
   margin-top: 1.35rem;
-  max-width: 700px;
+  /* Widened from 700px to accommodate the couplet payoff "from real
+     players and real game nights." on a single line at desktop sizes
+     (the mobile @media override below still clamps to 620px, where
+     the payoff is permitted to wrap naturally). */
+  max-width: 960px;
   font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
   font-size: clamp(28px, 3.1vw, 46px);
   line-height: 1.12;
@@ -1333,14 +1763,24 @@ a {
   z-index: 2;
 }
 
+/* Keep the rose-italic couplet payoff on a single line at desktop
+   widths. Below 900px the headline's max-width collapses and the
+   payoff is allowed to wrap — forcing nowrap there would push the
+   italic off the side of the viewport. */
+@media (min-width: 901px) {
+  .reviews-paired-title .title-accent {
+    white-space: nowrap;
+  }
+}
+
 .reviews-paired-cta {
   margin-top: 1.25rem;
   font-family: var(--font-plus-jakarta), system-ui, sans-serif;
   border: none;
   border-radius: 999px;
   padding: 0.72rem 1.95rem;
-  background: linear-gradient(135deg, rgba(232, 201, 159, 0.97) 0%, rgba(198, 166, 120, 0.96) 100%);
-  color: #17120d;
+  background: linear-gradient(135deg, rgba(232, 104, 72, 0.97) 0%, rgba(217, 82, 58, 0.96) 100%);
+  color: var(--on-cream);
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -1366,7 +1806,9 @@ a {
   padding: 1.05rem 1.2rem;
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(14, 13, 18, 0.96);
+  /* Wine-tinted dark glass — sits inside the warm reviews
+     atmosphere without reading as a neutral grey card. */
+  background: rgba(22, 10, 12, 0.96);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -1493,6 +1935,64 @@ a {
   }
 }
 
+/* ── Try Bevy inline CTA ────────────────────────
+ *
+ * Editorial ember-gradient pill rendered by <TryBevyButton />.
+ * Used inline inside body sections (Experience header, Gameplay
+ * header) and feature-deck cards. Sits on the same palette as the
+ * reviews-paired-cta (the big primary CTA on the reviews section)
+ * but at a smaller, inline size — so the whole page has a coherent
+ * family of ember CTAs at three tiers:
+ *
+ *   • App Store badge (DownloadButton)           — hero, footer
+ *   • Big ember pill (reviews-paired-cta)        — reviews
+ *   • Inline ember pill (this .try-bevy-btn)     — sections, cards
+ *
+ * All three route through useDownload()'s triggerDownload, so the
+ * click behaviour is identical everywhere. */
+.try-bevy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    rgba(232, 104, 72, 0.97) 0%,
+    rgba(217, 82, 58, 0.96) 100%
+  );
+  color: var(--on-cream);
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(217, 82, 58, 0.22);
+  transition: filter 200ms ease, box-shadow 200ms ease;
+}
+
+.try-bevy-btn:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 12px 28px rgba(217, 82, 58, 0.32);
+}
+
+.try-bevy-btn:active {
+  filter: brightness(0.98);
+}
+
+/* Compact variant — tighter padding + smaller type, used inside
+   feature-deck cards where the copy column shares horizontal
+   room with the illustration. */
+.try-bevy-btn--sm {
+  padding: 8px 18px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  gap: 8px;
+}
+
 /* ── Try for free button ─────────────────────── */
 
 .header-cta-group {
@@ -1521,8 +2021,8 @@ a {
 
 .previews-btn:hover {
   color: #fff;
-  border-color: rgba(198, 166, 120, 0.6);
-  background: rgba(198, 166, 120, 0.14);
+  border-color: rgba(217, 82, 58, 0.6);
+  background: rgba(217, 82, 58, 0.14);
   transform: translateY(-1px);
 }
 
@@ -1535,7 +2035,7 @@ a {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #0a0a0a;
+  color: var(--on-cream);
   background: var(--text-main);
   border: none;
   border-radius: 100px;
@@ -1562,8 +2062,10 @@ a {
   display: grid;
   place-items: center;
   padding: 1.2rem;
+  /* Warm wine-tinted overlay instead of neutral charcoal —
+     matches the rest of the site's cinematic atmosphere. */
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(24, 18, 14, 0.28), rgba(5, 5, 6, 0.38));
+    radial-gradient(120% 80% at 50% 0%, rgba(42, 14, 16, 0.36), rgba(13, 5, 5, 0.48));
   backdrop-filter: blur(10px);
   animation: fadeIn 280ms ease;
 }
@@ -1574,7 +2076,10 @@ a {
   max-height: min(94vh, 980px);
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(10, 10, 12, 0.62);
+  /* Wine-tinted glass surface. The slight red cast reads as warm
+     stage light behind the preview phones rather than a neutral
+     dark modal. */
+  background: rgba(24, 10, 12, 0.62);
   box-shadow:
     0 30px 90px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -1623,8 +2128,8 @@ a {
 }
 
 .preview-modal-close:hover {
-  border-color: rgba(198, 166, 120, 0.5);
-  background: rgba(198, 166, 120, 0.16);
+  border-color: rgba(217, 82, 58, 0.5);
+  background: rgba(217, 82, 58, 0.18);
 }
 
 .preview-slider-wrap {
@@ -1676,8 +2181,8 @@ a {
 }
 
 .preview-download-btn:hover:not(:disabled) {
-  border-color: rgba(198, 166, 120, 0.55);
-  background: rgba(198, 166, 120, 0.18);
+  border-color: rgba(217, 82, 58, 0.55);
+  background: rgba(217, 82, 58, 0.22);
   color: #f4eee5;
 }
 
@@ -1690,13 +2195,26 @@ a {
   cursor: progress;
 }
 
+/* ── App Store preview slide themes ───────────
+ *
+ * Each preview slide can opt into one of six color themes by adding a
+ * `.preview-story--<theme>` class. Themes override three CSS vars:
+ *   --pv-overlay-top     gradient wash at the top of the card
+ *   --pv-overlay-bottom  gradient wash at the bottom of the card
+ *   --pv-accent          colored bloom behind the phone mock
+ *
+ * All six themes now sit inside the site's red/ember family (no
+ * standalone blue or green swatches). The "cool" variants (blue,
+ * night) are deep oceanic navy-blacks with a wine undertone so
+ * they still feel like part of the same cinematic palette.
+ */
 .preview-story {
-  --pv-overlay-top: rgba(15, 10, 9, 0.2);
-  --pv-overlay-bottom: rgba(8, 6, 6, 0.86);
-  --pv-accent: rgba(191, 66, 91, 0.32);
-  --pv-chip-bg: rgba(248, 244, 236, 0.9);
+  --pv-overlay-top: rgba(22, 8, 10, 0.22);
+  --pv-overlay-bottom: rgba(13, 5, 5, 0.88);
+  --pv-accent: rgba(217, 82, 58, 0.32);
+  --pv-chip-bg: rgba(244, 238, 229, 0.9);
   --pv-chip-border: rgba(255, 255, 255, 0.58);
-  --pv-chip-text: rgba(20, 16, 12, 0.92);
+  --pv-chip-text: var(--on-cream);
   position: relative;
   width: min(460px, 84vw, calc(80vh * 0.462));
   aspect-ratio: 1242 / 2688;
@@ -1709,7 +2227,7 @@ a {
   box-shadow:
     0 34px 76px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  background: #111113;
+  background: var(--bg-nav);
 }
 
 .preview-story-bg {
@@ -1733,7 +2251,7 @@ a {
     linear-gradient(
       180deg,
       var(--pv-overlay-top) 0%,
-      rgba(10, 8, 8, 0.42) 44%,
+      rgba(18, 7, 9, 0.44) 44%,
       var(--pv-overlay-bottom) 100%
     );
 }
@@ -1746,40 +2264,46 @@ a {
   filter: blur(18px);
 }
 
+/* Crimson: deep wine — Devil Wears Prada red carpet */
 .preview-story--crimson {
-  --pv-overlay-top: rgba(46, 10, 14, 0.2);
-  --pv-overlay-bottom: rgba(14, 4, 6, 0.88);
-  --pv-accent: rgba(209, 46, 74, 0.36);
+  --pv-overlay-top: rgba(54, 10, 12, 0.22);
+  --pv-overlay-bottom: rgba(13, 4, 6, 0.9);
+  --pv-accent: rgba(193, 76, 76, 0.38);
 }
 
+/* Amber: warm rust glow — molten firelight */
 .preview-story--amber {
-  --pv-overlay-top: rgba(56, 27, 10, 0.2);
-  --pv-overlay-bottom: rgba(13, 9, 6, 0.88);
-  --pv-accent: rgba(192, 118, 45, 0.34);
+  --pv-overlay-top: rgba(62, 24, 12, 0.22);
+  --pv-overlay-bottom: rgba(16, 7, 6, 0.9);
+  --pv-accent: rgba(217, 82, 58, 0.34);
 }
 
+/* Blue: deep indigo-wine — cool but within the dark red family */
 .preview-story--blue {
-  --pv-overlay-top: rgba(10, 31, 46, 0.2);
-  --pv-overlay-bottom: rgba(4, 14, 22, 0.9);
-  --pv-accent: rgba(42, 124, 176, 0.34);
+  --pv-overlay-top: rgba(18, 20, 40, 0.26);
+  --pv-overlay-bottom: rgba(10, 8, 16, 0.92);
+  --pv-accent: rgba(90, 78, 140, 0.32);
 }
 
+/* Gold theme name preserved for back-compat, now rust-toned. */
 .preview-story--gold {
-  --pv-overlay-top: rgba(43, 29, 8, 0.2);
-  --pv-overlay-bottom: rgba(11, 8, 5, 0.9);
-  --pv-accent: rgba(193, 142, 56, 0.3);
+  --pv-overlay-top: rgba(58, 22, 10, 0.22);
+  --pv-overlay-bottom: rgba(13, 6, 4, 0.92);
+  --pv-accent: rgba(232, 104, 72, 0.32);
 }
 
+/* Ember: the signature warm glow */
 .preview-story--ember {
-  --pv-overlay-top: rgba(47, 15, 9, 0.2);
-  --pv-overlay-bottom: rgba(14, 5, 4, 0.9);
-  --pv-accent: rgba(179, 82, 55, 0.33);
+  --pv-overlay-top: rgba(54, 18, 10, 0.22);
+  --pv-overlay-bottom: rgba(14, 5, 4, 0.92);
+  --pv-accent: rgba(184, 67, 43, 0.36);
 }
 
+/* Night: cool wine-indigo — still inside the red family */
 .preview-story--night {
-  --pv-overlay-top: rgba(8, 11, 18, 0.2);
-  --pv-overlay-bottom: rgba(4, 7, 11, 0.92);
-  --pv-accent: rgba(52, 78, 133, 0.3);
+  --pv-overlay-top: rgba(14, 12, 24, 0.24);
+  --pv-overlay-bottom: rgba(8, 4, 10, 0.94);
+  --pv-accent: rgba(70, 62, 124, 0.32);
 }
 
 .preview-story-content {
@@ -1801,7 +2325,7 @@ a {
   text-align: center;
   letter-spacing: -0.03em;
   font-weight: 800;
-  color: #f8f4ee;
+  color: #f4eee5;
   text-shadow: 0 9px 22px rgba(0, 0, 0, 0.38);
   max-width: 12ch;
   text-wrap: balance;
@@ -1870,7 +2394,7 @@ a {
   line-height: 1;
   font-weight: 800;
   letter-spacing: -0.025em;
-  color: #f8f4ee;
+  color: #f4eee5;
   text-shadow: 0 8px 18px rgba(0, 0, 0, 0.36);
 }
 
@@ -1880,7 +2404,7 @@ a {
   line-height: 0.95;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #f8f4ee;
+  color: #f4eee5;
   text-shadow: 0 9px 20px rgba(0, 0, 0, 0.36);
   display: flex;
   flex-direction: column;
@@ -1892,9 +2416,11 @@ a {
   display: block;
 }
 
-.preview-brand-tagline span:last-child {
-  color: rgba(248, 244, 238, 0.5);
-}
+/* The second line ("Reimagined.") is now styled explicitly in JSX via
+   `font-display font-bold title-accent` — which pulls in Playfair
+   italic + the preview cream-gold override above. No additional span
+   rule needed here (the previous `span:last-child` color override
+   has been removed so it doesn't fight the title-accent class). */
 
 .preview-brand-row {
   position: relative;
@@ -1934,7 +2460,7 @@ a {
   font-size: clamp(10px, 2.1vw, 13px);
   line-height: 1.48;
   font-weight: 600;
-  color: rgba(250, 246, 239, 0.98);
+  color: rgba(244, 238, 229, 0.98);
   text-wrap: pretty;
 }
 
@@ -1942,7 +2468,7 @@ a {
   margin: 0 0 0.52rem;
   font-size: clamp(14px, 3.2vw, 18px);
   letter-spacing: 0.14em;
-  color: #f4cf78;
+  color: #e86848;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
 }
 
@@ -2296,8 +2822,9 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Warm wine wash (matches preview-modal overlay). */
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(24, 18, 14, 0.16), rgba(5, 5, 6, 0.22));
+    radial-gradient(120% 80% at 50% 0%, rgba(42, 14, 16, 0.22), rgba(13, 5, 5, 0.30));
   backdrop-filter: blur(10px);
   /* Motion handles enter/exit via AnimatePresence in DownloadContext. */
 }
@@ -2310,7 +2837,8 @@ a {
   padding: 3rem 2.5rem;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(17, 17, 17, 0.64);
+  /* Wine-tinted glass, not neutral grey. */
+  background: rgba(28, 12, 12, 0.66);
   max-width: 380px;
   width: 90%;
   position: relative;
@@ -2380,8 +2908,8 @@ a {
   margin-top: 1.4rem;
   padding: 12px 22px;
   border-radius: 999px;
-  background: rgba(198, 166, 120, 0.14);
-  border: 1px solid rgba(198, 166, 120, 0.4);
+  background: rgba(217, 82, 58, 0.14);
+  border: 1px solid rgba(217, 82, 58, 0.42);
   color: var(--gold-soft);
   font-size: 11px;
   font-weight: 600;
@@ -2391,8 +2919,8 @@ a {
 }
 
 .qr-fallback--primary:hover {
-  background: rgba(198, 166, 120, 0.22);
-  border-color: rgba(198, 166, 120, 0.6);
+  background: rgba(217, 82, 58, 0.28);
+  border-color: rgba(217, 82, 58, 0.6);
   color: #f4eee5;
 }
 

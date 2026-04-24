@@ -41,8 +41,10 @@ export default function Footer() {
   return (
     <footer className="relative min-h-[88vh] overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.04),transparent_60%)]" />
+        {/* Wine-tinted section overlay + a soft central bloom so the
+            footer reads as the final, warm "exhale" of the page. */}
+        <div className="section-overlay absolute inset-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(217,82,58,0.06),transparent_60%)]" />
       </div>
 
       <div className="site-shell relative flex min-h-[88vh] flex-col items-center py-12 sm:py-14 lg:py-16">
@@ -62,8 +64,12 @@ export default function Footer() {
               <p className="kicker">Get Bevy</p>
             </RevealChild>
             <RevealChild>
+              {/* Couplet CTA — "Try Bevy" in cream, "for free." as
+                  the rose italic payoff. See .title-accent in
+                  globals.css. */}
               <h2 className="section-title" style={{ textAlign: "center" }}>
-                Try Bevy for free.
+                Try Bevy{" "}
+                <span className="title-accent">for free.</span>
               </h2>
             </RevealChild>
             <RevealChild preset="scale">

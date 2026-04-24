@@ -12,8 +12,12 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#050505",
-    theme_color: "#050505",
+    // Match --bg-base in globals.css — wine-tinted near-black.
+    // `theme_color` also drives the iOS/Android status-bar color
+    // when launched from the home screen; the subtle red warmth
+    // ties the PWA chrome to the in-page palette.
+    background_color: "#0d0505",
+    theme_color: "#0d0505",
     icons: [
       {
         src: "/icon-192.png",

@@ -7,10 +7,12 @@ import { RevealChild, RevealGroup } from "./RevealIn";
 const APP_STORE_URL =
   "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490";
 
-// All FAQ cards share the Significant Other bundle's deep red to
-// match the brand's primary accent. Kept as a single constant so it
-// can be swapped (e.g. back to bundle-per-card) in one edit.
-const CARD_ACCENT = "#610000";
+// All FAQ cards share the crimson brand anchor — the same value used
+// by the Significant Other bundle and the --crimson design token in
+// globals.css. Kept as a single constant so the red can be swapped
+// (e.g. to a bundle-per-card palette) in one edit. If this value
+// changes, also update `--crimson` in `src/app/globals.css`.
+const CARD_ACCENT = "#6b0f10";
 
 type FaqItem = {
   q: string;
@@ -97,10 +99,7 @@ export default function FaqSection() {
   return (
     <section id="faq" className="section-space relative overflow-hidden">
       <span id="faq-anchor" className="section-anchor-mid" aria-hidden />
-      <div
-        aria-hidden
-        className="absolute inset-0 z-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48"
-      />
+      <div aria-hidden className="section-overlay absolute inset-0 z-0" />
 
       <div className="relative z-10">
         <RevealGroup
@@ -113,9 +112,12 @@ export default function FaqSection() {
             <p className="kicker">Frequently Asked Questions</p>
           </RevealChild>
           <RevealChild>
+            {/* Couplet headline — inline variant (short enough to fit
+                on one line on most screens). See .title-accent in
+                globals.css. */}
             <h2 id="faq-heading" className="section-title section-anchor-title">
               A deck of{" "}
-              <span className="font-bold italic">answers.</span>
+              <span className="title-accent font-bold">answers.</span>
             </h2>
           </RevealChild>
           <RevealChild preset="scale">

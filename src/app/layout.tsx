@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { DownloadProvider } from "@/components/DownloadContext";
 import MotionProvider from "@/components/MotionProvider";
-import ScrollProgressBar from "@/components/ScrollProgressBar";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -123,7 +122,6 @@ export default function RootLayout({
           Skip to main content
         </a>
         <MotionProvider>
-          <ScrollProgressBar />
           <DownloadProvider>{children}</DownloadProvider>
         </MotionProvider>
         <Analytics />

@@ -9,51 +9,72 @@ import {
   useMotionValueEvent,
   type MotionValue,
 } from "motion/react";
+import TryBevyButton from "./TryBevyButton";
 
+/**
+ * Feature-deck card palette — six subtle variations inside the site's
+ * wine-black family. Each card shifts slightly in warmth/mood so the
+ * deck feels alive as it fly-offs, without any card breaking the
+ * unified cinematic atmosphere (previously the "Powered by AI" card
+ * was cool slate blue, "Safe & Inclusive" was dark forest green —
+ * both fought the warm red palette).
+ *
+ * Titles use a "couplet" structure — `title` is the cream upright
+ * premise, `titleAccent` (optional) is the rose-italic sensory
+ * payoff that sits on the next line. When `titleAccent` is omitted,
+ * the title renders as a single cream line (used for any card whose
+ * headline is already short enough to read as one beat).
+ */
 const features = [
   {
     tab: "The Feeling",
-    title: "Go further, feel more.",
+    title: "Go further,",
+    titleAccent: "feel more.",
     body: "Every card is emotionally considered, socially aware, and designed to land. Questions that bring out different feelings in you and in each other. Dares that get you moving, laughing, and fully in the moment. Moments that bond you closer to the people around you.",
     imageSrc: "/images/illustrations/illustration1.jpg",
-    bg: "#1f1811",
+    bg: "#1f0d0b", // deep wine-brown — soft firelight
   },
   {
     tab: "The Growth",
-    title: "Conversations that stay with you.",
+    title: "Conversations that",
+    titleAccent: "stay with you.",
     body: "The more you play, the more connected you become, with each other and with yourself. You notice new parts of who you are, and new sides of the people around you. You learn how to show up with different energies, in ways that feel socially aware and emotionally true. Bevy turns those moments into growth you can feel.",
     imageSrc: "/images/illustrations/illustration2.jpg",
-    bg: "#221613",
+    bg: "#22100e", // warm wine — settled, reflective
   },
   {
     tab: "Be Extraordinary",
-    title: "Elevate the ordinary.",
+    title: "Elevate",
+    titleAccent: "the ordinary.",
     body: "Made for the moments in between. Bevy turns ordinary moments into meaningful ones, then meaningful ones into unforgettable nights. No awkward silences. No recycled small talk. Just the right card at the exact right moment.",
     imageSrc: "/images/illustrations/illustration3.jpg",
-    bg: "#1c1313",
+    bg: "#1c0a0a", // darkest wine — nocturnal
   },
   {
     tab: "Powered by AI",
-    title: "Thoughtfully intelligent.",
+    title: "Thoughtful.",
+    titleAccent: "Intelligent.",
     body: "BevyAI adapts the game to your preferences, energy, and comfort level so every session feels right for your group. And when there is no group, it steps in as your play partner for solo reflection and discovery.",
     imageSrc: "/images/illustrations/illustration4.jpg",
-    bg: "#131a21",
+    bg: "#14121d", // cool wine-indigo — the tech note inside the warm room
   },
   {
     tab: "Safe & Inclusive",
-    title: "Play without hesitation.",
+    title: "Play",
+    titleAccent: "without hesitation.",
     body: "Every card is thoughtfully crafted to be inclusive, respectful, and easy to say yes to. No cringe. No pressure. No moments that leave anyone behind. Just honest, socially intelligent prompts designed for real people in real rooms.",
     imageSrc: "/images/illustrations/illustration5.jpg",
-    bg: "#182014",
+    bg: "#180e0a", // warm amber-black — calm, steady
   },
   {
     tab: "Courage Catalyst",
-    title: "Permission to make the first move.",
+    title: "Permission to make",
+    titleAccent: "the first move.",
     body: "Bevy helps the room shift. It gives people permission to ask the deeper question, take the bolder dare, and open up without overthinking it. When a moment feels risky, the app carries the weight, so connection feels easier and more natural.",
     imageSrc: "/images/illustrations/illustration6.jpg",
-    bg: "#1f1a12",
+    bg: "#1f130a", // ember-tinged dark — courage, warmth
   },
-];
+] as const;
 
 const N = features.length;
 // Number of fly-off transitions = N - 1. The last card lands on top and stays,
@@ -156,8 +177,29 @@ function FeatureCard({
     >
       <div className="fd-card-depth">
         <div className="fd-card-copy">
-          <h2 className="fd-card-title">{feature.title}</h2>
+          {/*
+            Couplet title: cream premise on line 1, rose italic
+            payoff on line 2 (see .title-accent in globals.css).
+            Falls back to a single cream line if a feature only
+            supplies `title` without `titleAccent`.
+          */}
+          <h2 className="fd-card-title">
+            {feature.title}
+            {feature.titleAccent ? (
+              <>
+                <br />
+                <span className="title-accent">{feature.titleAccent}</span>
+              </>
+            ) : null}
+          </h2>
           <p className="fd-card-body">{feature.body}</p>
+          {/* Inline CTA — compact ember pill so it sits naturally
+              in the copy column next to the illustration without
+              overwhelming the card. Triggers the same download
+              flow as every other CTA on the site. */}
+          <div style={{ marginTop: 20 }}>
+            <TryBevyButton size="sm" />
+          </div>
         </div>
         <div className="fd-card-media">
           <Image
@@ -233,7 +275,8 @@ export default function FeatureDeck() {
         className="section-anchor-mid section-anchor-mid--feature"
         aria-hidden
       />
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
+      {/* Wine-tinted section overlay (see --section-overlay in globals.css). */}
+      <div className="section-overlay absolute inset-0 z-0" />
       <div className="fd-sticky-container relative z-10">
         <div
           style={{
@@ -251,10 +294,17 @@ export default function FeatureDeck() {
             }}
           >
             <p className="kicker">The Experience</p>
+            {/*
+              Section headline — the signature "Best Nights" couplet.
+              Cream premise on line 1, rose italic payoff on line 2.
+              This is the anchor couplet that every other one on the
+              page (hero "Reimagined.", feature cards, gameplay,
+              bundles, reviews, footer CTA) rhymes with visually.
+            */}
             <h2 className="section-title">
               The best nights aren&rsquo;t planned.
               <br />
-              They&rsquo;re felt.
+              <span className="title-accent">They&rsquo;re felt.</span>
             </h2>
             <div
               className="gold-line mt-4"

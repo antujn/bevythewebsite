@@ -13,11 +13,30 @@ type Bundle = {
   imageSrc: string;
   imageAlt: string;
   accent: string;
-  accentBg: string;
 };
 
+/**
+ * Bundle palette — unified into two families that mirror the Truth/Dare
+ * split, and deliberately spread across the full usable hue range of
+ * each family so adjacent bundles read as clearly different vibes
+ * (not just "another dark red" or "another dark blue"):
+ *
+ *   truth → warm family, spanning wine → magenta-berry → burnt copper
+ *           → plum-wine → bright ember. Each bundle occupies a distinct
+ *           hue AND brightness within the warm half of the site's
+ *           palette so the dial never shows two siblings that look
+ *           like near-duplicates.
+ *
+ *   dare  → cool family, spanning plum-indigo → charcoal-black → deep
+ *           navy → royal indigo → teal-steel. Same principle on the
+ *           cool half: five distinct temperatures of "after dark."
+ *
+ * Every accent still reads as cinematic-dark (low lightness, saturated)
+ * so the whole dial stays inside the Devil-Wears-Prada / "Best Nights"
+ * wine-black atmosphere — no pastel or neutral-grey interlopers.
+ */
 const bundles: Bundle[] = [
-  // Truth bundles
+  // ── TRUTH bundles — warm family (wine → copper → ember) ─────
   {
     label: "Significant Other",
     type: "truth",
@@ -25,8 +44,9 @@ const bundles: Bundle[] = [
       "Intimate, affectionate and pragmatic questions to ask in a long-term monogamous relationship to bring you closer to your partner.",
     imageSrc: "/images/bundles/bundle-significant-other.png",
     imageAlt: "Significant Other bundle screen",
-    accent: "#610000",
-    accentBg: "rgba(97, 0, 0, 0.2)",
+    // Deep classic crimson — the brand anchor red, the "canonical
+    // long-term love" color.
+    accent: "#6b0f10",
   },
   {
     label: "Early Dating",
@@ -35,8 +55,9 @@ const bundles: Bundle[] = [
       "Socially and emotionally intelligent questions to help you develop a great connection with your potential significant other.",
     imageSrc: "/images/bundles/bundle-early-dating.png",
     imageAlt: "Early Dating bundle screen",
-    accent: "#001f2a",
-    accentBg: "rgba(0, 31, 42, 0.2)",
+    // Magenta-berry wine — pink-leaning red for "butterflies,
+    // new spark, first flirt."
+    accent: "#8c1f43",
   },
   {
     label: "The Office",
@@ -45,8 +66,9 @@ const bundles: Bundle[] = [
       "Quirky, entertaining and revealing questions to create laughter, camaraderie, and share secrets and hilarious anecdotes among coworkers.",
     imageSrc: "/images/bundles/bundle-the-office.png",
     imageAlt: "The Office bundle screen",
-    accent: "#3c3c00",
-    accentBg: "rgba(60, 60, 0, 0.2)",
+    // Burnt copper — warm orange for "daytime camaraderie,
+    // break-room coffee light, print-shop warmth."
+    accent: "#8d3e1c",
   },
   {
     label: "House Party",
@@ -55,8 +77,9 @@ const bundles: Bundle[] = [
       "Playful, hilarious and stimulating questions to ask your party-mates. Ideal to make new friends and banter with them.",
     imageSrc: "/images/bundles/bundle-house-party.png",
     imageAlt: "House Party bundle screen",
-    accent: "#000000",
-    accentBg: "rgba(0, 0, 0, 0.32)",
+    // Deepest plum-wine — the darkest warm in the set, for
+    // "late-night dim lights, red bulb, kitchen-island energy."
+    accent: "#3a0d1c",
   },
   {
     label: "No Strings Attached",
@@ -65,10 +88,12 @@ const bundles: Bundle[] = [
       "Bold questions for casual relationships. Great for sexual partners wanting to share experiences and communicate desires.",
     imageSrc: "/images/bundles/bundle-no-strings.png",
     imageAlt: "No Strings Attached bundle screen",
-    accent: "#613500",
-    accentBg: "rgba(97, 53, 0, 0.2)",
+    // Bright ember/rust — the brightest warm in the set, for
+    // "passionate heat, flame, bold confidence."
+    accent: "#b3371c",
   },
-  // Dare bundles
+
+  // ── DARE bundles — cool family (plum → navy → teal) ─────────
   {
     label: "Date Night",
     type: "dare",
@@ -76,8 +101,9 @@ const bundles: Bundle[] = [
       "Elevate your dates with these novel date ideas. Avoid those conversational clich\u00E9s that leave you yawning into your pasta at a local date spot.",
     imageSrc: "/images/bundles/bundle-date-night.png",
     imageAlt: "Date Night bundle screen",
-    accent: "#00424d",
-    accentBg: "rgba(0, 66, 77, 0.2)",
+    // Plum indigo — the warm-to-cool bridge; "candlelight romance,
+    // violet hour" straddling both halves of the palette.
+    accent: "#260c30",
   },
   {
     label: "Not Safe For Work",
@@ -86,8 +112,9 @@ const bundles: Bundle[] = [
       "This bundle is a riot. If you\u2019ve got a lively group of enthusiastic, exciting individuals craving an unforgettable after-party, this bundle is for you!",
     imageSrc: "/images/bundles/bundle-nsfw.png",
     imageAlt: "Not Safe For Work bundle screen",
-    accent: "#1a1a1a",
-    accentBg: "rgba(26, 26, 26, 0.32)",
+    // Cool charcoal-black — near-black for "midnight mystery,
+    // the light off, secret." The darkest cool in the set.
+    accent: "#0d0d18",
   },
   {
     label: "Safe For Work",
@@ -96,8 +123,9 @@ const bundles: Bundle[] = [
       "Hilarious and harmless dares for your next game-night with co-workers or family. No unhygienic or pointless tasks, just pure enjoyment.",
     imageSrc: "/images/bundles/bundle-safe-for-work.png",
     imageAlt: "Safe For Work bundle screen",
-    accent: "#1a2530",
-    accentBg: "rgba(26, 37, 48, 0.2)",
+    // Deep navy — pure blue for "approachable daytime cool,
+    // office-party-on-a-Thursday vibe."
+    accent: "#0b1e33",
   },
   {
     label: "Baby Making",
@@ -106,8 +134,9 @@ const bundles: Bundle[] = [
       "Bored with your usual bedroom routine? Pair with a fellow baby maker and test your trust, coordination and add variety to your love making.",
     imageSrc: "/images/bundles/bundle-baby-making.png",
     imageAlt: "Baby Making bundle screen",
-    accent: "#00002a",
-    accentBg: "rgba(0, 0, 42, 0.22)",
+    // Royal indigo — the most saturated cool in the set, for
+    // "deep, intimate, boudoir, silk-sheets" energy.
+    accent: "#1a1b55",
   },
   {
     label: "Point Break",
@@ -116,8 +145,9 @@ const bundles: Bundle[] = [
       "Not for the weak! Made for total daredevils to take on extreme sports challenges across the globe and push their limits to new heights.",
     imageSrc: "/images/bundles/bundle-point-break.png",
     imageAlt: "Point Break bundle screen",
-    accent: "#002b00",
-    accentBg: "rgba(0, 43, 0, 0.22)",
+    // Teal-steel — the coolest (greenest-blue) in the set, for
+    // "ocean spray, stormy sky, adrenaline."
+    accent: "#1a3a3d",
   },
 ];
 
@@ -229,7 +259,7 @@ export default function BundlesShowcase() {
           sizes="100vw"
           className="editorial-img opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
+        <div className="section-overlay absolute inset-0" />
       </div>
 
       <div className="site-shell relative z-10">
@@ -242,8 +272,11 @@ export default function BundlesShowcase() {
           }}
         >
           <p className="kicker">The Collection</p>
+          {/* Couplet headline — see .title-accent in globals.css. */}
           <h2 id="bundles-heading" className="section-title section-anchor-title">
-            A different energy for every night.
+            A different energy
+            <br />
+            <span className="title-accent">for every night.</span>
           </h2>
           <div className="gold-line mt-4" style={{ marginInline: "auto" }} />
           <p className="section-body" style={{ maxWidth: 560, marginInline: "auto" }}>
@@ -391,28 +424,6 @@ function MockDial({
           );
         })}
       </motion.div>
-
-      {/* Dot indicators. Each button is a 24×24 hit target (meets WCAG
-          touch-target min) with the visible dot rendered as an inner span
-          so we can keep it small without sacrificing tap-ability. */}
-      <div className="dial-dots">
-        {bundles.map((b, i) => (
-          <button
-            key={b.label}
-            type="button"
-            className={`dial-dot${i === active ? " dial-dot--active" : ""}`}
-            onClick={() => onSelect(i)}
-            aria-label={`Go to ${b.label}`}
-            aria-pressed={i === active}
-          >
-            <span
-              className="dial-dot-mark"
-              style={i === active ? { background: b.accent } : undefined}
-              aria-hidden
-            />
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
@@ -438,7 +449,7 @@ function TextDial({
   };
 
   return (
-    <div className="dial">
+    <div className="dial dial--text">
       <motion.div
         className="dial-track"
         drag="y"
@@ -503,13 +514,21 @@ function TextDial({
                 borderColor: `${bundle.accent}`,
               }}
             >
+              {/*
+                Type pill sits on top of the bundle's accent color. Truth
+                bundles (warm red family) get the brand ember — it pops
+                against the deep wine backgrounds. Dare bundles (cool
+                slate family) get the rose token — a warm editorial red
+                that reads as "dangerous / after-dark" against the cold
+                indigo accents without introducing a new color family.
+              */}
               <span
                 className="dial-type"
                 style={{
                   color:
                     bundle.type === "truth"
-                      ? "var(--gold-soft)"
-                      : "rgba(219, 146, 125, 0.95)",
+                      ? "var(--ember-soft)"
+                      : "var(--rose)",
                 }}
               >
                 {bundle.type === "truth" ? "Question Bundle" : "Challenge Bundle"}
@@ -524,6 +543,33 @@ function TextDial({
           );
         })}
       </motion.div>
+
+      {/*
+        Dot indicators — rendered as a vertical column on the right
+        edge of the text (description) dial, which places them at
+        the far-right of the overall bundles layout on desktop. See
+        `.dial-dots` + `.dial--text` in globals.css. Each button is
+        a 24×24 hit target (meets WCAG touch-target min) with a 10px
+        visible dot so the column reads tight and compact.
+      */}
+      <div className="dial-dots">
+        {bundles.map((b, i) => (
+          <button
+            key={b.label}
+            type="button"
+            className={`dial-dot${i === active ? " dial-dot--active" : ""}`}
+            onClick={() => onSelect(i)}
+            aria-label={`Go to ${b.label}`}
+            aria-pressed={i === active}
+          >
+            <span
+              className="dial-dot-mark"
+              style={i === active ? { background: b.accent } : undefined}
+              aria-hidden
+            />
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

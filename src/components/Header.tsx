@@ -297,8 +297,14 @@ export default function Header() {
     <>
       <header
         className={`fixed inset-x-0 top-0 z-[60] border-b transition-all duration-700 ${
+          // Scrolled state uses a wine-black tint (mirrors the
+          // --bg-nav design token in globals.css) rather than a
+          // neutral near-black, so the nav sits inside the site's
+          // unified cinematic atmosphere. If --bg-nav changes,
+          // update this literal too (Tailwind arbitrary-value opacity
+          // modifiers don't reliably resolve CSS vars).
           scrolled
-            ? "border-white/[0.12] bg-[#090909]/88 backdrop-blur-xl"
+            ? "border-white/[0.12] bg-[#160808]/88 backdrop-blur-xl"
             : "border-transparent bg-transparent"
         }`}
       >
@@ -464,60 +470,79 @@ export default function Header() {
                             {slide.id === "hero" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Start the</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">chemistry.</span>
+                                <span className="block font-display font-bold title-accent">chemistry.</span>
                               </>
                             ) : slide.id === "prompts" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Cards that command</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">attention.</span>
+                                <span className="block font-display font-bold title-accent">attention.</span>
                               </>
                             ) : slide.id === "party" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Turn up</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">the tension.</span>
+                                <span className="block font-display font-bold title-accent">the tension.</span>
                               </>
                             ) : slide.id === "modes" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Run the room</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">your way.</span>
+                                <span className="block font-display font-bold title-accent">your way.</span>
                               </>
                             ) : slide.id === "ai" ? (
                               <>
                                 <span className="block font-sans font-extrabold">
                                   Keep <span className="whitespace-nowrap">first dates</span>
                                 </span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">flowing.</span>
+                                <span className="block font-display font-bold title-accent">flowing.</span>
                               </>
                             ) : slide.id === "achievements" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Write cards that fit</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">your story.</span>
+                                <span className="block font-display font-bold title-accent">your story.</span>
                               </>
                             ) : slide.id === "widget" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Never run out of</span>
                                 <span className="block font-sans font-extrabold">
-                                  <span className="font-display font-bold italic text-[#e9d8a6]">momentum</span>{" "}
-                                  <span className="whitespace-nowrap">with BevyAI.</span>
+                                  <span className="font-display font-bold title-accent">momentum</span>{" "}
+                                  {/* "with BevyAI." matches the Playfair italic
+                                      treatment of "momentum" so the whole payoff
+                                      reads as one continuous serif phrase rather
+                                      than a sans "tail" on a serif head. */}
+                                  <span className="font-display font-bold title-accent whitespace-nowrap">with BevyAI.</span>
                                 </span>
                               </>
                             ) : slide.id === "custom" ? (
                               <>
                                 <span className="block font-sans font-extrabold whitespace-nowrap">Fresh cards</span>
                                 <span className="block font-sans font-extrabold whitespace-nowrap">right to your</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6] whitespace-nowrap">
+                                <span className="block font-display font-bold title-accent whitespace-nowrap">
                                   home screen.
                                 </span>
                               </>
                             ) : slide.id === "nsfw" ? (
                               <>
                                 <span className="block font-sans font-extrabold">Pre-game energy in</span>
-                                <span className="block font-display font-bold italic text-[#e9d8a6]">one tap.</span>
+                                <span className="block font-display font-bold title-accent">one tap.</span>
                               </>
                             ) : slide.id === "dating" ? (
                               <>
-                                <span className="block">A favorite at <span className="whitespace-nowrap">house parties</span></span>
-                                <span className="block">and <span className="whitespace-nowrap">pre-drinks.</span></span>
+                                {/* Dating slide couplet: "A favorite at …"
+                                    premise in sans (matches every other
+                                    preview slide), with the two evocative
+                                    nouns — "house parties" / "pre-drinks." —
+                                    pulled into Playfair italic so they read
+                                    as the cream-gold accent moments. */}
+                                <span className="block font-sans font-extrabold">
+                                  A favorite at{" "}
+                                  <span className="font-display font-bold title-accent whitespace-nowrap">house parties</span>
+                                </span>
+                                {/* Line 2 collapses to a single Playfair italic
+                                    phrase ("& pre-drinks.") so the ampersand
+                                    gets the same cream-gold editorial treatment
+                                    as the noun it connects. */}
+                                <span className="block font-display font-bold title-accent whitespace-nowrap">
+                                  &amp; pre-drinks.
+                                </span>
                               </>
                             ) : (
                               slide.title
@@ -537,9 +562,19 @@ export default function Header() {
                           >
                             {slide.stageMode === "brand" ? (
                               <div className="preview-brand-stage">
+                                {/* Brand couplet on the hero slide:
+                                    "Truth or Dare." in sans (matches the
+                                    rest of the brand row), "Reimagined."
+                                    in Playfair italic cream-gold — same
+                                    treatment every other preview payoff
+                                    gets (see .title-accent + the
+                                    .preview-brand-tagline scoped override
+                                    in globals.css). */}
                                 <p className="preview-brand-tagline">
                                   <span>Truth or Dare.</span>
-                                  <span>Reimagined.</span>
+                                  <span className="font-display font-bold title-accent">
+                                    Reimagined.
+                                  </span>
                                 </p>
 
                                 <div className="preview-brand-row">

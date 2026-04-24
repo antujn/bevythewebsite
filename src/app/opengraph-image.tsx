@@ -40,9 +40,13 @@ export default async function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "72px 96px",
-          background: "#050505",
+          // Wine-tinted base (matches --bg-base in globals.css) with
+          // two radial blooms: deep crimson from the top-left and
+          // ember from the bottom-right. Entirely inside the unified
+          // red/ember family — no gold.
+          background: "#0d0505",
           backgroundImage:
-            "radial-gradient(circle at 30% 20%, rgba(120, 20, 20, 0.28), transparent 55%), radial-gradient(circle at 80% 85%, rgba(198, 166, 120, 0.14), transparent 60%)",
+            "radial-gradient(circle at 30% 20%, rgba(107, 15, 16, 0.38), transparent 55%), radial-gradient(circle at 80% 85%, rgba(217, 82, 58, 0.20), transparent 60%)",
           color: "#f4eee5",
           fontFamily: "Playfair Display",
           position: "relative",
@@ -78,7 +82,9 @@ export default async function OpenGraphImage() {
           </div>
         </div>
 
-        {/* Hero tagline */}
+        {/* Hero tagline — cream headline + rose italic accent
+            (matches the "Best Nights" reference where the italic is
+            a softer, warmer red than the body copy). */}
         <div
           style={{
             display: "flex",
@@ -94,14 +100,15 @@ export default async function OpenGraphImage() {
               fontFamily: "Playfair Display Italic",
               fontWeight: 700,
               fontStyle: "italic",
-              color: "rgba(244, 238, 229, 0.58)",
+              color: "#c14c4c",
             }}
           >
             Reimagined.
           </span>
         </div>
 
-        {/* Gold divider (brand signature) */}
+        {/* Ember divider — brand signature, now fades across the
+            ember ramp instead of the old gold ramp. */}
         <div
           style={{
             width: 72,
@@ -109,7 +116,7 @@ export default async function OpenGraphImage() {
             marginTop: 36,
             marginBottom: 28,
             background:
-              "linear-gradient(90deg, transparent 0%, #c6a678 20%, #e8c99f 50%, #c6a678 80%, transparent 100%)",
+              "linear-gradient(90deg, transparent 0%, #b8432b 20%, #e86848 50%, #b8432b 80%, transparent 100%)",
           }}
         />
 
@@ -129,7 +136,7 @@ export default async function OpenGraphImage() {
             color: "rgba(244, 238, 229, 0.56)",
           }}
         >
-          <span style={{ color: "#e8c99f", fontWeight: 500 }}>4.7</span>
+          <span style={{ color: "#e86848", fontWeight: 500 }}>4.7</span>
           <span>out of 5  ·  25K+ downloads on the App Store</span>
         </div>
       </div>

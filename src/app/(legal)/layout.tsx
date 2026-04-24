@@ -46,16 +46,22 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
+      {/*
+        Legal-page dim overlay. Uses wine-tinted blacks (matches the
+        `--section-overlay` token in globals.css, slightly darker so
+        copy reads clearly over the background texture) instead of
+        neutral grey.
+      */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[5] bg-gradient-to-b from-black/62 via-black/58 to-black/66"
+        className="pointer-events-none fixed inset-0 z-[5] bg-gradient-to-b from-[#0d0505]/70 via-[#160808]/64 to-[#1e0a0c]/72"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: EASE_OUT }}
       />
 
       <motion.nav
-        className="fixed inset-x-0 top-0 z-[60] border-b border-white/[0.12] bg-[#090909]/88 backdrop-blur-xl"
+        className="fixed inset-x-0 top-0 z-[60] border-b border-white/[0.12] bg-[#160808]/88 backdrop-blur-xl"
         initial={{ y: -84, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.55, ease: EASE_OUT, delay: 0.1 }}

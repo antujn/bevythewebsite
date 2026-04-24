@@ -159,7 +159,10 @@ export default function HeroSection() {
           className="editorial-img"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
+        {/* Section dim overlay — wine-tinted to match the unified
+            palette (replaces the old neutral black overlay). Mirrors
+            the --section-overlay token in globals.css. */}
+        <div className="section-overlay absolute inset-0" />
       </motion.div>
 
       {/* Hero content — scroll-linked translate + fade */}
@@ -208,8 +211,13 @@ export default function HeroSection() {
               </motion.span>
             ))}
             <br />
+            {/* "Reimagined." — the couplet payoff. Rendered via the
+                shared .title-accent utility (rose italic, see globals.css)
+                so it matches every other couplet headline on the site
+                and mirrors the italic treatment in the reference
+                imagery. */}
             <motion.span
-              className="font-bold italic text-white/50"
+              className="title-accent font-bold"
               style={{ display: "inline-block" }}
               initial={{ opacity: 0, y: 30, scale: 0.92, rotate: -3 }}
               animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}

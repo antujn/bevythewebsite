@@ -132,7 +132,7 @@ export default function ReviewsSection() {
           sizes="100vw"
           className="editorial-img opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
+        <div className="section-overlay absolute inset-0" />
       </div>
 
       <div className="site-shell reviews-paired-stage">
@@ -143,12 +143,20 @@ export default function ReviewsSection() {
         </RevealIn>
 
         <RevealIn delay={0.1} amount={0.35}>
+          {/* Couplet headline — "4.7 out of 5 on the App Store"
+              is the factual lede (cream upright); the sensory
+              testimony "from real players and real game nights."
+              becomes the rose italic payoff. See .title-accent in
+              globals.css. */}
           <h2
             id="reviews-heading"
             className="reviews-paired-title section-anchor-title"
           >
-            4.7 out of 5 on the App Store, from real players and real game
-            nights.
+            4.7 out of 5 on the App Store,
+            <br />
+            <span className="title-accent">
+              from real players and real game nights.
+            </span>
           </h2>
         </RevealIn>
 

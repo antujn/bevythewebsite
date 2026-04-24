@@ -1,57 +1,134 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
-const DIGITS = ["4", "0", "4"] as const;
+type RouteCard = {
+  chip: string;
+  title: string;
+  href: string;
+  cta: string;
+  tone: "red" | "charcoal";
+};
+
+const BASE_CARDS: RouteCard[] = [
+  {
+    chip: "Truth",
+    title: "This route is not in the deck.",
+    href: "/#hero",
+    cta: "Go Home",
+    tone: "red",
+  },
+  {
+    chip: "Dare",
+    title: "Pick a fresh card and keep the game moving.",
+    href: "/#bundles-heading",
+    cta: "Open Collection",
+    tone: "charcoal",
+  },
+  {
+    chip: "Bevy",
+    title: "Wrong turn, still the right app.",
+    href: "/#gameplay-heading",
+    cta: "See Gameplay",
+    tone: "red",
+  },
+  {
+    chip: "Review",
+    title: "See what players say before your next round.",
+    href: "/#reviews-top",
+    cta: "Jump to Reviews",
+    tone: "charcoal",
+  },
+  {
+    chip: "FAQ",
+    title: "Need quick answers? We stacked them for you.",
+    href: "/#faq-heading",
+    cta: "Open FAQ",
+    tone: "red",
+  },
+  {
+    chip: "Restart",
+    title: "Reset the vibe in one tap.",
+    href: "/#hero",
+    cta: "Back to Top",
+    tone: "charcoal",
+  },
+];
+
+const RAIL_OFFSETS = [0, 2, 4, 1] as const;
+
+function buildRailCards(offset: number): RouteCard[] {
+  return Array.from({ length: 8 }, (_, index) => {
+    return BASE_CARDS[(index + offset) % BASE_CARDS.length];
+  });
+}
 
 export default function NotFound() {
   return (
-    <main
-      id="main"
-      tabIndex={-1}
-      className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-8 py-20 sm:px-12 sm:py-24"
-    >
-      <div
-        className="absolute inset-0 z-0 bg-gradient-to-b from-black/45 via-black/40 to-black/52"
-        aria-hidden="true"
-      >
+    <main id="main" tabIndex={-1} className="relative min-h-[100dvh] overflow-clip">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        <Image
+          src="/images/backgrounds/background2.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="editorial-img"
+          priority
+        />
         <Image
           src="/images/illustrations/illustration7.jpg"
           alt=""
           fill
           sizes="100vw"
-          className="editorial-img opacity-50"
+          className="editorial-img opacity-38"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/58 via-black/54 to-black/66" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,rgba(255,255,255,0.08),transparent_55%),radial-gradient(circle_at_50%_78%,rgba(198,166,120,0.08),transparent_60%)]" />
+        {/* 404 page uses a slightly darker wine-tinted overlay than
+            the universal --section-overlay (this is a standalone
+            page, so we want more ambience behind the giant "404"
+            ghost type). */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0d0505]/70 via-[#1a0809]/64 to-[#26090c]/74" />
       </div>
 
-      <section className="relative z-10 w-full max-w-[760px] px-8 py-8 text-center sm:px-12 sm:py-12">
-        <div
-          className="font-display flex items-baseline justify-center px-4 py-3 text-[clamp(112px,20vw,220px)] font-normal leading-none tracking-[-0.03em] text-white/92"
-          aria-label="404"
-        >
-          {DIGITS.map((d, i) => (
-            <span
-              key={i}
-              className={`${i === 1 ? "italic font-bold text-white/52" : ""} inline-block px-1 py-1`}
-            >
-              <span className="px-[0.035em]">{d}</span>
-            </span>
-          ))}
+      <section className="nf-stage relative z-10 h-[100dvh]">
+        <div className="nf-ghost" aria-hidden="true">
+          <p className="nf-ghost__code font-display">404</p>
         </div>
 
-        <h1 className="font-display mt-3 px-4 py-2 text-[clamp(30px,4.1vw,44px)] leading-[1.16] text-white/86 sm:mt-4">
-          Wrong turn.
-        </h1>
-
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-3 sm:mt-10">
-          <Link href="/" className="nf-cta">
-            <span className="nf-cta__arrow" aria-hidden>
-              &larr;
-            </span>
-            Back to Bevy
-          </Link>
+        <div className="nf-rails" aria-label="Recovery route cards">
+          {RAIL_OFFSETS.map((offset, railIndex) => (
+            <div
+              key={`rail-${offset}`}
+              className={`nf-rail nf-rail--${railIndex}`}
+            >
+              <div className="nf-rail-track">
+                {[...buildRailCards(offset), ...buildRailCards(offset)].map(
+                  (card, cardIndex) => (
+                    <Link
+                      key={`rail-${offset}-${cardIndex}`}
+                      href={card.href}
+                      className={`nf-rail-card ${card.tone === "red" ? "nf-rail-card--red" : "nf-rail-card--charcoal"}`}
+                    >
+                      <div className="nf-rail-card__top">
+                        <span className="nf-rail-card__chip">{card.chip}</span>
+                        <span className="nf-rail-card__index">
+                          {String((cardIndex % BASE_CARDS.length) + 1).padStart(
+                            2,
+                            "0",
+                          )}
+                        </span>
+                      </div>
+                      <p className="nf-rail-card__title">{card.title}</p>
+                      <p className="nf-rail-card__cta">
+                        {card.cta} <span aria-hidden>→</span>
+                      </p>
+                    </Link>
+                  ),
+                )}
+              </div>
+            </div>
+          ))}
         </div>
 
       </section>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { RevealIn, RevealGroup, RevealChild } from "./RevealIn";
+import TryBevyButton from "./TryBevyButton";
 
 // Base paths without extension — each video is served as both .webm
 // and .mp4 (see <source> tags below) so the browser picks what it
@@ -102,7 +103,7 @@ export default function GameplaySection() {
           sizes="100vw"
           className="editorial-img opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/48 via-black/42 to-black/48" />
+        <div className="section-overlay absolute inset-0" />
       </div>
 
       <div className="site-shell relative z-10">
@@ -115,11 +116,14 @@ export default function GameplaySection() {
             <p className="kicker">The Gameplay</p>
           </RevealChild>
           <RevealChild>
+            {/* Couplet headline — see .title-accent in globals.css. */}
             <h2
               id="gameplay-heading"
               className="section-title section-anchor-title"
             >
-              An interface designed to feel intuitive and effortless.
+              An interface designed to feel
+              <br />
+              <span className="title-accent">intuitive and effortless.</span>
             </h2>
           </RevealChild>
           <RevealChild preset="scale">
@@ -163,6 +167,15 @@ export default function GameplaySection() {
                         {point}
                       </span>
                     ))}
+                  </div>
+                  {/* Inline "Try Bevy" CTA below each tab's
+                      description. Because it lives inside the
+                      <AnimatePresence> motion.div keyed to the
+                      active tab, the button rides the same
+                      crossfade animation as the title, body, and
+                      chips whenever the player switches tabs. */}
+                  <div style={{ marginTop: "1.4rem" }}>
+                    <TryBevyButton />
                   </div>
                 </motion.div>
               </AnimatePresence>
