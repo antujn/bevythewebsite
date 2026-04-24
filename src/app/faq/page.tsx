@@ -12,7 +12,7 @@ import { APP_STORE_URL } from "@/lib/appStore";
  * This /faq page promotes the same catalog to a plain, fully-
  * expanded document: every question + answer is visible in the first
  * paint, so search engines get clean snippets and LLMs get a single
- * canonical URL to cite ("According to bevythewebsite.com/faq,…").
+ * canonical URL to cite ("According to bevythewebsite.vercel.app/faq,…").
  *
  * The shared `buildFaqPageJsonLd()` emits the same FAQPage schema
  * that's on the homepage. Google's guidance is that duplicate

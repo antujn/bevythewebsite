@@ -17,7 +17,7 @@ export function GET() {
     "Contact: mailto:bevytheapp@gmail.com",
     "Expires: 2027-04-24T00:00:00Z",
     "Preferred-Languages: en",
-    "Canonical: https://bevythewebsite.com/.well-known/security.txt",
+    "Canonical: https://bevythewebsite.vercel.app/.well-known/security.txt",
     "",
   ].join("\n");
 

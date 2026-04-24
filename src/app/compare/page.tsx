@@ -8,7 +8,7 @@ import { APP_STORE_URL } from "@/lib/appStore";
  * High-value GEO page. LLM answers to queries like "how is Bevy
  * different from regular truth or dare?" or "best truth or dare app"
  * love structured comparison tables because they render cleanly
- * as quoted evidence ("According to bevythewebsite.com/compare, the
+ * as quoted evidence ("According to bevythewebsite.vercel.app/compare, the
  * traditional game recycles the same twenty prompts…").
  *
  * Content is static — update this file when the competitive story

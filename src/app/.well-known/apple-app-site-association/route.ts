@@ -3,9 +3,15 @@
  *
  * Served at `/.well-known/apple-app-site-association` so that Apple's
  * CDN-scanning bots pick up Bevy as the iOS app to open when any
- * https://bevythewebsite.com/* URL is tapped in Messages, Mail, or
- * Safari on a device that already has Bevy installed — instead of
- * launching Safari. Classic "Universal Links" setup.
+ * https URL under the site's current host is tapped in Messages,
+ * Mail, or Safari on a device that already has Bevy installed —
+ * instead of launching Safari. Classic "Universal Links" setup.
+ *
+ * The file itself is host-agnostic: it declares which app claims the
+ * domain, not which domain the app lives on. Apple fetches it from
+ * whatever host serves it (currently bevythewebsite.vercel.app).
+ * When the site moves to a custom domain, nothing here needs to
+ * change — Apple just re-fetches from the new host.
  *
  * Apple requires:
  *   - path: exactly /.well-known/apple-app-site-association (no .json)
