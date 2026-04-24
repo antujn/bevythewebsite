@@ -173,25 +173,22 @@ main:focus-visible {
 
 .faq-rail-viewport {
   margin-top: clamp(2.4rem, 5vw, 3.4rem);
-  /* Perspective lives on the scrolling viewport so the 3D flip has
-     consistent depth regardless of horizontal scroll position. */
-  perspective: 1400px;
   overflow-x: auto;
   overflow-y: visible;
   scrollbar-width: none;
-  /* Allow BOTH axes of touch panning. Without `pan-y` explicitly
-     permitted, mobile browsers treat vertical swipes starting on
-     this element as blocked gestures — the page refuses to scroll
-     while the user's finger is inside the rail. With both axes
-     allowed, horizontal swipes route to this element (which has
-     overflow-x: auto and scrolls the rail) while vertical swipes
-     bubble up to the body (this element has overflow-y: visible, so
-     there's nothing here to consume them) and the page scrolls as
-     expected. */
+  /* Explicit permission for both pan axes.
+     - pan-x: this element has overflow-x: auto, consumes horizontal
+       swipes for rail scrolling.
+     - pan-y: this element has overflow-y: visible (nothing to
+       consume), so vertical swipes bubble up to the document body
+       and the page scrolls as expected.
+     Without pan-y listed, iOS Safari blocks vertical gestures that
+     start inside the rail — the bug the user kept hitting. */
   touch-action: pan-x pan-y;
-  /* Keep horizontal overscroll contained to this rail so a vigorous
-     horizontal swipe doesn't trigger browser-level navigation
-     (back/forward gestures on iOS Safari). */
+  /* Horizontal overscroll contained — prevents iOS Safari's
+     back/forward gesture from firing on a vigorous horizontal swipe.
+     Vertical overscroll defaults to `auto` so the page can still
+     rubber-band at its natural edges. */
   overscroll-behavior-x: contain;
   /* Soft fades at the rail edges so peeking cards feel like they
      continue off-screen rather than abruptly clipping. */
@@ -215,8 +212,25 @@ main:focus-visible {
      ::before / ::after spacers below so that scroll-snap treats the
      first and last card identically (equal gutter on both sides). */
   padding: 32px 0;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  /* `proximity` instead of `mandatory` — mandatory snap aggressively
+     holds onto every touch to maintain alignment, which on iOS
+     Safari bleeds into capturing vertical swipes that should bubble
+     to page scroll. Proximity still snaps when the user releases
+     near a card center (the UX goal) but releases touches
+     immediately when the pan direction is clearly vertical. */
+  scroll-snap-type: x proximity;
+  /* 3D perspective lives on the rail (the non-scrolling inner
+     track) rather than on the viewport. The 3D flip effect is
+     unchanged — each card still rotates in the shared 3D space the
+     perspective creates — but the scroll container is now a plain
+     flat element, which iOS Safari routes touch events through
+     cleanly. (Perspective on a scroll container is a long-standing
+     iOS Safari quirk that misroutes touches.) */
+  perspective: 1400px;
+  /* -webkit-overflow-scrolling: touch was required on iOS 12 and
+     below for momentum scrolling; it's a no-op on iOS 13+ and has
+     been observed to cause scroll-snap + touch weirdness on older
+     builds, so explicitly removed here. */
 }
 
 .faq-rail::before,
