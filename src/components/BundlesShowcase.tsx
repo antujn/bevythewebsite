@@ -5,10 +5,47 @@ import Image from "next/image";
 import { motion, type PanInfo } from "motion/react";
 
 // Mirrors the `BundleType` enum in bevytheapp's CardBundle model:
-//   .truth  → stock question deck  (ember-accented pill label)
-//   .dare   → stock challenge deck (rose-accented pill label)
-//   .both   → user-authored deck   (neutral cream pill label)
+//   .truth  → stock question deck
+//   .dare   → stock challenge deck
+//   .both   → user-authored deck
+// (The type determines the label text — "Question Bundle" / "Challenge
+// Bundle" / "Custom Bundle" — but the label COLOR is driven by the
+// card's accent brightness, not its type. See pillColor() below.)
 type BundleType = "truth" | "dare" | "both";
+
+/**
+ * Perceptual luminance of a `#rrggbb` accent, in 0–1. Uses the
+ * ITU-R BT.601 coefficients (close enough to sRGB luminance for our
+ * purposes without needing the gamma-corrected WCAG formula — the
+ * cards' accents all sit well inside either the "dark" or "bright"
+ * tier, so sub-percent precision around the threshold doesn't matter).
+ */
+function accentLuminance(accent: string): number {
+  const h = accent.replace(/^#/, "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+}
+
+/**
+ * Pick the type-pill color based on the card's accent brightness:
+ *   - Light/vibrant accents (No Strings Attached #B3371C ember,
+ *     Safe For Work #8C1F43 magenta, Write Your Own #444444 grey)
+ *     → cream text, so the label doesn't blend into the warm hue.
+ *   - Dark accents (every other card: deep reds, navies, blacks)
+ *     → brand ember-bright (#e86848), so the label pops as a fiery
+ *     accent against the cinematic-dark background.
+ *
+ * Threshold 0.22 cleanly separates the three "light" cards from the
+ * eight darker siblings. If a future accent lands right on the edge,
+ * nudge the threshold or the hex rather than retyping bundles.
+ */
+function pillColor(accent: string): string {
+  return accentLuminance(accent) > 0.22
+    ? "var(--cream)"
+    : "var(--ember-bright)";
+}
 
 type Bundle = {
   label: string;
@@ -549,24 +586,17 @@ function TextDial({
               }}
             >
               {/*
-                Type pill sits on top of the bundle's accent color.
-                  truth → ember (warm, question energy)
-                  dare  → rose  (editorial red, challenge energy)
-                  both  → cream (neutral, "your deck, not ours")
-                The "both" case covers the user-authored "Write Your
-                Own" bundle; its neutral cream label signals that this
-                tile is meta/custom rather than a stock game mode.
+                Type pill sits on top of the bundle's accent color. The
+                label TEXT is driven by bundle.type (Question / Challenge
+                / Custom), but the label COLOR is picked by pillColor()
+                based on accent luminance, so the label always reads
+                clearly regardless of which bundle it's labelling:
+                  - Bright cards  → cream       (no orange-on-orange)
+                  - Dark cards    → ember-bright (fiery brand accent)
               */}
               <span
                 className="dial-type"
-                style={{
-                  color:
-                    bundle.type === "truth"
-                      ? "var(--ember-soft)"
-                      : bundle.type === "dare"
-                        ? "var(--rose)"
-                        : "var(--text-sub)",
-                }}
+                style={{ color: pillColor(bundle.accent) }}
               >
                 {bundle.type === "truth"
                   ? "Question Bundle"
