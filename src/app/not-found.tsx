@@ -1,4 +1,18 @@
-"use client";
+// Intentionally a Server Component (no `"use client"`). Per the
+// Next.js 16 docs: "By default, `not-found` is a Server Component."
+//
+// Previously this file was marked `"use client"` even though it uses
+// only <Image>, <Link>, and static data — all Server-Component-safe.
+// That stray directive pushed the 404 route into the client router
+// cache. When the user hit the browser back button from this page
+// back to the homepage, Next.js's router-cache restoration path got
+// confused and the homepage's motion hooks (useScroll, whileInView,
+// useTransform, framer-motion's internal trackers) failed to
+// re-initialize cleanly — reading as "all motion broken" on return.
+//
+// Keeping this a Server Component makes back-navigation a clean
+// full-swap of children, the homepage's client components mount
+// fresh, and motion works again.
 
 import Image from "next/image";
 import Link from "next/link";
