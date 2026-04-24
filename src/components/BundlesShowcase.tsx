@@ -16,27 +16,31 @@ type Bundle = {
 };
 
 /**
- * Bundle palette — unified into two families that mirror the Truth/Dare
- * split, and deliberately spread across the full usable hue range of
- * each family so adjacent bundles read as clearly different vibes
- * (not just "another dark red" or "another dark blue"):
+ * Bundle palette — synced 1:1 with the in-app color catalog in
+ * `bevytheapp/Shared/Assets.xcassets/bundleColors/`. Each accent below
+ * mirrors the `theme` assigned to that bundle in `BundleViewModel.swift`
+ * (see `darkred.colorset`, `darkteal.colorset`, etc.) so the marketing
+ * landing page and the in-app bundle chrome read as the same product.
  *
- *   truth → warm family, spanning wine → magenta-berry → burnt copper
- *           → plum-wine → bright ember. Each bundle occupies a distinct
- *           hue AND brightness within the warm half of the site's
- *           palette so the dial never shows two siblings that look
- *           like near-duplicates.
- *
- *   dare  → cool family, spanning plum-indigo → charcoal-black → deep
- *           navy → royal indigo → teal-steel. Same principle on the
- *           cool half: five distinct temperatures of "after dark."
+ * The previous website-side theory (strict truth=warm / dare=cool split)
+ * has been relaxed to match the app: each bundle now owns whichever dark
+ * cinematic color best expresses its mood, regardless of category. Warm
+ * reds still dominate the "intimate / fiery" bundles; cool tones still
+ * dominate the "private / after-dark" bundles; but truth and dare can
+ * now share hues where the story calls for it.
  *
  * Every accent still reads as cinematic-dark (low lightness, saturated)
  * so the whole dial stays inside the Devil-Wears-Prada / "Best Nights"
  * wine-black atmosphere — no pastel or neutral-grey interlopers.
+ *
+ * When you change a color here, also update:
+ *   1. `bevytheapp/Shared/Assets.xcassets/bundleColors/<theme>.colorset`
+ *   2. `bevytheapp/Shared/Widget/Assets.xcassets/bundleColors/<theme>.colorset`
+ *   3. The `theme:` line in `bevytheapp/Shared/Core/ViewModels/BundleViewModel.swift`
+ * …so the site and the app stay in lock-step.
  */
 const bundles: Bundle[] = [
-  // ── TRUTH bundles — warm family (wine → copper → ember) ─────
+  // ── TRUTH bundles ───────────────────────────────────────────
   {
     label: "Significant Other",
     type: "truth",
@@ -44,9 +48,9 @@ const bundles: Bundle[] = [
       "Intimate, affectionate and pragmatic questions to ask in a long-term monogamous relationship to bring you closer to your partner.",
     imageSrc: "/images/bundles/bundle-significant-other.png",
     imageAlt: "Significant Other bundle screen",
-    // Deep classic crimson — the brand anchor red, the "canonical
-    // long-term love" color.
-    accent: "#6b0f10",
+    // darkred — deep classic crimson, the brand anchor red for
+    // "canonical long-term love."  (prev diversified pass: #6B0F10)
+    accent: "#610000",
   },
   {
     label: "Early Dating",
@@ -55,9 +59,11 @@ const bundles: Bundle[] = [
       "Socially and emotionally intelligent questions to help you develop a great connection with your potential significant other.",
     imageSrc: "/images/bundles/bundle-early-dating.png",
     imageAlt: "Early Dating bundle screen",
-    // Magenta-berry wine — pink-leaning red for "butterflies,
-    // new spark, first flirt."
-    accent: "#8c1f43",
+    // darkteal — deep teal-steel, "cool first-date nerves / the
+    // quiet suspense before a spark." The app shifted this from a
+    // warm berry to a cooler teal so it reads calmer than the more
+    // established relationships.  (prev diversified pass: #8C1F43)
+    accent: "#1A3A3D",
   },
   {
     label: "The Office",
@@ -66,9 +72,10 @@ const bundles: Bundle[] = [
       "Quirky, entertaining and revealing questions to create laughter, camaraderie, and share secrets and hilarious anecdotes among coworkers.",
     imageSrc: "/images/bundles/bundle-the-office.png",
     imageAlt: "The Office bundle screen",
-    // Burnt copper — warm orange for "daytime camaraderie,
-    // break-room coffee light, print-shop warmth."
-    accent: "#8d3e1c",
+    // darkroyal — deep navy blue, "boardroom-suit, printer-ink,
+    // after-hours coworker energy." Cool and composed.
+    // (prev diversified pass: #8D3E1C)
+    accent: "#001F2A",
   },
   {
     label: "House Party",
@@ -77,9 +84,10 @@ const bundles: Bundle[] = [
       "Playful, hilarious and stimulating questions to ask your party-mates. Ideal to make new friends and banter with them.",
     imageSrc: "/images/bundles/bundle-house-party.png",
     imageAlt: "House Party bundle screen",
-    // Deepest plum-wine — the darkest warm in the set, for
-    // "late-night dim lights, red bulb, kitchen-island energy."
-    accent: "#3a0d1c",
+    // darkblack — pure black, "lights-off, speaker-stack, red-cup
+    // silhouettes." The most neutral-dark slot in the dial.
+    // (prev diversified pass: #3A0D1C)
+    accent: "#000000",
   },
   {
     label: "No Strings Attached",
@@ -88,12 +96,13 @@ const bundles: Bundle[] = [
       "Bold questions for casual relationships. Great for sexual partners wanting to share experiences and communicate desires.",
     imageSrc: "/images/bundles/bundle-no-strings.png",
     imageAlt: "No Strings Attached bundle screen",
-    // Bright ember/rust — the brightest warm in the set, for
-    // "passionate heat, flame, bold confidence."
-    accent: "#b3371c",
+    // darkorange — bright ember/rust, "passionate heat, flame,
+    // bold confidence." The brightest warm card in the dial.
+    // (matches diversified pass: #B3371C — unchanged)
+    accent: "#B3371C",
   },
 
-  // ── DARE bundles — cool family (plum → navy → teal) ─────────
+  // ── DARE bundles ────────────────────────────────────────────
   {
     label: "Date Night",
     type: "dare",
@@ -101,9 +110,10 @@ const bundles: Bundle[] = [
       "Elevate your dates with these novel date ideas. Avoid those conversational clich\u00E9s that leave you yawning into your pasta at a local date spot.",
     imageSrc: "/images/bundles/bundle-date-night.png",
     imageAlt: "Date Night bundle screen",
-    // Plum indigo — the warm-to-cool bridge; "candlelight romance,
-    // violet hour" straddling both halves of the palette.
-    accent: "#260c30",
+    // darkplum — deep plum-wine, "candlelight, dessert-wine,
+    // late-dinner intimacy." Warmest dare in the set.
+    // (prev diversified pass: #260C30)
+    accent: "#3A0D1C",
   },
   {
     label: "Not Safe For Work",
@@ -112,9 +122,10 @@ const bundles: Bundle[] = [
       "This bundle is a riot. If you\u2019ve got a lively group of enthusiastic, exciting individuals craving an unforgettable after-party, this bundle is for you!",
     imageSrc: "/images/bundles/bundle-nsfw.png",
     imageAlt: "Not Safe For Work bundle screen",
-    // Cool charcoal-black — near-black for "midnight mystery,
-    // the light off, secret." The darkest cool in the set.
-    accent: "#0d0d18",
+    // darknight — cool charcoal-black, "midnight mystery, the light
+    // off, secret." Darkest cool in the set.
+    // (matches diversified pass: #0D0D18 — unchanged)
+    accent: "#0D0D18",
   },
   {
     label: "Safe For Work",
@@ -123,9 +134,11 @@ const bundles: Bundle[] = [
       "Hilarious and harmless dares for your next game-night with co-workers or family. No unhygienic or pointless tasks, just pure enjoyment.",
     imageSrc: "/images/bundles/bundle-safe-for-work.png",
     imageAlt: "Safe For Work bundle screen",
-    // Deep navy — pure blue for "approachable daytime cool,
-    // office-party-on-a-Thursday vibe."
-    accent: "#0b1e33",
+    // darkpink — magenta-berry wine, "playful flirt, game-night
+    // blush." Pink-leaning warm pulled into the dare side to offset
+    // the otherwise all-cool challenge family.
+    // (prev diversified pass: #0B1E33)
+    accent: "#8C1F43",
   },
   {
     label: "Baby Making",
@@ -134,9 +147,10 @@ const bundles: Bundle[] = [
       "Bored with your usual bedroom routine? Pair with a fellow baby maker and test your trust, coordination and add variety to your love making.",
     imageSrc: "/images/bundles/bundle-baby-making.png",
     imageAlt: "Baby Making bundle screen",
-    // Royal indigo — the most saturated cool in the set, for
-    // "deep, intimate, boudoir, silk-sheets" energy.
-    accent: "#1a1b55",
+    // darknavy — deepest midnight navy, "silk-sheets, private-
+    // bedroom, boudoir." Near-black with just enough blue to read
+    // cool.  (prev diversified pass: #1A1B55)
+    accent: "#00002A",
   },
   {
     label: "Point Break",
@@ -145,9 +159,11 @@ const bundles: Bundle[] = [
       "Not for the weak! Made for total daredevils to take on extreme sports challenges across the globe and push their limits to new heights.",
     imageSrc: "/images/bundles/bundle-point-break.png",
     imageAlt: "Point Break bundle screen",
-    // Teal-steel — the coolest (greenest-blue) in the set, for
-    // "ocean spray, stormy sky, adrenaline."
-    accent: "#1a3a3d",
+    // darkgreen — deep forest green, "cliff-ledge, wet-kelp,
+    // adrenaline-surge on the coast." The one true green in the
+    // palette, reserved for the extreme-sports bundle.
+    // (prev diversified pass: #1A3A3D)
+    accent: "#002B00",
   },
 ];
 
