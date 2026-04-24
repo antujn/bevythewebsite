@@ -175,7 +175,7 @@ const bundles: Bundle[] = [
     label: "Write Your Own",
     type: "both",
     description:
-      "Write your own prompts and challenges. Save them, mix them with the stock bundles, and replay whenever the moment calls for something hand-written.",
+      "Leverage the intuitive and versatile interface provided by Bevy to write and play your own questions and challenges.",
     imageSrc: "/images/bundles/bevy-write-your-own.png",
     imageAlt: "Write Your Own bundle screen",
     // darksilver — neutral mid-grey, intentionally sitting outside the
