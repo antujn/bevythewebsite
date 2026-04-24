@@ -4,7 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, type PanInfo } from "motion/react";
 
-type BundleType = "truth" | "dare";
+// Mirrors the `BundleType` enum in bevytheapp's CardBundle model:
+//   .truth  → stock question deck  (ember-accented pill label)
+//   .dare   → stock challenge deck (rose-accented pill label)
+//   .both   → user-authored deck   (neutral cream pill label)
+type BundleType = "truth" | "dare" | "both";
 
 type Bundle = {
   label: string;
@@ -164,6 +168,20 @@ const bundles: Bundle[] = [
     // palette, reserved for the extreme-sports bundle.
     // (prev diversified pass: #1A3A3D)
     accent: "#002B00",
+  },
+
+  // ── CUSTOM / USER-AUTHORED bundle ───────────────────────────
+  {
+    label: "Write Your Own",
+    type: "both",
+    description:
+      "Write your own prompts and challenges. Save them, mix them with the stock bundles, and replay whenever the moment calls for something hand-written.",
+    imageSrc: "/images/bundles/bevy-write-your-own.png",
+    imageAlt: "Write Your Own bundle screen",
+    // darksilver — neutral mid-grey, intentionally sitting outside the
+    // warm/cool split so user-authored content reads as "yours, not
+    // ours." Matches BevyWriteYourOwn.theme in the app.
+    accent: "#444444",
   },
 ];
 
@@ -531,12 +549,13 @@ function TextDial({
               }}
             >
               {/*
-                Type pill sits on top of the bundle's accent color. Truth
-                bundles (warm red family) get the brand ember — it pops
-                against the deep wine backgrounds. Dare bundles (cool
-                slate family) get the rose token — a warm editorial red
-                that reads as "dangerous / after-dark" against the cold
-                indigo accents without introducing a new color family.
+                Type pill sits on top of the bundle's accent color.
+                  truth → ember (warm, question energy)
+                  dare  → rose  (editorial red, challenge energy)
+                  both  → cream (neutral, "your deck, not ours")
+                The "both" case covers the user-authored "Write Your
+                Own" bundle; its neutral cream label signals that this
+                tile is meta/custom rather than a stock game mode.
               */}
               <span
                 className="dial-type"
@@ -544,10 +563,16 @@ function TextDial({
                   color:
                     bundle.type === "truth"
                       ? "var(--ember-soft)"
-                      : "var(--rose)",
+                      : bundle.type === "dare"
+                        ? "var(--rose)"
+                        : "var(--text-sub)",
                 }}
               >
-                {bundle.type === "truth" ? "Question Bundle" : "Challenge Bundle"}
+                {bundle.type === "truth"
+                  ? "Question Bundle"
+                  : bundle.type === "dare"
+                    ? "Challenge Bundle"
+                    : "Custom Bundle"}
               </span>
               <h3 className="dial-title">{bundle.label}</h3>
               {/* Description only shown for the active item — side items
