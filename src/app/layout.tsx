@@ -153,6 +153,15 @@ export const metadata: Metadata = {
     // deployments (`*.vercel.app`) from being indexed alongside prod.
     canonical: "/",
   },
+  // Search-engine ownership verification. Each key emits one
+  // `<meta name="<engine>-site-verification" content="…">` tag.
+  // Required once per engine during property setup, then kept
+  // permanently so Google/Bing/etc. can re-verify ownership even
+  // if the DNS path ever changes. Add more engines here (`yandex`,
+  // `me` for Yahoo, `other`) as they're wired up.
+  verification: {
+    google: "Qsx0a-M_V5rL1stjWh4LvUkAVktJn5pDJwJgyY46pU4",
+  },
   // Give crawlers (including AI crawlers like GPTBot and Google-Extended)
   // explicit permission to use the full page content — no snippet length
   // cap, large image previews, full video previews. This is the SEO side
