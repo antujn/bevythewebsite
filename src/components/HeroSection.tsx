@@ -159,7 +159,12 @@ export default function HeroSection() {
       >
         <Image
           src="/images/illustrations/illustration7.jpg"
-          alt=""
+          // Descriptive alt instead of `""` — the background
+          // illustration is the first image crawlers see on the
+          // homepage, and the cinematic red-black atmosphere is a
+          // core brand signal. Bing/Google now count this image
+          // correctly toward coverage.
+          alt="Cinematic wine-black mood illustration setting the editorial tone for Bevy — a modern Truth or Dare card game for iPhone"
           fill
           sizes="100vw"
           className="editorial-img"

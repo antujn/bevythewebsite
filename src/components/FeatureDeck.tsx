@@ -204,7 +204,12 @@ function FeatureCard({
         <div className="fd-card-media">
           <Image
             src={feature.imageSrc}
-            alt={feature.tab}
+            // Descriptive alt combining the feature's editorial tab
+            // name with a one-line summary drawn from the card title,
+            // so crawlers and screen readers get the full context for
+            // each of the 6 feature illustrations instead of a
+            // two-word label.
+            alt={`${feature.tab} — ${feature.title} ${feature.titleAccent ?? ""}`.trim()}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             className="fd-card-illustration"

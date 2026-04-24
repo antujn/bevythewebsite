@@ -325,7 +325,7 @@ export default function BundlesShowcase() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/illustrations/illustration7.jpg"
-          alt=""
+          alt="Moody editorial backdrop for the Bevy bundle collection — a room of dim red light framing the eleven themed prompt decks"
           fill
           sizes="100vw"
           className="editorial-img opacity-50"

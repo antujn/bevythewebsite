@@ -157,7 +157,7 @@ export default function ReviewsSection() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/illustrations/illustration7.jpg"
-          alt=""
+          alt="Warm editorial backdrop for Bevy user reviews — four featured 5-star quotes from App Store players"
           fill
           sizes="100vw"
           className="editorial-img opacity-50"

@@ -105,7 +105,7 @@ export default function GameplaySection() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/illustrations/illustration8.jpg"
-          alt=""
+          alt="Atmospheric illustration behind the Bevy gameplay showcase — mood setting for the five game modes: Finger Game, Alias Game, BevyAI Play, Custom Mode, Achievements"
           fill
           sizes="100vw"
           className="editorial-img opacity-50"
