@@ -161,14 +161,6 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
                 &times;
               </button>
 
-              <Image
-                src="/images/icons/bevy-logo.png"
-                alt="Bevy"
-                width={56}
-                height={56}
-                priority
-              />
-
               {modal === "qr" ? (
                 <>
                   <h3 id="download-modal-title" className="qr-title">
