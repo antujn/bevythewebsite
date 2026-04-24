@@ -134,10 +134,23 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
                   (with the sequenced delay). The inner keyed span
                   handles the title text swap when switching between
                   legal tabs, so text changes fade instead of snapping.
+
+                  Color + style override: legal-page titles render as
+                  ember-bright Playfair italic — the same editorial
+                  voice used for the homepage couplet payoffs, just
+                  recolored from rose to ember so "Privacy Policy",
+                  "Terms of Service", "Legal Disclaimer" feel like the
+                  serious, branded chapter headings they are. The
+                  `.section-title` base class already carries the
+                  Playfair family; only italic + color need overriding.
                 */}
                 <motion.h1
                   className="section-title"
-                  style={{ fontSize: "clamp(28px, 3.5vw, 42px)" }}
+                  style={{
+                    fontSize: "clamp(28px, 3.5vw, 42px)",
+                    color: "var(--ember-bright)",
+                    fontStyle: "italic",
+                  }}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
