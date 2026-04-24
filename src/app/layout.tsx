@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { DownloadProvider } from "@/components/DownloadContext";
 import MotionProvider from "@/components/MotionProvider";
+import BfcacheGuard from "@/components/BfcacheGuard";
 import { APP_FULL_NAME, APP_STORE_ID, APP_STORE_URL } from "@/lib/appStore";
 import "./globals.css";
 
@@ -251,6 +252,13 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
+        {/* Safari/Chrome can restore the previous page from bfcache
+            on browser back, freezing motion hooks, scroll trackers,
+            and IntersectionObservers in their pre-navigation state.
+            BfcacheGuard listens for the `pageshow` event with
+            `persisted: true` and reloads the page to reinitialise
+            everything cleanly. See the component for details. */}
+        <BfcacheGuard />
         <MotionProvider>
           <DownloadProvider>{children}</DownloadProvider>
         </MotionProvider>
