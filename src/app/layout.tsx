@@ -162,7 +162,7 @@ export const metadata: Metadata = {
   // even if the DNS path ever changes.
   verification: {
     // Google Search Console → Google organic search + AI Overviews.
-    google: "Qsx0a-M_V5rL1stjWh4LvUkAVktJn5pDJwJgyY46pU4",
+    google: "F1wVYWMFhfM3dCACA2LN2GxLmoLuU1Gn4fXHsvBuQts",
     // Bing Webmaster Tools → Bing organic search. Also the backing
     // index for ChatGPT's web-browsing tool, so being verified here
     // specifically improves visibility in LLM-cited results.
