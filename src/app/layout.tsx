@@ -102,6 +102,21 @@ export const metadata: Metadata = {
     // deployments (`*.vercel.app`) from being indexed alongside prod.
     canonical: "/",
   },
+  // Give crawlers (including AI crawlers like GPTBot and Google-Extended)
+  // explicit permission to use the full page content — no snippet length
+  // cap, large image previews, full video previews. This is the SEO side
+  // of the "you're welcome here" signal started in robots.ts.
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: APP_FULL_NAME,
     description:
