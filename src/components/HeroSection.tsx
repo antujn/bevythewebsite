@@ -237,6 +237,22 @@ export default function HeroSection() {
             </motion.span>
           </h1>
 
+          {/*
+            Visually hidden keyword-rich subhead — helps search engines
+            and screen readers understand the product without cluttering
+            the designed word-art above. Web Content Accessibility
+            Guidelines accept this pattern (content is still part of the
+            heading's accessible name via aria-describedby on the h1 is
+            overkill; we simply expose it as a hidden paragraph near the
+            h1 so the first few lines Google crawls carry the keywords
+            "Truth or Dare party card game app 1000+ AI prompts".
+          */}
+          <p className="sr-only">
+            Bevy is the modern Truth or Dare card game app for iPhone — a
+            library of 1,000+ AI-curated prompts across 11 themed bundles for
+            couples, house parties, date nights, co-workers, and solo play.
+          </p>
+
           <motion.p
             style={{ marginTop: 20 }}
             className="max-w-[420px] text-[15px] font-light leading-[1.75] text-white/44"

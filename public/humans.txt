@@ -1,0 +1,21 @@
+/* TEAM */
+
+Creator: Anant Jain
+Contact: bevytheapp@gmail.com
+From: London, UK
+Social: instagram.com/bevytheapp
+Social: tiktok.com/@bevytheapp
+
+
+/* SITE */
+
+Last update: 2026/04/24
+Language: English
+Standards: HTML5, CSS3, TypeScript, Next.js 16
+Components: React 19, Motion (framer-motion), Tailwind CSS 4
+Software: Next.js, Vercel
+
+/* APP */
+
+iOS App: https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490
+Support: bevytheapp@gmail.com

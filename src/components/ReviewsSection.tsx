@@ -118,11 +118,41 @@ export default function ReviewsSection() {
   const { triggerDownload } = useDownload();
   const featuredReviews = featuredReviewIndices.map((i) => appStoreReviews[i]);
 
+  // Schema.org Review markup for the 4 visible bubbles. The
+  // MobileApplication schema in layout.tsx already carries the
+  // AggregateRating; this supplements it with individual Review
+  // instances so Google can surface a specific quote in rich
+  // snippets (sitelinks testimonials, knowledge panels, etc.). All
+  // 4 are explicit 5-star reviews pulled from the App Store.
+  const reviewJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": featuredReviews.map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.author },
+      reviewBody: r.text,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: "5",
+        bestRating: "5",
+      },
+      itemReviewed: {
+        "@type": "MobileApplication",
+        name: "Bevy",
+        applicationCategory: "GameApplication",
+        operatingSystem: "iOS",
+      },
+    })),
+  };
+
   return (
     <section
       id="reviews"
       className="reviews-paired relative overflow-hidden"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewJsonLd) }}
+      />
       <span id="reviews-anchor" className="section-anchor-mid" aria-hidden />
       <div className="absolute inset-0 z-0">
         <Image

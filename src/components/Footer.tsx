@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import DownloadButton from "./DownloadButton";
 import { RevealIn, RevealGroup, RevealChild } from "./RevealIn";
+import { APP_STORE_URL } from "@/lib/appStore";
 
 const legalLinks = [
   { label: "Privacy Policy", href: "/privacy" },
@@ -12,7 +13,7 @@ const legalLinks = [
   { label: "Legal Disclaimer", href: "/disclaimer" },
   {
     label: "App Store",
-    href: "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
+    href: APP_STORE_URL,
     external: true,
   },
 ];

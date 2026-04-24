@@ -4,8 +4,7 @@ import { useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { RevealChild, RevealGroup } from "./RevealIn";
 
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490";
+import { APP_STORE_URL } from "@/lib/appStore";
 
 // All FAQ cards share the crimson brand anchor — the same value used
 // by the Significant Other bundle and the --crimson design token in

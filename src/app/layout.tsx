@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { DownloadProvider } from "@/components/DownloadContext";
 import MotionProvider from "@/components/MotionProvider";
+import { APP_FULL_NAME, APP_STORE_ID, APP_STORE_URL } from "@/lib/appStore";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -44,17 +45,15 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "MobileApplication",
   name: "Bevy",
-  alternateName: "Bevy — Truth or Dare. Reimagined.",
+  alternateName: APP_FULL_NAME,
   description:
     "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ carefully crafted cards. Designed to deepen human connection.",
   applicationCategory: "GameApplication",
   operatingSystem: "iOS",
   url: siteUrl.toString(),
   image: new URL("/opengraph-image", siteUrl).toString(),
-  downloadUrl:
-    "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
-  installUrl:
-    "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490",
+  downloadUrl: APP_STORE_URL,
+  installUrl: APP_STORE_URL,
   author: {
     "@type": "Person",
     name: "Anant Jain",
@@ -75,26 +74,74 @@ const jsonLd = {
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
-  title: "Bevy — Truth or Dare. Reimagined.",
+  title: {
+    default: APP_FULL_NAME,
+    // Each sub-route with its own metadata.title gets framed as
+    // "<route title> · Bevy" automatically (e.g. "Privacy Policy · Bevy").
+    template: "%s · Bevy",
+  },
   description:
     "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards. Designed to deepen human connection.",
+  applicationName: "Bevy",
+  keywords: [
+    "Truth or Dare",
+    "card game",
+    "party game",
+    "date night game",
+    "couples questions",
+    "BevyAI",
+    "ice breaker app",
+    "conversation starters",
+    "iOS card game",
+  ],
+  authors: [{ name: "Anant Jain" }],
+  creator: "Anant Jain",
+  publisher: "Anant Jain",
+  alternates: {
+    // Explicit canonical URL per Google best-practice — stops preview
+    // deployments (`*.vercel.app`) from being indexed alongside prod.
+    canonical: "/",
+  },
   openGraph: {
-    title: "Bevy — Truth or Dare. Reimagined.",
+    title: APP_FULL_NAME,
     description:
       "The modern, meaningful alternative to traditional truth or dare. AI-powered. 1000+ cards.",
     // Relative URL resolves against metadataBase above.
     url: "/",
     siteName: "Bevy",
     type: "website",
-    // og:image tags are injected by src/app/opengraph-image.tsx
+    locale: "en_US",
+    // og:image tags are injected by src/app/opengraph-image.tsx — Next
+    // generates the width/height/type automatically from the file's
+    // exported `size` + `contentType` so we don't repeat them here.
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bevy — Truth or Dare. Reimagined.",
+    title: APP_FULL_NAME,
     description:
       "The modern, meaningful alternative to traditional truth or dare.",
-    // Twitter will reuse og:image when twitter:image isn't specified,
-    // so the same generated share card covers both.
+    // Attribute shared cards to the brand account. Twitter will reuse
+    // og:image when twitter:image isn't specified, so the same
+    // generated share card covers both platforms.
+    site: "@bevytheapp",
+    creator: "@bevytheapp",
+  },
+  // iOS Safari smart banner. Adds a sticky iTunes-branded "View" pill
+  // at the top of the page when the user is on iPhone, deep-linking
+  // straight to the App Store listing. Higher install conversion than
+  // a CTA click for iPhone sessions. Using `appleWebApp` here ships
+  // the corresponding `<meta name="apple-itunes-app">` tag.
+  appleWebApp: {
+    title: "Bevy",
+    statusBarStyle: "black-translucent",
+  },
+  other: {
+    // Smart-banner directive. The `app-argument` is a URL that the app,
+    // if installed, receives via AppDelegate to deep-link into a
+    // specific screen — we point at the site root so the app treats
+    // the tap as "open from web-marketing," but can be tightened later
+    // (e.g. app-argument=/bundles/date-night for a per-bundle page).
+    "apple-itunes-app": `app-id=${APP_STORE_ID}, app-argument=${siteUrl.toString()}`,
   },
   // Icons are supplied via Next.js file conventions:
   //   src/app/icon.png       → <link rel="icon">

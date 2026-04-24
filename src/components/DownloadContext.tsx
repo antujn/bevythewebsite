@@ -12,8 +12,7 @@ import {
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bevy-truth-or-dare-card-game/id1553693490";
+import { APP_STORE_URL } from "@/lib/appStore";
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
@@ -138,84 +137,97 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
             transition={{ duration: 0.22 }}
             role="presentation"
           >
-            <motion.div
-              ref={modalRef}
-              className="qr-modal"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="download-modal-title"
-              aria-describedby="download-modal-subtitle"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.94, y: 14 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 8 }}
-              transition={{ duration: 0.28, ease: EASE_OUT }}
-            >
-              <button
-                ref={closeBtnRef}
-                className="qr-close"
-                onClick={close}
-                aria-label="Close"
-                type="button"
-              >
-                &times;
-              </button>
+            {/*
+              Unique dialog IDs per variant avoid the same DOM id being
+              used twice if anything ever renders both modal variants at
+              once (React Fast Refresh edge cases, future test snapshots,
+              etc.). The aria-labelledby / aria-describedby on the
+              wrapper point at the variant-specific pair.
+            */}
+            {(() => {
+              const titleId =
+                modal === "qr"
+                  ? "download-modal-qr-title"
+                  : "download-modal-ios-title";
+              const subtitleId =
+                modal === "qr"
+                  ? "download-modal-qr-subtitle"
+                  : "download-modal-ios-subtitle";
+              return (
+                <motion.div
+                  ref={modalRef}
+                  className="qr-modal"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby={titleId}
+                  aria-describedby={subtitleId}
+                  onClick={(e) => e.stopPropagation()}
+                  initial={{ opacity: 0, scale: 0.94, y: 14 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: 8 }}
+                  transition={{ duration: 0.28, ease: EASE_OUT }}
+                >
+                  <button
+                    ref={closeBtnRef}
+                    className="qr-close"
+                    onClick={close}
+                    aria-label="Close"
+                    type="button"
+                  >
+                    &times;
+                  </button>
 
-              {modal === "qr" ? (
-                <>
-                  <h3 id="download-modal-title" className="qr-title">
-                    Scan to download Bevy
-                  </h3>
-                  <p
-                    id="download-modal-subtitle"
-                    className="qr-subtitle"
-                  >
-                    Point your phone camera at the QR code to open the App Store.
-                  </p>
-                  <div className="qr-code">
-                    <Image
-                      src="/images/qrs/qr-black.png"
-                      alt="QR code to download Bevy"
-                      width={200}
-                      height={200}
-                    />
-                  </div>
-                  <a
-                    href={APP_STORE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="qr-fallback"
-                  >
-                    Or{" "}
-                    <span className="qr-fallback-link">open in browser</span>{" "}
-                    &rarr;
-                  </a>
-                </>
-              ) : (
-                <>
-                  <h3 id="download-modal-title" className="qr-title">
-                    iPhone only, for now.
-                  </h3>
-                  <p
-                    id="download-modal-subtitle"
-                    className="qr-subtitle"
-                  >
-                    Bevy is currently only available on iPhone. If you have
-                    one nearby, grab it from the App Store below.
-                  </p>
-                  <a
-                    href={APP_STORE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="qr-fallback qr-fallback--primary"
-                  >
-                    Open the{" "}
-                    <span className="qr-fallback-link">App Store listing</span>{" "}
-                    &rarr;
-                  </a>
-                </>
-              )}
-            </motion.div>
+                  {modal === "qr" ? (
+                    <>
+                      <h3 id={titleId} className="qr-title">
+                        Scan to download Bevy
+                      </h3>
+                      <p id={subtitleId} className="qr-subtitle">
+                        Point your phone camera at the QR code to open the App Store.
+                      </p>
+                      <div className="qr-code">
+                        <Image
+                          src="/images/qrs/qr-black.png"
+                          alt="QR code to download Bevy"
+                          width={200}
+                          height={200}
+                        />
+                      </div>
+                      <a
+                        href={APP_STORE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="qr-fallback"
+                      >
+                        Or{" "}
+                        <span className="qr-fallback-link">open in browser</span>{" "}
+                        &rarr;
+                      </a>
+                    </>
+                  ) : (
+                    <>
+                      <h3 id={titleId} className="qr-title">
+                        iPhone only, for now.
+                      </h3>
+                      <p id={subtitleId} className="qr-subtitle">
+                        Bevy is currently only available on iPhone. If you have
+                        one nearby, grab it from the App Store below.
+                      </p>
+                      <a
+                        href={APP_STORE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="qr-fallback qr-fallback--primary"
+                      >
+                        Open the{" "}
+                        <span className="qr-fallback-link">App Store listing</span>{" "}
+                        &rarr;
+                      </a>
+                    </>
+                  )}
+                </motion.div>
+              );
+            })()}
           </motion.div>
         )}
       </AnimatePresence>

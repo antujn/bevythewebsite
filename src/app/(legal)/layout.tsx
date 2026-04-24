@@ -44,8 +44,37 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);
 
+  // BreadcrumbList JSON-LD helps Google render "Home › <title>" in SERP
+  // results for legal routes and makes the site's hierarchy explicit
+  // to crawlers that rely on it. Regenerated per route via the current
+  // pathname + title — both come from client hooks, but `dangerouslySetInnerHTML`
+  // only renders after mount, which is fine for crawlers that execute
+  // JS. (Server-side crawlers still get the full route metadata above.)
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: title,
+        item: pathname,
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/*
         Legal-page dim overlay. Uses wine-tinted blacks (matches the
         `--section-overlay` token in globals.css, slightly darker so
