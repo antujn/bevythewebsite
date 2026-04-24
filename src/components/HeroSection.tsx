@@ -14,10 +14,16 @@ import DownloadButton from "./DownloadButton";
 // Base paths without extension — each video is served as both .webm
 // (VP9, smaller, modern browsers) and .mp4 (H.264, universal fallback)
 // via <source> children below, so the browser picks what it supports.
+//
+// Hero cycles through one sample of each major gameplay mode so the
+// first-fold viewer sees the full range of the app (alias turn picking,
+// tap-to-pick finger mode, AI chat). Previously this cycled through
+// three alias-mode variants, but the nsfw + early-dating clips were
+// retired when those per-bundle recordings were dropped.
 const frontVideos = [
   "/videos/alias-mode-significant-other",
-  "/videos/alias-mode-nsfw",
-  "/videos/alias-mode-early-dating",
+  "/videos/finger-mode-significant-other",
+  "/videos/ai-chat-significant-other",
 ];
 
 const backVideo = "/videos/hero-screen";

@@ -32,6 +32,13 @@ const gameplaySlides = [
     frontVideo: "/videos/ai-chat-significant-other",
   },
   {
+    label: "Custom Mode",
+    title: "Write your own cards. Play them instantly.",
+    body: "Compose prompts that fit your crew, your inside jokes, your mood. Save them, mix them with the stock bundles, and surface them whenever the moment calls.",
+    points: ["Custom prompt builder", "Mixes with stock bundles", "Private to your group"],
+    frontVideo: "/videos/custom-mode",
+  },
+  {
     label: "Achievements",
     title: "Progress that keeps the game alive.",
     body: "Unlock milestones across bundles and game styles. Achievements reward consistency, creativity, and bold gameplay, giving players reasons to return.",

@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# Raw video sources — only the transcoded .webm/.mp4 pairs are shipped
+# to public/videos. Keep source .mov files locally (e.g. iOS screen
+# recordings) without committing them.
+public/videos/*.mov
+
 # debug
 npm-debug.log*
 yarn-debug.log*
