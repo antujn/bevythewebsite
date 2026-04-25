@@ -292,7 +292,7 @@ function PosterArtwork() {
       {/* QR card */}
       <div
         style={{
-          marginTop: 64,
+          marginTop: 56,
           alignSelf: "center",
           width: 720,
           background: "#f4eee5",
@@ -319,6 +319,46 @@ function PosterArtwork() {
             imageRendering: "crisp-edges",
           }}
         />
+      </div>
+
+      {/* QR caption — sits on the dark background below the cream
+          QR card so the QR itself stays visually clean while still
+          giving the viewer a clear instruction. */}
+      <div
+        style={{
+          marginTop: 22,
+          alignSelf: "center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 16,
+          color: "#f4eee5",
+        }}
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#e86848"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <span
+          style={{
+            fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
+            fontWeight: 800,
+            fontSize: 30,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+          }}
+        >
+          Scan to download
+        </span>
       </div>
 
       {/* Footer band — pinned at bottom */}
