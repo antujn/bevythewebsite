@@ -1,11 +1,31 @@
 "use client";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { useDownload } from "./DownloadContext";
+import PreviewIcons from "./PreviewIcons";
 import { previewSlides } from "./previewSlides";
+
+// PreviewVideos pulls in three full preview Stages (each with its own
+// rAF loop + <video> elements). Loading it lazily keeps the modal trigger
+// itself cheap and avoids shipping the 30s/50s/90s scene code to anyone
+// who never opens the modal. SSR is off because the Stage relies on
+// ResizeObserver / requestAnimationFrame.
+const PreviewVideos = dynamic(() => import("./preview-videos/PreviewVideos"), {
+  ssr: false,
+});
+
+type PreviewTab = "slides" | "videos" | "icons";
+type VideoKey = "30s" | "50s" | "90s";
+
+const VIDEO_TABS: { key: VideoKey; label: string; sublabel: string }[] = [
+  { key: "30s", label: "30s", sublabel: "App Store" },
+  { key: "50s", label: "50s", sublabel: "App Store" },
+  { key: "90s", label: "90s", sublabel: "Cinematic" },
+];
 
 const NAV_HOVER_SPRING = { type: "spring" as const, stiffness: 400, damping: 24 };
 const NAV_LINK_CLASS =
@@ -25,6 +45,12 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [isPreviewsOpen, setIsPreviewsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<PreviewTab>("slides");
+  const [activeVideoTab, setActiveVideoTab] = useState<VideoKey>("30s");
+  const [isVideoFullscreen, setIsVideoFullscreen] = useState(false);
+  const [videoFullscreenSignal, setVideoFullscreenSignal] = useState(0);
+  const [iconsDownloadSignal, setIconsDownloadSignal] = useState(0);
+  const [isDownloadingIcons, setIsDownloadingIcons] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [isDownloadingAll, setIsDownloadingAll] = useState(false);
   const storyRefs = useRef<Array<HTMLElement | null>>([]);
@@ -196,6 +222,9 @@ export default function Header() {
   };
 
   const openPreviews = () => {
+    // Always re-open on the slides tab so returning users land on the
+    // App Store flow they expect.
+    setActiveTab("slides");
     setIsPreviewsOpen(true);
   };
 
@@ -283,6 +312,12 @@ export default function Header() {
       (previouslyFocused ?? triggerAtOpen)?.focus();
     };
   }, [isPreviewsOpen]);
+
+  useEffect(() => {
+    if (activeTab !== "videos") {
+      setIsVideoFullscreen(false);
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     if (!isPreviewsOpen) return;
@@ -401,19 +436,122 @@ export default function Header() {
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
             <div className="preview-modal-top">
-              <p className="preview-modal-kicker">App Store Preview Flow</p>
-              <div className="preview-modal-top-right">
+              <div
+                className="preview-modal-tabs"
+                role="tablist"
+                aria-label="Preview type"
+              >
                 <button
                   type="button"
-                  className="preview-download-btn"
-                  onClick={downloadAllPreviews}
-                  disabled={
-                    isDownloadingAll || downloadingId !== null
-                  }
-                  aria-label="Download all previews as images"
+                  role="tab"
+                  aria-selected={activeTab === "slides"}
+                  className={`preview-modal-tab ${activeTab === "slides" ? "is-active" : ""}`}
+                  onClick={() => setActiveTab("slides")}
                 >
-                  {isDownloadingAll ? "Preparing..." : "Download All"}
+                  Slides
                 </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === "videos"}
+                  className={`preview-modal-tab ${activeTab === "videos" ? "is-active" : ""}`}
+                  onClick={() => setActiveTab("videos")}
+                >
+                  Videos
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === "icons"}
+                  className={`preview-modal-tab ${activeTab === "icons" ? "is-active" : ""}`}
+                  onClick={() => setActiveTab("icons")}
+                >
+                  Icons
+                </button>
+              </div>
+
+              {activeTab === "videos" && (
+                <div
+                  className="preview-video-subtabs"
+                  role="tablist"
+                  aria-label="Video duration"
+                >
+                  {VIDEO_TABS.map((t) => (
+                    <button
+                      key={t.key}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeVideoTab === t.key}
+                      className={`preview-video-subtab ${activeVideoTab === t.key ? "is-active" : ""}`}
+                      onClick={() => setActiveVideoTab(t.key)}
+                    >
+                      <span className="preview-video-subtab__label">{t.label}</span>
+                      <span className="preview-video-subtab__sublabel">
+                        {t.sublabel}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="preview-modal-top-right">
+                {activeTab === "slides" && (
+                  <button
+                    type="button"
+                    className="preview-download-btn"
+                    onClick={downloadAllPreviews}
+                    disabled={
+                      isDownloadingAll || downloadingId !== null
+                    }
+                    aria-label="Download all previews as images"
+                  >
+                    {isDownloadingAll ? "Preparing..." : "Download All"}
+                  </button>
+                )}
+                {activeTab === "icons" && (
+                  <button
+                    type="button"
+                    className="preview-download-btn"
+                    onClick={() => setIconsDownloadSignal((prev) => prev + 1)}
+                    disabled={isDownloadingIcons}
+                    aria-label="Download all icon variants as PNG"
+                  >
+                    {isDownloadingIcons ? "Preparing..." : "Download All"}
+                  </button>
+                )}
+                {activeTab === "videos" && (
+                  <button
+                    type="button"
+                    className="preview-video-fullscreen-btn"
+                    onClick={() =>
+                      setVideoFullscreenSignal((prev) => prev + 1)
+                    }
+                    aria-label={
+                      isVideoFullscreen
+                        ? "Exit fullscreen preview"
+                        : "Enter fullscreen preview"
+                    }
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                      focusable="false"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 9V4h5" />
+                      <path d="M20 9V4h-5" />
+                      <path d="M4 15v5h5" />
+                      <path d="M20 15v5h-5" />
+                    </svg>
+                    {isVideoFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                  </button>
+                )}
                 <button
                   type="button"
                   className="preview-modal-close"
@@ -427,6 +565,7 @@ export default function Header() {
               </div>
             </div>
 
+            {activeTab === "slides" ? (
             <div className="preview-slider-wrap">
               <div
                 className="preview-slider-window"
@@ -673,7 +812,7 @@ export default function Header() {
                                       </div>
                                     </div>
                                   ),
-                                )}
+                                 )}
                               </>
                             )}
 
@@ -685,6 +824,20 @@ export default function Header() {
                 </div>
               </div>
             </div>
+            ) : activeTab === "videos" ? (
+              <PreviewVideos
+                active={activeVideoTab}
+                onActiveChange={setActiveVideoTab}
+                onFullscreenChange={setIsVideoFullscreen}
+                fullscreenToggleSignal={videoFullscreenSignal}
+                showControls={false}
+              />
+            ) : (
+              <PreviewIcons
+                downloadAllSignal={iconsDownloadSignal}
+                onDownloadStateChange={setIsDownloadingIcons}
+              />
+            )}
           </motion.div>
         </motion.div>
         )}

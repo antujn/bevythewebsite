@@ -2117,9 +2117,10 @@ a {
 }
 
 .preview-modal-top {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.75rem;
   margin-bottom: 0.85rem;
 }
 
@@ -2187,6 +2188,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  justify-self: end;
 }
 
 .preview-download-btn {
@@ -2221,6 +2223,291 @@ a {
 .preview-download-btn:disabled {
   opacity: 0.6;
   cursor: progress;
+}
+
+/* ── Top-level Slides / Videos tabs ────────────
+ *
+ * Replaces the old "App Store Preview Flow" kicker with a two-button
+ * segmented switcher. Visually sits in the same row as the close button
+ * so the modal chrome stays a single row. The active tab carries the
+ * site's wine-red accent + cream text; the inactive tab is muted glass.
+ */
+.preview-modal-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.preview-modal-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(244, 238, 229, 0.6);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.preview-modal-tab:hover {
+  color: rgba(244, 238, 229, 0.9);
+}
+
+.preview-modal-tab.is-active {
+  /* Active pill mirrors the wine-red accent used elsewhere in the
+     modal (close-hover, scrub-bar fill). */
+  color: #f4eee5;
+  background: rgba(217, 82, 58, 0.32);
+  box-shadow: inset 0 0 0 1px rgba(217, 82, 58, 0.35);
+}
+
+/* ── Video previews tab ─────────────────────────
+ *
+ * Wraps the active <Stage> in a tall portrait box that the Stage's
+ * own ResizeObserver can scale into. The 1170×2532 canvas always
+ * fits — the ResizeObserver picks the largest scale where width+height
+ * (plus the playback bar) clears the modal. Sub-tabs sit above the
+ * canvas as a pill row so users can hop between the three durations
+ * without leaving the modal.
+ */
+.preview-videos-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  height: min(78vh, 760px);
+}
+
+/* Sub-tab pill row + fullscreen action live on a shared row above the
+   active video stage. The subtabs centre themselves visually while the
+   action button anchors to the right. */
+.preview-video-controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-video-subtabs {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.preview-video-fullscreen-btn {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(244, 238, 229, 0.9);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+@media (max-width: 900px) {
+  .preview-modal-top {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.6rem;
+  }
+
+  .preview-modal-top .preview-video-subtabs {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+}
+
+.preview-video-fullscreen-btn:hover {
+  border-color: rgba(217, 82, 58, 0.55);
+  background: rgba(217, 82, 58, 0.22);
+  color: #f4eee5;
+}
+
+.preview-video-fullscreen-btn:active {
+  transform: translateY(1px);
+}
+
+/* The action button stacks below the subtabs once the modal gets
+   tight enough that the absolute-positioned button would overlap. */
+@media (max-width: 720px) {
+  .preview-video-controls {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .preview-video-fullscreen-btn {
+    position: static;
+  }
+}
+
+.preview-video-subtab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(244, 238, 229, 0.65);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.preview-video-subtab__label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  font-variant-numeric: tabular-nums;
+}
+
+.preview-video-subtab__sublabel {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.preview-video-subtab:hover {
+  color: rgba(244, 238, 229, 0.95);
+}
+
+.preview-video-subtab.is-active {
+  color: #f4eee5;
+  background: rgba(217, 82, 58, 0.32);
+  box-shadow: inset 0 0 0 1px rgba(217, 82, 58, 0.35);
+}
+
+.preview-video-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(74, 10, 16, 0.45), rgba(10, 4, 6, 0.7));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preview-video-stage:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: 0;
+}
+
+.preview-video-stage:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: 0;
+}
+
+.preview-video-stage:fullscreen [data-playback-bar="true"],
+.preview-video-stage:-webkit-full-screen [data-playback-bar="true"] {
+  display: none !important;
+}
+
+.preview-icons-wrap {
+  height: min(78vh, 760px);
+  min-height: 0;
+  border-radius: 22px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(120% 85% at 50% 0%, rgba(45, 17, 18, 0.3), rgba(12, 6, 8, 0.86));
+  padding: 0.95rem;
+}
+
+.preview-icons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.95rem;
+}
+
+.preview-icon-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preview-icon-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+}
+
+.preview-icon-tile.is-premium {
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45);
+}
+
+.preview-icon-tile__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -8%, rgba(255, 255, 255, 0.16), transparent 58%),
+    radial-gradient(120% 80% at 50% 115%, rgba(0, 0, 0, 0.26), transparent 60%);
+}
+
+.preview-icon-logo-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.preview-icon-logo {
+  object-fit: contain;
+  padding: 18%;
+  filter: drop-shadow(0 7px 16px rgba(0, 0, 0, 0.35));
+}
+
+.preview-icon-name {
+  margin: 0;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 229, 0.78);
 }
 
 /* ── App Store preview slide themes ───────────
