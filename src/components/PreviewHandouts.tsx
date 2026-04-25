@@ -297,13 +297,12 @@ function PosterArtwork() {
           width: 720,
           background: "#f4eee5",
           borderRadius: 36,
-          padding: "44px 44px 38px",
+          padding: 44,
           boxShadow:
             "0 28px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          gap: 22,
+          justifyContent: "center",
           position: "relative",
         }}
       >
@@ -320,40 +319,6 @@ function PosterArtwork() {
             imageRendering: "crisp-edges",
           }}
         />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 14,
-            color: "#1a0808",
-          }}
-        >
-          {/* Arrow pointing up to the QR */}
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#1a0808"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d="M12 19V5M5 12l7-7 7 7" />
-          </svg>
-          <span
-            style={{
-              fontWeight: 800,
-              fontSize: 34,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-            }}
-          >
-            Scan to download
-          </span>
-        </div>
       </div>
 
       {/* Footer band — pinned at bottom */}
