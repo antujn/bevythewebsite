@@ -167,7 +167,10 @@ function PosterArtwork() {
         fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
         overflow: "hidden",
         boxSizing: "border-box",
-        padding: 80,
+        // 64px side padding gives a 1112px content area — wide enough
+        // for the hook headline to render on a single line at 104px
+        // font without horizontal clipping.
+        padding: 64,
         display: "flex",
         flexDirection: "column",
       }}
@@ -221,21 +224,22 @@ function PosterArtwork() {
       </div>
 
       {/* HOOK — dominant headline, all caps, designed to land from
-          across the room. Each line is its own block so the line
-          break is intentional, not dependent on container width. */}
+          across the room. Each line is its own block with
+          whiteSpace: nowrap so it never wraps mid-line and pushes the
+          footer past the 1754px canvas height. Font size is tuned so
+          "YOU ALWAYS WANTED." fits in the 1080px content width with
+          a comfortable margin. */}
       <h1
         style={{
-          marginTop: 60,
           margin: 0,
-          paddingTop: 60,
+          paddingTop: 56,
           fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
           fontWeight: 800,
-          fontSize: 132,
+          fontSize: 104,
           lineHeight: 0.96,
-          letterSpacing: "-0.018em",
+          letterSpacing: "-0.02em",
           textTransform: "uppercase",
           color: "#f4eee5",
-          // Subtle ember underline accent created by the second line below.
         }}
       >
         {POSTER_HOOK_LINES.map((line, i) => (
@@ -243,6 +247,7 @@ function PosterArtwork() {
             key={line}
             style={{
               display: "block",
+              whiteSpace: "nowrap",
               color: i === POSTER_HOOK_LINES.length - 1 ? "#e86848" : "#f4eee5",
             }}
           >
@@ -254,16 +259,16 @@ function PosterArtwork() {
       {/* Brand couplet demoted to subtitle in Playfair italic. */}
       <p
         style={{
-          marginTop: 32,
           fontFamily: "var(--font-playfair), serif",
           fontStyle: "italic",
           fontWeight: 500,
-          fontSize: 56,
+          fontSize: 50,
           lineHeight: 1.1,
           letterSpacing: "-0.015em",
-          color: "rgba(244, 238, 229, 0.8)",
+          color: "rgba(244, 238, 229, 0.82)",
           margin: 0,
-          paddingTop: 32,
+          paddingTop: 26,
+          whiteSpace: "nowrap",
         }}
       >
         Truth or Dare. <span style={{ color: "#e86848" }}>Reimagined.</span>
@@ -272,13 +277,13 @@ function PosterArtwork() {
       {/* Sub-tagline — quick benefit beat. */}
       <p
         style={{
-          marginTop: 22,
-          fontSize: 24,
+          marginTop: 18,
+          fontSize: 22,
           fontWeight: 400,
           color: "rgba(244, 238, 229, 0.66)",
           letterSpacing: "0.02em",
           lineHeight: 1.5,
-          maxWidth: 900,
+          maxWidth: 1000,
         }}
       >
         1,000+ AI-curated cards across 11 themed bundles. Free on the App Store.
