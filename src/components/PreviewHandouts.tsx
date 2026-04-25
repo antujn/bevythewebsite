@@ -289,7 +289,8 @@ function PosterArtwork() {
         1,000+ AI-curated cards across 11 themed bundles. Free on the App Store.
       </p>
 
-      {/* QR card */}
+      {/* QR card — sized so the cream border hugs the QR (40px on
+          each side). Larger QR = more scannable from a distance. */}
       <div
         style={{
           marginTop: 56,
@@ -297,7 +298,7 @@ function PosterArtwork() {
           width: 720,
           background: "#f4eee5",
           borderRadius: 36,
-          padding: 44,
+          padding: 40,
           boxShadow:
             "0 28px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
           display: "flex",
@@ -310,12 +311,12 @@ function PosterArtwork() {
         <img
           src={QR_SRC}
           alt=""
-          width={560}
-          height={560}
+          width={640}
+          height={640}
           style={{
             display: "block",
-            width: 560,
-            height: 560,
+            width: 640,
+            height: 640,
             imageRendering: "crisp-edges",
           }}
         />
