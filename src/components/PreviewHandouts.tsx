@@ -47,6 +47,26 @@ const APPSTORE_BADGE_SRC = "/images/icons/appstore-light.png";
 const POSTER_FILENAME = "Bevy-Poster-A4.png";
 const CARD_FILENAME = "Bevy-Visiting-Card.png";
 
+/**
+ * The marketing hook that fronts both designs. Short, declarative, all
+ * caps — designed to land from across the room. Editing this single
+ * string updates both the poster and visiting card. The brand couplet
+ * ("Truth or Dare. Reimagined.") becomes the supporting subtitle.
+ *
+ * Pulled from the hooks sheet in projectBevy/marketing/planning;
+ * "THE DRINKING GAME YOU ALWAYS WANTED" is the chosen variant for
+ * bars/parties/hostels — substitute another hook from that sheet
+ * (e.g. "THE PARTY GAME YOUR GROUP WILL TEXT ABOUT") if the venue
+ * mix shifts toward cafes / co-working spaces / family settings.
+ */
+const POSTER_HOOK_LINES = [
+  "THE DRINKING GAME",
+  "YOU ALWAYS WANTED.",
+];
+
+/** Same hook stacked tighter for the smaller visiting card. */
+const CARD_HOOK_LINES = ["THE DRINKING GAME", "YOU ALWAYS WANTED."];
+
 type PreviewHandoutsProps = {
   /** Bumped by the parent (header) "Download All" button. */
   downloadAllSignal?: number;
@@ -200,59 +220,62 @@ function PosterArtwork() {
         </span>
       </div>
 
-      {/* Headline kicker */}
-      <p
-        style={{
-          marginTop: 60,
-          fontSize: 22,
-          fontWeight: 700,
-          letterSpacing: "0.32em",
-          textTransform: "uppercase",
-          color: "#e86848",
-        }}
-      >
-        A new way to play
-      </p>
-
-      {/* Headline couplet */}
+      {/* HOOK — dominant headline, all caps, designed to land from
+          across the room. Each line is its own block so the line
+          break is intentional, not dependent on container width. */}
       <h1
         style={{
-          marginTop: 16,
-          fontFamily: "var(--font-playfair), serif",
-          fontWeight: 500,
-          fontStyle: "italic",
-          fontSize: 130,
-          lineHeight: 1.02,
-          letterSpacing: "-0.025em",
+          marginTop: 60,
           margin: 0,
+          paddingTop: 60,
+          fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
+          fontWeight: 800,
+          fontSize: 132,
+          lineHeight: 0.96,
+          letterSpacing: "-0.018em",
+          textTransform: "uppercase",
           color: "#f4eee5",
+          // Subtle ember underline accent created by the second line below.
         }}
       >
-        Truth or Dare.
+        {POSTER_HOOK_LINES.map((line, i) => (
+          <span
+            key={line}
+            style={{
+              display: "block",
+              color: i === POSTER_HOOK_LINES.length - 1 ? "#e86848" : "#f4eee5",
+            }}
+          >
+            {line}
+          </span>
+        ))}
       </h1>
-      <h2
-        style={{
-          fontFamily: "var(--font-playfair), serif",
-          fontWeight: 600,
-          fontStyle: "italic",
-          fontSize: 130,
-          lineHeight: 1.02,
-          letterSpacing: "-0.025em",
-          margin: 0,
-          marginTop: -4,
-          color: "#e86848",
-        }}
-      >
-        Reimagined.
-      </h2>
 
-      {/* Sub-tagline */}
+      {/* Brand couplet demoted to subtitle in Playfair italic. */}
       <p
         style={{
-          marginTop: 28,
-          fontSize: 26,
+          marginTop: 32,
+          fontFamily: "var(--font-playfair), serif",
+          fontStyle: "italic",
+          fontWeight: 500,
+          fontSize: 56,
+          lineHeight: 1.1,
+          letterSpacing: "-0.015em",
+          color: "rgba(244, 238, 229, 0.8)",
+          margin: 0,
+          paddingTop: 32,
+        }}
+      >
+        Truth or Dare. <span style={{ color: "#e86848" }}>Reimagined.</span>
+      </p>
+
+      {/* Sub-tagline — quick benefit beat. */}
+      <p
+        style={{
+          marginTop: 22,
+          fontSize: 24,
           fontWeight: 400,
-          color: "rgba(244, 238, 229, 0.74)",
+          color: "rgba(244, 238, 229, 0.66)",
           letterSpacing: "0.02em",
           lineHeight: 1.5,
           maxWidth: 900,
@@ -409,10 +432,10 @@ function VisitingCardArtwork() {
         }}
       />
 
-      {/* LEFT — brand column */}
+      {/* LEFT — hook + brand column */}
       <div
         style={{
-          padding: "52px 44px 44px",
+          padding: "44px 38px 38px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -420,13 +443,13 @@ function VisitingCardArtwork() {
           zIndex: 1,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={LOGO_SRC}
             alt=""
-            width={56}
-            height={56}
+            width={42}
+            height={42}
             style={{ display: "block" }}
           />
           <span
@@ -434,7 +457,7 @@ function VisitingCardArtwork() {
               fontFamily: "var(--font-playfair), serif",
               fontStyle: "italic",
               fontWeight: 600,
-              fontSize: 42,
+              fontSize: 30,
               letterSpacing: "-0.02em",
               lineHeight: 1,
               color: "#f4eee5",
@@ -445,48 +468,47 @@ function VisitingCardArtwork() {
         </div>
 
         <div>
-          <p
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: "#e86848",
-              margin: 0,
-            }}
-          >
-            Free on the App Store
-          </p>
+          {/* HOOK — dominant headline, mirrors the poster. */}
           <h3
             style={{
-              marginTop: 8,
-              fontFamily: "var(--font-playfair), serif",
-              fontStyle: "italic",
-              fontWeight: 500,
-              fontSize: 56,
-              lineHeight: 1.05,
-              letterSpacing: "-0.02em",
+              fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
+              fontWeight: 800,
+              fontSize: 44,
+              lineHeight: 0.96,
+              letterSpacing: "-0.012em",
+              textTransform: "uppercase",
               color: "#f4eee5",
               margin: 0,
             }}
           >
-            Truth or Dare.
+            {CARD_HOOK_LINES.map((line, i) => (
+              <span
+                key={line}
+                style={{
+                  display: "block",
+                  color: i === CARD_HOOK_LINES.length - 1 ? "#e86848" : "#f4eee5",
+                }}
+              >
+                {line}
+              </span>
+            ))}
           </h3>
-          <h3
+          <p
             style={{
+              marginTop: 14,
               fontFamily: "var(--font-playfair), serif",
               fontStyle: "italic",
-              fontWeight: 600,
-              fontSize: 56,
-              lineHeight: 1.05,
-              letterSpacing: "-0.02em",
-              color: "#e86848",
+              fontWeight: 500,
+              fontSize: 22,
+              lineHeight: 1.2,
+              letterSpacing: "-0.015em",
+              color: "rgba(244, 238, 229, 0.78)",
               margin: 0,
-              marginTop: -2,
+              paddingTop: 14,
             }}
           >
-            Reimagined.
-          </h3>
+            Truth or Dare. <span style={{ color: "#e86848" }}>Reimagined.</span>
+          </p>
         </div>
 
         <div
