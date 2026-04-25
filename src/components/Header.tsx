@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { useDownload } from "./DownloadContext";
+import PreviewHandouts from "./PreviewHandouts";
 import PreviewIcons from "./PreviewIcons";
 import { previewSlides } from "./previewSlides";
 
@@ -18,7 +19,7 @@ const PreviewVideos = dynamic(() => import("./preview-videos/PreviewVideos"), {
   ssr: false,
 });
 
-type PreviewTab = "slides" | "videos" | "icons";
+type PreviewTab = "slides" | "videos" | "icons" | "handouts";
 type VideoKey = "30s" | "50s" | "90s";
 
 const VIDEO_TABS: { key: VideoKey; label: string; sublabel: string }[] = [
@@ -51,6 +52,8 @@ export default function Header() {
   const [videoFullscreenSignal, setVideoFullscreenSignal] = useState(0);
   const [iconsDownloadSignal, setIconsDownloadSignal] = useState(0);
   const [isDownloadingIcons, setIsDownloadingIcons] = useState(false);
+  const [handoutsDownloadSignal, setHandoutsDownloadSignal] = useState(0);
+  const [isDownloadingHandouts, setIsDownloadingHandouts] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [isDownloadingAll, setIsDownloadingAll] = useState(false);
   const storyRefs = useRef<Array<HTMLElement | null>>([]);
@@ -468,6 +471,15 @@ export default function Header() {
                 >
                   Icons
                 </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === "handouts"}
+                  className={`preview-modal-tab ${activeTab === "handouts" ? "is-active" : ""}`}
+                  onClick={() => setActiveTab("handouts")}
+                >
+                  Handouts
+                </button>
               </div>
 
               {activeTab === "videos" && (
@@ -517,6 +529,19 @@ export default function Header() {
                     aria-label="Download all icon variants as PNG"
                   >
                     {isDownloadingIcons ? "Preparing..." : "Download All"}
+                  </button>
+                )}
+                {activeTab === "handouts" && (
+                  <button
+                    type="button"
+                    className="preview-download-btn"
+                    onClick={() =>
+                      setHandoutsDownloadSignal((prev) => prev + 1)
+                    }
+                    disabled={isDownloadingHandouts}
+                    aria-label="Download poster + visiting card as PNG"
+                  >
+                    {isDownloadingHandouts ? "Preparing..." : "Download All"}
                   </button>
                 )}
                 {activeTab === "videos" && (
@@ -832,10 +857,15 @@ export default function Header() {
                 fullscreenToggleSignal={videoFullscreenSignal}
                 showControls={false}
               />
-            ) : (
+            ) : activeTab === "icons" ? (
               <PreviewIcons
                 downloadAllSignal={iconsDownloadSignal}
                 onDownloadStateChange={setIsDownloadingIcons}
+              />
+            ) : (
+              <PreviewHandouts
+                downloadAllSignal={handoutsDownloadSignal}
+                onDownloadStateChange={setIsDownloadingHandouts}
               />
             )}
           </motion.div>

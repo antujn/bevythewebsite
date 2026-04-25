@@ -2510,6 +2510,149 @@ a {
   color: rgba(244, 238, 229, 0.78);
 }
 
+/* ── Handouts tab (poster + visiting card) ────
+ *
+ * Each preview-handout-card houses an artwork rendered at its
+ * full print pixel size. The .preview-handout-stage wrapper applies
+ * a transform: scale() to fit the live modal viewport, while the
+ * inner .preview-handout-art element keeps its native dimensions so
+ * modern-screenshot captures it at print resolution.
+ *
+ * Scale factors are tuned to:
+ *   - Poster (1240x1754) -> ~440px wide preview (~0.355x)
+ *   - Card   (1050x600)  -> ~700px wide preview (~0.667x)
+ * which lays them out side-by-side at >900px modal width and stacks
+ * on narrower screens.
+ */
+.preview-handouts-wrap {
+  height: min(78vh, 760px);
+  min-height: 0;
+  border-radius: 22px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(
+    120% 85% at 50% 0%,
+    rgba(45, 17, 18, 0.3),
+    rgba(12, 6, 8, 0.86)
+  );
+  padding: 1.6rem;
+}
+
+.preview-handouts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.8rem;
+  justify-items: center;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .preview-handouts-grid {
+    /* Poster is taller, so give it the slimmer column.
+       Layout: poster 440px wide column, card up to 700px wide column. */
+    grid-template-columns: 440px minmax(420px, 700px);
+    align-items: start;
+    justify-items: center;
+  }
+}
+
+.preview-handout-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 720px;
+}
+
+.preview-handout-stage {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  width: 100%;
+  /* The inner art element sits at native pixel size with a JS-driven
+     transform: scale(). The stage's aspect-ratio reserves the right
+     vertical space so the transformed art maps cleanly inside it. */
+}
+
+.preview-handout-stage--poster {
+  aspect-ratio: 1240 / 1754;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.preview-handout-stage--vcard {
+  aspect-ratio: 1050 / 600;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.preview-handout-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+.preview-handout-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 4px;
+}
+
+.preview-handout-meta__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preview-handout-meta__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 238, 229, 0.92);
+}
+
+.preview-handout-meta__detail {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(244, 238, 229, 0.5);
+  letter-spacing: 0.04em;
+}
+
+.preview-handout-download-btn {
+  background: rgba(217, 82, 58, 0.92);
+  color: #f4eee5;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    transform 200ms ease,
+    opacity 200ms ease;
+}
+
+.preview-handout-download-btn:hover:not(:disabled) {
+  background: rgba(232, 104, 72, 1);
+  transform: translateY(-1px);
+}
+
+.preview-handout-download-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* ── App Store preview slide themes ───────────
  *
  * Each preview slide can opt into one of six color themes by adding a
