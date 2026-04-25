@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { DownloadProvider } from "@/components/DownloadContext";
 import MotionProvider from "@/components/MotionProvider";
 import BfcacheGuard from "@/components/BfcacheGuard";
+import HomeMotionEpochProvider from "@/components/HomeMotionEpochProvider";
 import { APP_FULL_NAME, APP_STORE_ID, APP_STORE_URL } from "@/lib/appStore";
 import "./globals.css";
 
@@ -259,9 +260,11 @@ export default function RootLayout({
             `persisted: true` and reloads the page to reinitialise
             everything cleanly. See the component for details. */}
         <BfcacheGuard />
-        <MotionProvider>
-          <DownloadProvider>{children}</DownloadProvider>
-        </MotionProvider>
+        <HomeMotionEpochProvider>
+          <MotionProvider>
+            <DownloadProvider>{children}</DownloadProvider>
+          </MotionProvider>
+        </HomeMotionEpochProvider>
         <Analytics />
       </body>
     </html>
