@@ -321,45 +321,27 @@ function PosterArtwork() {
         />
       </div>
 
-      {/* QR caption — sits on the dark background below the cream
-          QR card so the QR itself stays visually clean while still
-          giving the viewer a clear instruction. */}
-      <div
+      {/* QR caption — styled as a title beat that mirrors the hook
+          headline above: Plus Jakarta Sans extrabold caps with the
+          same -0.02em tracking and cream/ember two-tone split. */}
+      <p
         style={{
-          marginTop: 22,
+          margin: 0,
+          marginTop: 30,
           alignSelf: "center",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 16,
-          color: "#f4eee5",
+          fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
+          fontWeight: 800,
+          fontSize: 64,
+          lineHeight: 0.96,
+          letterSpacing: "-0.02em",
+          textTransform: "uppercase",
+          textAlign: "center",
+          whiteSpace: "nowrap",
         }}
       >
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#e86848"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-        >
-          <path d="M12 19V5M5 12l7-7 7 7" />
-        </svg>
-        <span
-          style={{
-            fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
-            fontWeight: 800,
-            fontSize: 30,
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-          }}
-        >
-          Scan to download
-        </span>
-      </div>
+        <span style={{ color: "#f4eee5" }}>Scan to </span>
+        <span style={{ color: "#e86848" }}>Download.</span>
+      </p>
 
       {/* Footer band — pinned at bottom */}
       <div
