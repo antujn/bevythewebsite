@@ -149,8 +149,7 @@ public/
   humans.txt                         Author/team manifest
   videos/                            Hero + gameplay clips (.mp4 + .webm pairs)
   images/
-    icons/                           Site icons (logo, social, App Store badges)
-    icons/app-icons/                 Logo source variants used by the icon exporter
+    icons/                           Site icons (logo, social, App Store badges) — `bevy-logo.png` is the canonical Bevy silhouette used everywhere
     bundles/                         11 bundle screenshots (one per bundle)
     backgrounds/                     Section background art
     illustrations/                   Feature deck artwork (illustration1–8.jpg)
@@ -369,5 +368,5 @@ Steps to redeploy on Vercel:
 - Bundle screenshots: `public/images/bundles/bundle-<slug>.png` (one per bundle defined in `src/lib/bundles.ts`)
 - Hero + gameplay videos: `public/videos/<name>.{mp4,webm}` (every clip ships both, browser picks)
 - Feature deck art: `public/images/illustrations/illustration1.jpg`–`illustration8.jpg`
-- Icon-export source logos: `public/images/icons/app-icons/{logo-red-512,logo-gunmetal,logo-offwhite}.png` (the Icons-tab exporter draws the tile background dynamically and composites the logo on top)
+- Icon-export source logo: `public/images/icons/bevy-logo.png` (the canonical Bevy silhouette used across the site; the Icons-tab exporter draws the tile background dynamically and, for premium tiers, recolors the logo at draw time via per-tier gradient masking — see `PREMIUM_LOGO_STOPS` in `PreviewIcons.tsx`)
 - The `public/images/previews/claude_design/` folder is a working scratchpad and may be deleted; the runtime no longer depends on anything inside it (asset migration was done when the Icons-tab feature shipped).

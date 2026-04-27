@@ -10,8 +10,64 @@ type IconVariant = {
   tileBackground: string;
   logoSrc: string;
   premium?: boolean;
-  gradient?: "gunmetal" | "charcoal";
+  gradient?: "gunmetal" | "cobalt" | "palladium" | "iridium";
 };
+
+// MARK: - Premium logo palettes
+//
+// Each premium tier's logo is recolored at draw time with a top-to-bottom
+// linear gradient — applied as a `source-in` mask onto the logo's alpha
+// silhouette so the glyph reads as forged from the tier's metal. Most
+// tiers use a 3-stop monochrome metal ramp; Iridium uses a 5-stop
+// iridescent oil-slick ramp to honor its "alien apex" brief.
+type GradientStop = [offset: number, color: string];
+
+const PREMIUM_LOGO_STOPS: Record<NonNullable<IconVariant["gradient"]>, GradientStop[]> = {
+  // Polished steel — clean monochrome, matte industrial entry.
+  gunmetal: [
+    [0, "#bcc4d2"],
+    [0.55, "#8b95a4"],
+    [1, "#50596a"],
+  ],
+  // Frosted blue-steel — high-tech specialist tier.
+  cobalt: [
+    [0, "#aac0e3"],
+    [0.55, "#6f86b3"],
+    [1, "#3a4868"],
+  ],
+  // Dark brushed graphite against bright Palladium tile (inverted
+  // contrast so the glyph still reads on a near-white background).
+  palladium: [
+    [0, "#3a4252"],
+    [0.55, "#5c6677"],
+    [1, "#7e889c"],
+  ],
+  // Iridescent oil-slick — apex/alien tier. The hue rotation
+  // (cyan → blue → violet → magenta → warm gold) mimics the way thin-
+  // film interference shifts color across an iridium meteorite or a
+  // gasoline puddle, giving Iridium a clearly distinct identity from
+  // Gunmetal's flat steel.
+  iridium: [
+    [0, "#7ad8ff"],
+    [0.25, "#5e7fff"],
+    [0.5, "#a558ff"],
+    [0.75, "#ff5fc7"],
+    [1, "#ffb84a"],
+  ],
+};
+
+// CSS gradient form of `PREMIUM_LOGO_STOPS`, used by the live DOM
+// preview via `background-image` + `-webkit-mask` so the on-screen
+// tile visually matches the canvas export.
+const PREMIUM_LOGO_CSS_GRADIENT: Record<NonNullable<IconVariant["gradient"]>, string> =
+  Object.fromEntries(
+    Object.entries(PREMIUM_LOGO_STOPS).map(([key, stops]) => [
+      key,
+      `linear-gradient(180deg, ${stops
+        .map(([offset, color]) => `${color} ${offset * 100}%`)
+        .join(", ")})`,
+    ]),
+  ) as Record<NonNullable<IconVariant["gradient"]>, string>;
 
 type PreviewIconsProps = {
   downloadAllSignal?: number;
@@ -27,97 +83,121 @@ const ICON_VARIANTS: IconVariant[] = [
     label: "Dark Red",
     fileBase: "BevyDarkRedIcon",
     tileBackground: "#610000",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-teal",
     label: "Dark Teal",
     fileBase: "BevyDarkTealIcon",
     tileBackground: "#1A3A3D",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-royal",
     label: "Dark Royal",
     fileBase: "BevyDarkRoyalIcon",
     tileBackground: "#001F2A",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-black",
     label: "Dark Black",
     fileBase: "BevyDarkBlackIcon",
     tileBackground: "#000000",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-orange",
     label: "Dark Orange",
     fileBase: "BevyDarkOrangeIcon",
     tileBackground: "#B3371C",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-plum",
     label: "Dark Plum",
     fileBase: "BevyDarkPlumIcon",
     tileBackground: "#3A0D1C",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-night",
     label: "Dark Night",
     fileBase: "BevyDarkNightIcon",
     tileBackground: "#0D0D18",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-pink",
     label: "Dark Pink",
     fileBase: "BevyDarkPinkIcon",
     tileBackground: "#8C1F43",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-navy",
     label: "Dark Navy",
     fileBase: "BevyDarkNavyIcon",
     tileBackground: "#00002A",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-green",
     label: "Dark Green",
     fileBase: "BevyDarkGreenIcon",
     tileBackground: "#002B00",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
   {
     id: "dark-silver",
     label: "Dark Silver",
     fileBase: "BevyDarkSilverIcon",
     tileBackground: "#444444",
-    logoSrc: "/images/icons/app-icons/logo-red-512.png",
+    logoSrc: "/images/icons/bevy-logo.png",
   },
+  // Premium tiers all share the canonical Bevy silhouette
+  // (`bevy-logo.png`); its color is discarded at render time and
+  // replaced with a per-tier brushed-metal gradient via `source-in`
+  // alpha-mask compositing.
   {
     id: "premium-gunmetal",
-    label: "Premium Gunmetal Noir",
-    fileBase: "BevyDarkGunmetalNoirIcon",
+    label: "Premium Gunmetal",
+    fileBase: "BevyDarkGunmetalIcon",
     tileBackground:
       "radial-gradient(120% 120% at 30% 20%, #2b313a 0%, #1d2128 55%, #13161b 100%)",
-    logoSrc: "/images/icons/app-icons/logo-gunmetal.png",
+    logoSrc: "/images/icons/bevy-logo.png",
     premium: true,
     gradient: "gunmetal",
   },
   {
-    id: "premium-charcoal",
-    label: "Premium Charcoal Platinum",
-    fileBase: "BevyDarkCharcoalPlatinumIcon",
+    id: "premium-cobalt",
+    label: "Premium Cobalt",
+    fileBase: "BevyDarkCobaltIcon",
     tileBackground:
-      "radial-gradient(120% 120% at 30% 20%, #32383f 0%, #20242b 55%, #15181d 100%)",
-    logoSrc: "/images/icons/app-icons/logo-offwhite.png",
+      "radial-gradient(120% 120% at 30% 20%, #5b6e94 0%, #2f3a55 55%, #161b2d 100%)",
+    logoSrc: "/images/icons/bevy-logo.png",
     premium: true,
-    gradient: "charcoal",
+    gradient: "cobalt",
+  },
+  {
+    id: "premium-palladium",
+    label: "Premium Palladium",
+    fileBase: "BevyDarkPalladiumIcon",
+    tileBackground:
+      "radial-gradient(120% 120% at 30% 20%, #fafcff 0%, #dde3ee 55%, #a8b2c4 100%)",
+    logoSrc: "/images/icons/bevy-logo.png",
+    premium: true,
+    gradient: "palladium",
+  },
+  {
+    id: "premium-iridium",
+    label: "Premium Iridium",
+    fileBase: "BevyDarkIridiumIcon",
+    tileBackground:
+      "radial-gradient(120% 120% at 30% 20%, #3a3148 0%, #231b30 55%, #0f0918 100%)",
+    logoSrc: "/images/icons/bevy-logo.png",
+    premium: true,
+    gradient: "iridium",
   },
 ];
 
@@ -196,7 +276,34 @@ export default function PreviewIcons({
       ctx.save();
       ctx.clip();
 
-      if (variant.gradient === "gunmetal") {
+      // Premium tile gradients use a shared radial geometry anchored
+      // top-left so the highlight reads consistently across variants.
+      // Each tier picks its own stop palette below; Iridium's tile
+      // shifts violet-black to clearly distinguish it from Gunmetal.
+      const premiumTileStops: Record<NonNullable<IconVariant["gradient"]>, GradientStop[]> = {
+        gunmetal: [
+          [0, "#2b313a"],
+          [0.55, "#1d2128"],
+          [1, "#13161b"],
+        ],
+        cobalt: [
+          [0, "#5b6e94"],
+          [0.55, "#2f3a55"],
+          [1, "#161b2d"],
+        ],
+        palladium: [
+          [0, "#fafcff"],
+          [0.55, "#dde3ee"],
+          [1, "#a8b2c4"],
+        ],
+        iridium: [
+          [0, "#3a3148"],
+          [0.55, "#231b30"],
+          [1, "#0f0918"],
+        ],
+      };
+
+      if (variant.gradient && variant.gradient in premiumTileStops) {
         const g = ctx.createRadialGradient(
           EXPORT_SIZE * 0.3,
           EXPORT_SIZE * 0.2,
@@ -205,22 +312,9 @@ export default function PreviewIcons({
           EXPORT_SIZE * 0.55,
           EXPORT_SIZE * 0.95,
         );
-        g.addColorStop(0, "#2b313a");
-        g.addColorStop(0.55, "#1d2128");
-        g.addColorStop(1, "#13161b");
-        ctx.fillStyle = g;
-      } else if (variant.gradient === "charcoal") {
-        const g = ctx.createRadialGradient(
-          EXPORT_SIZE * 0.3,
-          EXPORT_SIZE * 0.2,
-          EXPORT_SIZE * 0.08,
-          EXPORT_SIZE * 0.45,
-          EXPORT_SIZE * 0.55,
-          EXPORT_SIZE * 0.95,
-        );
-        g.addColorStop(0, "#32383f");
-        g.addColorStop(0.55, "#20242b");
-        g.addColorStop(1, "#15181d");
+        for (const [offset, color] of premiumTileStops[variant.gradient]) {
+          g.addColorStop(offset, color);
+        }
         ctx.fillStyle = g;
       } else {
         ctx.fillStyle = variant.tileBackground;
@@ -257,7 +351,42 @@ export default function PreviewIcons({
       const logoSize = EXPORT_SIZE * LOGO_SCALE;
       const logoX = (EXPORT_SIZE - logoSize) / 2;
       const logoY = (EXPORT_SIZE - logoSize) / 2;
-      ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+
+      if (variant.gradient && variant.gradient in PREMIUM_LOGO_STOPS) {
+        // Premium tier: render the logo into an offscreen canvas, then
+        // composite a vertical brushed-metal gradient onto its alpha
+        // silhouette. This makes the glyph read as forged from the
+        // tier's metal rather than a flat-tinted decal.
+        const off = document.createElement("canvas");
+        off.width = Math.round(logoSize);
+        off.height = Math.round(logoSize);
+        const offCtx = off.getContext("2d", { alpha: true });
+        if (!offCtx) {
+          throw new Error("Could not create offscreen 2D context for logo masking.");
+        }
+        offCtx.imageSmoothingEnabled = true;
+        offCtx.imageSmoothingQuality = "high";
+
+        // 1. Stamp the source silhouette (its color will be discarded).
+        offCtx.drawImage(logo, 0, 0, off.width, off.height);
+
+        // 2. Replace the silhouette's pixels with the metal gradient,
+        //    keeping the original alpha mask. Variable stop count so
+        //    Iridium can use a 5-stop iridescent ramp while the others
+        //    keep their 3-stop monochrome ramp.
+        const grad = offCtx.createLinearGradient(0, 0, 0, off.height);
+        for (const [offset, color] of PREMIUM_LOGO_STOPS[variant.gradient]) {
+          grad.addColorStop(offset, color);
+        }
+        offCtx.globalCompositeOperation = "source-in";
+        offCtx.fillStyle = grad;
+        offCtx.fillRect(0, 0, off.width, off.height);
+        offCtx.globalCompositeOperation = "source-over";
+
+        ctx.drawImage(off, logoX, logoY, logoSize, logoSize);
+      } else {
+        ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+      }
 
       ctx.restore();
 
@@ -318,13 +447,29 @@ export default function PreviewIcons({
             >
               <div className="preview-icon-tile__sheen" aria-hidden="true" />
               <div className="preview-icon-logo-wrap">
-                <Image
-                  src={icon.logoSrc}
-                  alt={`${icon.label} app icon`}
-                  fill
-                  sizes="(max-width: 900px) 38vw, 180px"
-                  className="preview-icon-logo"
-                />
+                {icon.gradient && icon.gradient in PREMIUM_LOGO_CSS_GRADIENT ? (
+                  // Premium tier: render the logo as a CSS mask filled
+                  // with the per-tier brushed-metal gradient, mirroring
+                  // the canvas export's `source-in` compositing.
+                  <div
+                    role="img"
+                    aria-label={`${icon.label} app icon`}
+                    className="preview-icon-logo preview-icon-logo--metal"
+                    style={{
+                      backgroundImage: PREMIUM_LOGO_CSS_GRADIENT[icon.gradient],
+                      WebkitMaskImage: `url(${icon.logoSrc})`,
+                      maskImage: `url(${icon.logoSrc})`,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src={icon.logoSrc}
+                    alt={`${icon.label} app icon`}
+                    fill
+                    sizes="(max-width: 900px) 38vw, 180px"
+                    className="preview-icon-logo"
+                  />
+                )}
               </div>
             </div>
             <figcaption className="preview-icon-name">{icon.fileBase}</figcaption>

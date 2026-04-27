@@ -2500,6 +2500,25 @@ a {
   filter: drop-shadow(0 7px 16px rgba(0, 0, 0, 0.35));
 }
 
+/* Premium-tier brushed-metal logo: a div whose background is the
+   per-tier gradient and whose alpha mask is the canonical Bevy
+   silhouette. Mirrors the canvas export's `source-in` compositing so
+   the on-screen preview matches the exported PNG. */
+.preview-icon-logo--metal {
+  position: absolute;
+  inset: 18%;
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  filter: drop-shadow(0 7px 16px rgba(0, 0, 0, 0.35));
+}
+
 .preview-icon-name {
   margin: 0;
   text-align: center;
