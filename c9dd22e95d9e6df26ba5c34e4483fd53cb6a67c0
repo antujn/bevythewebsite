@@ -1,0 +1,27 @@
+src/app/globals.css
+  e3abfb7bfb9634b9 212-272,1631-1641,1647-1661,1682-1689,1692-1696,1700-1715,1717,1720-1723,1726-1728,1731-1735,1738-1747,1841-1849,1851-1862
+src/components/FaqSection.tsx
+  e3abfb7bfb9634b9 3-4,103,114-276
+src/components/GameplaySection.tsx
+  e3abfb7bfb9634b9 5,12-18,21-31,35-38,42-45,49-52,115,151-165,168-179,181-220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "c9dd22e95d9e6df26ba5c34e4483fd53cb6a67c0",
+  "prompts": {
+    "e3abfb7bfb9634b9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_2208936e2ffez1eBBMn8sWMnex",
+        "model": "anthropic/claude-opus-4-7"
+      },
+      "human_author": "Anant Jain",
+      "messages": [],
+      "total_additions": 21420,
+      "total_deletions": 3482,
+      "accepted_lines": 21420,
+      "overriden_lines": 0
+    }
+  }
+}
