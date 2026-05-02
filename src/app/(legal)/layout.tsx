@@ -6,6 +6,8 @@ import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import Footer from "@/components/Footer";
+import { docsBySegment } from "./content";
+import { LegalPdfDownloadButton } from "./LegalPdfDownloadButton";
 
 const legalNav = [
   { label: "Privacy Policy", href: "/privacy" },
@@ -27,7 +29,7 @@ const SEGMENT_TITLES: Record<string, string> = {
  * The page-body `<strong>Effective date: …</strong>` lines are the
  * human-facing twin of this constant; keep the two in sync.
  */
-const LEGAL_LAST_UPDATED = "2026-04-04";
+const LEGAL_LAST_UPDATED = "2026-05-02";
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
@@ -42,6 +44,11 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
   const segment = useSelectedLayoutSegment();
   const pathname = usePathname();
   const title = (segment && SEGMENT_TITLES[segment]) ?? "Legal";
+  // Resolve the active doc for the PDF download button. Falls back
+  // to `null` when no segment is matched (e.g. a transient state
+  // mid-navigation), in which case the button is hidden rather than
+  // rendering with stale data.
+  const activeDoc = (segment && docsBySegment[segment]) ?? null;
 
   // Next.js's default scroll-to-view for shared layouts targets the
   // newly-rendered children (the page body), which lands the viewport
@@ -205,34 +212,61 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
                   `.section-title` base class already carries the
                   Playfair family; only italic + color need overriding.
                 */}
-                <motion.h1
-                  className="section-title"
-                  style={{
-                    fontSize: "clamp(28px, 3.5vw, 42px)",
-                    color: "var(--ember-bright)",
-                    fontStyle: "italic",
-                  }}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.75,
-                    ease: EASE_OUT,
-                    delay: 0.45,
-                  }}
-                >
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.span
-                      key={title}
-                      initial={{ opacity: 0, y: 8 }}
+                {/*
+                  Title row — Playfair-italic h1 on the left and the
+                  doc-level "Download PDF" action on the right.
+                  `flex items-baseline` aligns the button text to
+                  the title's typographic baseline, so the pill
+                  button reads as a deliberate adjacent action
+                  instead of floating at an arbitrary vertical.
+                  `gap-y-3` lets the button drop below the title on
+                  narrow viewports without overlapping it.
+                */}
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3">
+                  <motion.h1
+                    className="section-title"
+                    style={{
+                      fontSize: "clamp(28px, 3.5vw, 42px)",
+                      color: "var(--ember-bright)",
+                      fontStyle: "italic",
+                      margin: 0,
+                    }}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.75,
+                      ease: EASE_OUT,
+                      delay: 0.45,
+                    }}
+                  >
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={title}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.3, ease: EASE_OUT }}
+                        style={{ display: "inline-block" }}
+                      >
+                        {title}
+                      </motion.span>
+                    </AnimatePresence>
+                  </motion.h1>
+
+                  {activeDoc ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.3, ease: EASE_OUT }}
-                      style={{ display: "inline-block" }}
+                      transition={{
+                        duration: 0.6,
+                        ease: EASE_OUT,
+                        delay: 0.55,
+                      }}
                     >
-                      {title}
-                    </motion.span>
-                  </AnimatePresence>
-                </motion.h1>
+                      <LegalPdfDownloadButton doc={activeDoc} />
+                    </motion.div>
+                  ) : null}
+                </div>
                 <motion.div
                   className="gold-line mt-4"
                   style={{ marginInline: 0 }}
