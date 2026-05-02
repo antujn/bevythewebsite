@@ -1,0 +1,39 @@
+src/app/(legal)/disclaimer/page.tsx
+  e3abfb7bfb9634b9 2-3,24
+src/components/LegalPdf.tsx
+  e3abfb7bfb9634b9 1-249
+src/app/(legal)/terms/page.tsx
+  e3abfb7bfb9634b9 2-3,24
+src/app/(legal)/content.ts
+  e3abfb7bfb9634b9 1-1049
+package.json
+  e3abfb7bfb9634b9 12
+src/app/(legal)/LegalPdfDownloadButton.tsx
+  e3abfb7bfb9634b9 1-114
+src/app/(legal)/privacy/page.tsx
+  e3abfb7bfb9634b9 2-3,25
+src/app/(legal)/layout.tsx
+  e3abfb7bfb9634b9 9-10,32,47-51,215-258,260-264,266-269
+src/app/(legal)/LegalDocRenderer.tsx
+  e3abfb7bfb9634b9 1-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "dc8e046073859228862ad215e6f6d1e93c960038",
+  "prompts": {
+    "e3abfb7bfb9634b9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_2208936e2ffez1eBBMn8sWMnex",
+        "model": "anthropic/claude-opus-4-7"
+      },
+      "human_author": "Anant Jain",
+      "messages": [],
+      "total_additions": 1610,
+      "total_deletions": 289,
+      "accepted_lines": 1610,
+      "overriden_lines": 0
+    }
+  }
+}
