@@ -4,9 +4,27 @@
 // claude_design HTML preview files into a real React module. Each
 // preview "video" runs as a portrait <Stage> at 1170×2532 and uses
 // requestAnimationFrame to drive a global playhead that scenes read
-// via useTimeline()/useSprite(). The primitives intentionally mirror
-// the original animations.jsx API one-to-one so scene code copied out
-// of the HTML files keeps working with no behavioral changes.
+// via useTimeline()/useSprite(). The 1170×2532 logical canvas was
+// chosen for its match to the iPhone Pro coordinate space and is
+// the size every scene's inner sprite positions are tuned against.
+//
+// 1170/2532 = 0.4621 differs from Apple's App Store Connect preview
+// spec of 886×1920 (= 0.4615) by only 0.13% — visually identical and
+// well inside ASC's video pre-flight aspect tolerance. Users who
+// screen-record the Stage and re-encode to 886×1920 in a video
+// editor (or via ffmpeg) get an upload-ready file without any
+// noticeable letterboxing or distortion.
+//
+// Slide / screenshot exports take a different path entirely — they
+// render via canvas at the exact 1242×2688 ASC spec, see
+// `Header.tsx::downloadPreview`. So the Stage's coordinate-space
+// canvas size is independent of the screenshot upload pixel size,
+// and we keep the Stage at 1170×2532 so all hardcoded sprite layout
+// math in the scene files stays correct.
+//
+// The primitives intentionally mirror the original animations.jsx
+// API one-to-one so scene code copied out of the HTML files keeps
+// working with no behavioral changes.
 
 import {
   createContext,

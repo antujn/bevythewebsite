@@ -33,8 +33,16 @@ const NAV_LINK_CLASS =
   "text-[10px] font-semibold uppercase tracking-[0.18em] text-white/56 transition-colors hover:text-white/90";
 
 // iPhone 6.9" App Store required preview dimensions (portrait).
-const APPSTORE_TARGET_WIDTH = 1320;
-const APPSTORE_TARGET_HEIGHT = 2868;
+// Apple App Store Connect requires screenshot uploads to land at one
+// of a small set of exact pixel sizes — it rejects images whose
+// dimensions don't match a published class. We export at the 6.5"
+// "iPhone 11 Pro Max" spec (1242×2688) because it's also accepted
+// retroactively for newer device classes via Apple's automatic
+// scaling, and it matches the `aspect-ratio: 1242 / 2688` declared
+// on `.preview-story` exactly so the on-page render and the
+// downloaded JPEG share the same proportions with no aspect drift.
+const APPSTORE_TARGET_WIDTH = 1242;
+const APPSTORE_TARGET_HEIGHT = 2688;
 const HIDE_SUPPORTING_PHONE_IDS = new Set([
   "modes",
   "achievements",
