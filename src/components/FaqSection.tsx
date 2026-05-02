@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { RevealChild, RevealGroup } from "./RevealIn";
 
 import { APP_STORE_URL } from "@/lib/appStore";
@@ -100,18 +100,7 @@ export default function FaqSection() {
           </RevealChild>
         </RevealGroup>
 
-        <div className="faq-rail-viewport">
-          <div className="faq-rail">
-            {FAQ_ITEMS.map((item, i) => (
-              <FaqCard
-                key={item.q}
-                item={item}
-                index={i}
-                total={FAQ_ITEMS.length}
-              />
-            ))}
-          </div>
-        </div>
+        <FaqRail />
       </div>
 
       <script
@@ -119,6 +108,172 @@ export default function FaqSection() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
     </section>
+  );
+}
+
+// ── Rail with scroll-affordance arrows ─────────────────────────────
+//
+// The horizontal card rail wears two overlay buttons — left and right
+// chevrons — whose visibility is driven by the viewport's current
+// scroll position. Left appears once the user has scrolled past the
+// start; right disappears once the user reaches the end. This is the
+// same affordance Netflix / Apple TV+ rails use and is purely a
+// discoverability nudge — touch users still swipe, the arrows just
+// reinforce that more content lives in either direction.
+//
+// `proximity` scroll-snap means scrollLeft can settle at fractional
+// pixel values — we treat anything within 4px of the bounds as "at
+// the edge" so the arrows don't flicker on the last sub-pixel of
+// momentum.
+const SCROLL_EDGE_TOLERANCE = 4;
+
+function FaqRail() {
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  // Pulled out so the same logic runs on scroll, on resize, and on
+  // mount. Each call reads scrollLeft / clientWidth / scrollWidth and
+  // flips the two flags. Wrapped in useCallback so it's stable for
+  // the effect's dep list.
+  const recomputeScrollFlags = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const { scrollLeft, clientWidth, scrollWidth } = el;
+    setCanScrollLeft(scrollLeft > SCROLL_EDGE_TOLERANCE);
+    setCanScrollRight(
+      scrollLeft + clientWidth < scrollWidth - SCROLL_EDGE_TOLERANCE,
+    );
+  }, []);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    recomputeScrollFlags();
+
+    el.addEventListener("scroll", recomputeScrollFlags, { passive: true });
+    // Resize matters because both the viewport's clientWidth and the
+    // total scrollWidth (cards re-layout on container width changes
+    // via clamp()-driven slot widths) shift independently. A single
+    // ResizeObserver on the viewport catches both.
+    const ro = new ResizeObserver(recomputeScrollFlags);
+    ro.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", recomputeScrollFlags);
+      ro.disconnect();
+    };
+  }, [recomputeScrollFlags]);
+
+  const scrollByCard = useCallback((direction: "left" | "right") => {
+    const el = viewportRef.current;
+    if (!el) return;
+    // Scroll by ~85% of the viewport width so a "page" reveals the
+    // next batch of cards while keeping the trailing card from the
+    // previous batch partly visible as a continuity anchor.
+    const delta = el.clientWidth * 0.85;
+    el.scrollBy({
+      left: direction === "left" ? -delta : delta,
+      behavior: "smooth",
+    });
+  }, []);
+
+  return (
+    <div className="faq-rail-wrapper">
+      <div className="faq-rail-viewport" ref={viewportRef}>
+        <div className="faq-rail">
+          {FAQ_ITEMS.map((item, i) => (
+            <FaqCard
+              key={item.q}
+              item={item}
+              index={i}
+              total={FAQ_ITEMS.length}
+            />
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {canScrollLeft ? (
+          <motion.button
+            key="faq-arrow-left"
+            type="button"
+            className="faq-rail-arrow faq-rail-arrow--left"
+            onClick={() => scrollByCard("left")}
+            aria-label="Scroll FAQ cards left"
+            initial={{ opacity: 0, x: -6 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -6 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <RailArrowGlyph direction="left" />
+          </motion.button>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {canScrollRight ? (
+          <motion.button
+            key="faq-arrow-right"
+            type="button"
+            className="faq-rail-arrow faq-rail-arrow--right"
+            onClick={() => scrollByCard("right")}
+            aria-label="Scroll FAQ cards right"
+            initial={{ opacity: 0, x: 6 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 6 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <RailArrowGlyph direction="right" />
+          </motion.button>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/// Continuously bouncing arrow glyph that mirrors the language of
+/// the hero's "Discover" scroll indicator — same stem-and-head SVG
+/// path, same 2s easeInOut loop, just rotated and translated along
+/// the X axis so each side pokes outward toward the off-screen
+/// content. The hero's arrow points down via path geometry; we
+/// rotate via an inner `<g>` (rather than a CSS transform on the
+/// `<svg>`) so Motion's outer `x` animation isn't fighting a static
+/// CSS transform on the same element.
+function RailArrowGlyph({ direction }: { direction: "left" | "right" }) {
+  // Bounce delta — the arrow glyph translates 6px in its pointing
+  // direction, then back. Matches hero's `y: [0, 6, 0]` amplitude
+  // exactly so the rail and hero indicators feel like siblings.
+  const bounceX = direction === "left" ? [0, -6, 0] : [0, 6, 0];
+  // Rotation pivot is the viewbox center (12, 12). Rotating around
+  // 0,0 would translate the path off-screen.
+  const rotateDeg = direction === "left" ? 90 : -90;
+
+  return (
+    <motion.svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      aria-hidden
+      animate={{ x: bounceX }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <g transform={`rotate(${rotateDeg} 12 12)`}>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+        />
+      </g>
+    </motion.svg>
   );
 }
 

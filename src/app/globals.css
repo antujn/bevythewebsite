@@ -209,6 +209,67 @@ main:focus-visible {
   display: none;
 }
 
+/* Wrapper that hosts the viewport plus the two overlay arrow
+   buttons. Position-relative so the arrows can absolute-anchor
+   to its edges. */
+.faq-rail-wrapper {
+  position: relative;
+}
+
+/* Left / right scroll-affordance buttons rendered as a bare
+   chevron glyph — no fill, no border, no shadow. The 72×72 frame
+   stays so the click target is generous (well above the touch-
+   target minimum) even though the visible mark is just the SVG
+   stroke. Slightly translucent on idle so the chevron reads as
+   ambient affordance rather than a heavy CTA; pure white on hover
+   for clear interactive feedback.
+
+   Position-edge offsets sit just inside the viewport's mask fade
+   zone (4–6% from each edge per the linear-gradient mask) so the
+   chevrons appear anchored to the fade boundary, reinforcing that
+   "more content peeks past here." */
+.faq-rail-arrow {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(244, 238, 229, 0.7);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Drop shadow on the glyph itself so the chevron stays legible
+     when it overlaps a busy card image, without resurrecting the
+     full button-chrome look. */
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+  transition:
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.faq-rail-arrow:hover {
+  color: #fff;
+}
+
+.faq-rail-arrow:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 4px;
+}
+
+.faq-rail-arrow--left {
+  left: clamp(8px, 2vw, 24px);
+}
+
+.faq-rail-arrow--right {
+  right: clamp(8px, 2vw, 24px);
+}
+
 .faq-rail {
   display: flex;
   gap: 24px;
@@ -1567,11 +1628,37 @@ a {
 
 /* ── Gameplay section ───────────────────────── */
 
+/* Gameplay layout sits inside a card-style container that mirrors
+   the Experience deck's `.fd-card` chrome — same 24px corner
+   radius, hairline white border, soft drop shadow. The card hosts
+   the 2-column layout (copy left, mocks right) so the whole
+   "showcase" reads as a single editorial unit rather than two
+   columns floating loose against the section background.
+
+   Background gradient is intentionally subtle — wine-tinted black
+   leaning warmer at the top so the active video mock has a
+   stage-light feel without competing with the section's own
+   atmospheric backdrop. */
 .gameplay-layout {
   margin-top: 2.8rem;
   display: grid;
   gap: 2.2rem;
   align-items: center;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(74, 10, 16, 0.32), transparent 60%),
+    rgba(13, 5, 5, 0.55);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  /* Generous interior padding matching `.fd-card-copy` so copy
+     never crowds the card edges and the mock has room to breathe.
+     The clamp scales with viewport so mobile gets tighter
+     padding while desktop opens up. */
+  padding: clamp(2rem, 4vw, 3.5rem);
+  /* Backdrop blur softens the section illustration behind the
+     card so its content gradient stays the dominant chrome. */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 @media (min-width: 1024px) {
@@ -1592,29 +1679,72 @@ a {
   }
 }
 
+/* Tab list rendered as a vertical stack of rows separated by
+   hairlines instead of pill buttons. Each row spans the full
+   width of the copy column so the labels read like a typographic
+   table-of-contents — quiet, editorial, and visually distinct
+   from the chip language used on `.gameplay-point`s further
+   down. The active row gets brighter copy and an ember side-rule
+   on the leading edge so it reads as the current selection
+   without resorting to a filled background. */
 .gameplay-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.48rem;
+  flex-direction: column;
+  /* Top hairline so the stack reads as a self-contained block.
+     Bottom hairline lives on the last row's `::after` via the
+     row-level rules below. */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .gameplay-tab {
-  font-size: 10px;
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  /* Hairline divider between rows. Living on the row's own
+     bottom edge (rather than top) means the divider naturally
+     sits *below* each row including the last one, creating a
+     clean closed strip. */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Generous vertical hit area so the row is comfortably
+     tappable; horizontal padding leaves room for the active
+     side-rule pseudo-element to sit flush on the left edge. */
+  padding: 0.95rem 0.4rem 0.95rem 1.1rem;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-soft);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 0.52rem 0.82rem;
-  transition: all 220ms ease;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    background-color 200ms ease;
 }
 
+.gameplay-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* Active row: brighter label and a 2px ember side-rule on the
+   leading edge so the selection reads instantly without filling
+   the row's background. The rule is rendered via `::before` so
+   the rule's height tracks the row exactly even as padding scales
+   with viewport. */
 .gameplay-tab--active {
   color: var(--text-main);
-  border-color: rgba(232, 104, 72, 0.6);
-  background: rgba(217, 82, 58, 0.14);
+}
+
+.gameplay-tab--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(232, 104, 72, 0.85);
 }
 
 .gameplay-title {
@@ -1708,10 +1838,28 @@ a {
   backface-visibility: hidden;
 }
 
-/* Copy column: reserve space during text crossfade so surrounding layout
-   doesn't jump between slides with different paragraph lengths. */
+/* Copy column: reserve space during text crossfade so surrounding
+   layout doesn't jump between slides with different paragraph
+   lengths. Every slide is rendered simultaneously and they all
+   stack in the same grid cell (`grid-area: 1 / 1`). The grid
+   container auto-sizes to the tallest slide's natural footprint,
+   so the layout stays anchored to that height regardless of which
+   slide is currently visible. Inactive slides sit at opacity 0
+   underneath the active one but still contribute to the cell's
+   intrinsic sizing. */
 .gameplay-copy-stage {
-  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+}
+
+.gameplay-copy-slide {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  /* will-change hints the compositor to keep these on their own
+     GPU layer during the opacity crossfade so the four-slide
+     stack swaps cleanly without re-rasterising on each frame. */
+  will-change: opacity, transform;
 }
 
 /* ── Reviews ────────────────────────────────── */

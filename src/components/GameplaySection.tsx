@@ -2,40 +2,54 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { RevealIn, RevealGroup, RevealChild } from "./RevealIn";
 import TryBevyButton from "./TryBevyButton";
 
 // Base paths without extension — each video is served as both .webm
 // and .mp4 (see <source> tags below) so the browser picks what it
 // can decode. See P2 conversion notes: sizes dropped ~70% vs .mov.
+//
+// Slide order intentionally walks the user through the in-app tab
+// flow as they'd encounter it in a typical session: open the app
+// → Explore the deck → pick a game mode (Finger or Alias) → if
+// solo, hop into BevyAI Chat → if you want personal cards, write
+// them in Custom Mode. Same narrative the FAQ and homepage Feature
+// Deck use, just more screen-by-screen.
 const gameplaySlides = [
   {
-    label: "Finger Game",
-    title: "Fast turn picking for real groups.",
-    body: "Place fingers on screen and let Bevy select who goes next. Perfect for lively rooms where you want momentum, suspense, and zero setup friction.",
-    points: ["Quick start flow", "Supports team energy", "Designed for in-person play"],
+    label: "Browse the cards before playing",
+    title: "Browse the deck. Build the night.",
+    body: "Open the Explore tab to flick through every bundle, every prompt, every dare. Search for a vibe, save the cards you'll want later, exclude the ones that don't fit your room. Your deck, curated long before the first card lands on the table.",
+    points: ["Full prompt library", "Save and exclude cards", "Search across every bundle"],
+    frontVideo: "/videos/explore-tab",
+  },
+  {
+    label: "Let fingers decide whose turn it is",
+    title: "Lay your fingers down. Let chance pick the next move.",
+    body: "Everyone places a finger on the screen and Bevy picks who goes next. Pure momentum \u2014 no waiting, no debating, no awkward \u201cwhose turn is it\u201d. The cards keep flowing and the room stays in motion.",
+    points: ["Touch-driven turn picker", "Solo, duo, or full party", "Designed for in-person play"],
     frontVideo: "/videos/finger-mode-significant-other",
   },
   {
-    label: "Alias Game",
-    title: "Play in character with score tracking.",
-    body: "Give everyone a fun alias, rotate turns through cards, and let the built-in scoreboard carry the game night arc from warm-up to final winner.",
-    points: ["Alias identity setup", "Built-in scoreboard", "Great for parties and dates"],
+    label: "Become someone else",
+    title: "Slip into a name. Carry the night to its finish.",
+    body: "Everyone picks a fun alias, takes turns through the cards, and the built-in scoreboard tracks who's winning. Great for date nights, dinner parties, or any group that wants the arc of a real game from warm-up to last call.",
+    points: ["Alias setup per player", "Live scoreboard", "Saves and resumes between sessions"],
     frontVideo: "/videos/alias-mode-significant-other",
   },
   {
-    label: "BevyAI Play",
-    title: "A play partner when no group is around.",
-    body: "BevyAI adapts to your preferences and comfort level, then serves meaningful prompts for solo sessions, reflection, or low-pressure practice.",
-    points: ["Adaptive prompt flow", "Comfort-aware pacing", "Great for solo introspection"],
+    label: "When no one\u2019s free tonight",
+    title: "No group around? Bevy plays back.",
+    body: "Open BevyAI and tap any card to get a thoughtful reply, voiced as if a friend is answering across the table. Great for solo reflection, new-relationship calibration, or warming up your own answers before you bring the game to a group.",
+    points: ["AI replies to any prompt", "One token per reply", "Works with every bundle"],
     frontVideo: "/videos/ai-chat-significant-other",
   },
   {
-    label: "Custom Mode",
-    title: "Write your own cards. Play them instantly.",
-    body: "Compose prompts that fit your crew, your inside jokes, your mood. Save them, mix them with the bundles, and surface them whenever the moment calls.",
-    points: ["Custom prompt builder", "Mixes with stock bundles", "Private to your group"],
+    label: "Write your own cards",
+    title: "Write the cards your crew would actually play.",
+    body: "Compose prompts that fit your inside jokes, your relationships, your mood. Save them, mix them in with the stock bundles, and pull them up whenever the moment calls. The cards stay on your device \u2014 private to your group, not uploaded to a server.",
+    points: ["Custom prompt builder", "Mixes with every bundle", "Stored locally, never uploaded"],
     frontVideo: "/videos/custom-mode",
   },
 ];
@@ -98,7 +112,7 @@ export default function GameplaySection() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/illustrations/illustration8.jpg"
-          alt="Atmospheric illustration behind the Bevy gameplay showcase — mood setting for the four game modes: Finger Game, Alias Game, BevyAI Play, Custom Mode"
+          alt="Atmospheric illustration behind the Bevy gameplay showcase — mood setting for the five tabs walked through below: Explore, Finger Game, Alias Game, BevyAI Chat, Custom Mode"
           fill
           sizes="100vw"
           className="editorial-img opacity-50"
@@ -134,51 +148,76 @@ export default function GameplaySection() {
         <div className="gameplay-layout">
           <div className="gameplay-copy">
             <RevealGroup stagger={0.05} delay={0.15} className="gameplay-tabs">
-              {gameplaySlides.map((slide, i) => (
-                <RevealChild key={slide.label}>
-                  <motion.button
-                    className={`gameplay-tab${i === active ? " gameplay-tab--active" : ""}`}
-                    onClick={() => setActive(i)}
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 22 }}
-                  >
-                    {slide.label}
-                  </motion.button>
-                </RevealChild>
-              ))}
+              {gameplaySlides.map((slide, i) => {
+                const isActive = i === active;
+                return (
+                  <RevealChild key={slide.label}>
+                    <button
+                      type="button"
+                      className={`gameplay-tab${isActive ? " gameplay-tab--active" : ""}`}
+                      onClick={() => setActive(i)}
+                      aria-pressed={isActive}
+                    >
+                      {slide.label}
+                    </button>
+                  </RevealChild>
+                );
+              })}
             </RevealGroup>
 
-            {/* Text copy: crossfade + slight vertical slide when active changes */}
+            {/*
+              Text copy crossfade. To keep the surrounding layout
+              from jumping when a longer slide replaces a shorter
+              one, every slide is rendered simultaneously and they
+              all share the same CSS grid cell (`grid-area: 1 / 1`
+              via `.gameplay-copy-slide`). The grid cell sizes to
+              the tallest slide's natural footprint and holds that
+              height regardless of which slide is currently
+              visible. Only the active slide is opacity 1 + pointer-
+              events on; the others sit at opacity 0 underneath but
+              still anchor the grid's height.
+            */}
             <div className="gameplay-copy-stage">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={gameplaySlides[active].label}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <h3 className="gameplay-title">{gameplaySlides[active].title}</h3>
-                  <p className="gameplay-body">{gameplaySlides[active].body}</p>
-                  <div className="gameplay-points">
-                    {gameplaySlides[active].points.map((point) => (
-                      <span key={point} className="gameplay-point">
-                        {point}
-                      </span>
-                    ))}
-                  </div>
-                  {/* Inline "Try Bevy" CTA below each tab's
-                      description. Because it lives inside the
-                      <AnimatePresence> motion.div keyed to the
-                      active tab, the button rides the same
-                      crossfade animation as the title, body, and
-                      chips whenever the player switches tabs. */}
-                  <div style={{ marginTop: "1.4rem" }}>
-                    <TryBevyButton />
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+              {gameplaySlides.map((slide, i) => {
+                const isActive = i === active;
+                return (
+                  <motion.div
+                    key={slide.label}
+                    className="gameplay-copy-slide"
+                    initial={false}
+                    animate={{
+                      opacity: isActive ? 1 : 0,
+                      y: isActive ? 0 : 6,
+                    }}
+                    transition={{
+                      duration: 0.35,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    aria-hidden={!isActive}
+                    style={{
+                      pointerEvents: isActive ? "auto" : "none",
+                    }}
+                  >
+                    <h3 className="gameplay-title">{slide.title}</h3>
+                    <p className="gameplay-body">{slide.body}</p>
+                    <div className="gameplay-points">
+                      {slide.points.map((point) => (
+                        <span key={point} className="gameplay-point">
+                          {point}
+                        </span>
+                      ))}
+                    </div>
+                    {/* Inline "Try Bevy" CTA below each tab's
+                        description. Lives inside each per-slide
+                        wrapper so the button rides the same
+                        opacity crossfade as the title, body, and
+                        chips when the active tab changes. */}
+                    <div style={{ marginTop: "1.4rem" }}>
+                      <TryBevyButton />
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
