@@ -85,6 +85,17 @@ const ICON_VARIANTS: IconVariant[] = [
     tileBackground: "#610000",
     logoSrc: "/images/icons/bevy-logo.png",
   },
+  // Wraith — same maroon tile as Dark Red, but the red logo is
+  // replaced with a pure-black silhouette so the glyph reads as a
+  // deeper recess in the background rather than a graphic riding on
+  // top of it. Named for the "shadow on blood" feel it lands with.
+  {
+    id: "dark-wraith",
+    label: "Wraith",
+    fileBase: "BevyDarkWraithIcon",
+    tileBackground: "#610000",
+    logoSrc: "/images/icons/bevy-logo-black.png",
+  },
   {
     id: "dark-teal",
     label: "Dark Teal",
@@ -105,6 +116,30 @@ const ICON_VARIANTS: IconVariant[] = [
     fileBase: "BevyDarkBlackIcon",
     tileBackground: "#000000",
     logoSrc: "/images/icons/bevy-logo.png",
+  },
+  // Ghost — pure black tile with the off-white logo, giving the
+  // high-contrast monochrome treatment a clearly legible glyph
+  // (the standard Dark Black uses the red logo, which can read as
+  // muddy on jet black). Named for the pale silhouette floating in
+  // the void.
+  {
+    id: "dark-ghost",
+    label: "Ghost",
+    fileBase: "BevyDarkGhostIcon",
+    tileBackground: "#000000",
+    logoSrc: "/images/icons/bevy-logo-white.png",
+  },
+  // Shadow — pure black tile with the gunmetal-grey logo, sitting
+  // visually between Dark Black (red on black, hot) and Ghost
+  // (white on black, ice-cold). The muted grey reads as a
+  // half-emerged silhouette — present but receding — which is
+  // exactly the "shadow" mood the name implies.
+  {
+    id: "dark-shadow",
+    label: "Shadow",
+    fileBase: "BevyDarkShadowIcon",
+    tileBackground: "#000000",
+    logoSrc: "/images/icons/bevy-logo-grey.png",
   },
   {
     id: "dark-orange",
@@ -227,6 +262,13 @@ export default function PreviewIcons({
   onDownloadStateChange,
 }: PreviewIconsProps) {
   const [isDownloading, setIsDownloading] = useState(false);
+  // Tracks the variant currently being exported via a single-icon
+  // click. `null` when no individual download is in flight. Used to
+  // gate concurrent clicks and to drive a per-tile downloading state
+  // for visual feedback. Distinct from `isDownloading` (which fires
+  // for the bulk Download-All path) so a single-icon click can show
+  // its own subtle indicator without dimming the whole grid.
+  const [downloadingVariantId, setDownloadingVariantId] = useState<string | null>(null);
   const lastSignalRef = useRef<number | null>(null);
   const imageCacheRef = useRef<Map<string, Promise<HTMLImageElement>>>(new Map());
 
@@ -425,6 +467,28 @@ export default function PreviewIcons({
     }
   }, [downloadBlob, isDownloading, onDownloadStateChange, renderIconBlob]);
 
+  /// Renders and downloads a single variant. Gated on the bulk
+  /// download state so individual clicks during a Download-All
+  /// session don't race with the queued bulk export, and gated on
+  /// `downloadingVariantId` so the same variant can't be queued
+  /// twice from rapid double-clicks.
+  const downloadSingleIcon = useCallback(
+    async (variant: IconVariant) => {
+      if (isDownloading || downloadingVariantId !== null) return;
+
+      setDownloadingVariantId(variant.id);
+      try {
+        const blob = await renderIconBlob(variant);
+        downloadBlob(blob, `${variant.fileBase}.png`);
+      } catch (err) {
+        console.error(`Downloading ${variant.fileBase} failed`, err);
+      } finally {
+        setDownloadingVariantId(null);
+      }
+    },
+    [downloadBlob, downloadingVariantId, isDownloading, renderIconBlob],
+  );
+
   useEffect(() => {
     if (downloadAllSignal == null) return;
     if (lastSignalRef.current == null) {
@@ -439,42 +503,62 @@ export default function PreviewIcons({
   return (
     <div className="preview-icons-wrap" aria-label="Bevy icon variants">
       <div className="preview-icons-grid">
-        {ICON_VARIANTS.map((icon) => (
-          <figure key={icon.id} className="preview-icon-card">
-            <div
-              className={`preview-icon-tile${icon.premium ? " is-premium" : ""}`}
-              style={{ background: icon.tileBackground }}
-            >
-              <div className="preview-icon-tile__sheen" aria-hidden="true" />
-              <div className="preview-icon-logo-wrap">
-                {icon.gradient && icon.gradient in PREMIUM_LOGO_CSS_GRADIENT ? (
-                  // Premium tier: render the logo as a CSS mask filled
-                  // with the per-tier brushed-metal gradient, mirroring
-                  // the canvas export's `source-in` compositing.
-                  <div
-                    role="img"
-                    aria-label={`${icon.label} app icon`}
-                    className="preview-icon-logo preview-icon-logo--metal"
-                    style={{
-                      backgroundImage: PREMIUM_LOGO_CSS_GRADIENT[icon.gradient],
-                      WebkitMaskImage: `url(${icon.logoSrc})`,
-                      maskImage: `url(${icon.logoSrc})`,
-                    }}
-                  />
-                ) : (
-                  <Image
-                    src={icon.logoSrc}
-                    alt={`${icon.label} app icon`}
-                    fill
-                    sizes="(max-width: 900px) 38vw, 180px"
-                    className="preview-icon-logo"
-                  />
-                )}
-              </div>
-            </div>
-            <figcaption className="preview-icon-name">{icon.fileBase}</figcaption>
-          </figure>
-        ))}
+        {ICON_VARIANTS.map((icon) => {
+          const isThisDownloading = downloadingVariantId === icon.id;
+          const isAnyDownloading = isDownloading || downloadingVariantId !== null;
+          return (
+            <figure key={icon.id} className="preview-icon-card">
+              {/*
+                Tile is a button so each icon doubles as its own
+                download trigger — clicking renders a 1024×1024 PNG
+                of just that variant via the same canvas pipeline
+                used by Download All. Disabled while either a bulk
+                export or another single-icon export is in flight,
+                so concurrent clicks can't race the canvas.
+              */}
+              <button
+                type="button"
+                onClick={() => void downloadSingleIcon(icon)}
+                disabled={isAnyDownloading}
+                aria-label={`Download ${icon.label} app icon`}
+                aria-busy={isThisDownloading || undefined}
+                className={`preview-icon-tile${icon.premium ? " is-premium" : ""}${
+                  isThisDownloading ? " is-downloading" : ""
+                }`}
+                style={{ background: icon.tileBackground }}
+              >
+                <div className="preview-icon-tile__sheen" aria-hidden="true" />
+                <div className="preview-icon-logo-wrap">
+                  {icon.gradient && icon.gradient in PREMIUM_LOGO_CSS_GRADIENT ? (
+                    // Premium tier: render the logo as a CSS mask
+                    // filled with the per-tier brushed-metal
+                    // gradient, mirroring the canvas export's
+                    // `source-in` compositing.
+                    <div
+                      role="img"
+                      aria-label={`${icon.label} app icon`}
+                      className="preview-icon-logo preview-icon-logo--metal"
+                      style={{
+                        backgroundImage: PREMIUM_LOGO_CSS_GRADIENT[icon.gradient],
+                        WebkitMaskImage: `url(${icon.logoSrc})`,
+                        maskImage: `url(${icon.logoSrc})`,
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      src={icon.logoSrc}
+                      alt={`${icon.label} app icon`}
+                      fill
+                      sizes="(max-width: 900px) 38vw, 180px"
+                      className="preview-icon-logo"
+                    />
+                  )}
+                </div>
+              </button>
+              <figcaption className="preview-icon-name">{icon.fileBase}</figcaption>
+            </figure>
+          );
+        })}
       </div>
     </div>
   );

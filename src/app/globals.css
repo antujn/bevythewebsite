@@ -2466,10 +2466,64 @@ a {
   aspect-ratio: 1;
   border-radius: 30px;
   overflow: hidden;
+  /* Tile is a <button> so each preview doubles as its own download
+     trigger. Reset the user-agent button chrome (padding, border,
+     font, color) so the visual treatment is identical to the
+     previous <div> tile, then re-introduce a hover/focus/active
+     affordance scoped to the new interactive role. */
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
   box-shadow:
     0 18px 42px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
     inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+}
+
+.preview-icon-tile:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 26px 54px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+}
+
+.preview-icon-tile:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+}
+
+.preview-icon-tile:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 4px;
+}
+
+.preview-icon-tile:disabled {
+  cursor: progress;
+}
+
+/* Variant currently rendering its own download — soft pulse so the
+   user has visible confirmation of the click while the canvas does
+   its work. The pulse is gentle enough to avoid feeling like an
+   error state. */
+.preview-icon-tile.is-downloading {
+  animation: preview-icon-tile-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes preview-icon-tile-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
 }
 
 .preview-icon-tile.is-premium {
