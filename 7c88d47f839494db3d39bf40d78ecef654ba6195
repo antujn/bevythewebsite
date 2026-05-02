@@ -1,0 +1,25 @@
+src/app/globals.css
+  e3abfb7bfb9634b9 2469-2484,2491-2526
+src/components/PreviewIcons.tsx
+  e3abfb7bfb9634b9 88-91,93-98,120-142,265-271,470-490,506-561
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "7c88d47f839494db3d39bf40d78ecef654ba6195",
+  "prompts": {
+    "e3abfb7bfb9634b9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_2208936e2ffez1eBBMn8sWMnex",
+        "model": "anthropic/claude-opus-4-7"
+      },
+      "human_author": "Anant Jain",
+      "messages": [],
+      "total_additions": 746,
+      "total_deletions": 36,
+      "accepted_lines": 746,
+      "overriden_lines": 0
+    }
+  }
+}
