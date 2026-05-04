@@ -29,7 +29,7 @@ const SEGMENT_TITLES: Record<string, string> = {
  * The page-body `<strong>Effective date: …</strong>` lines are the
  * human-facing twin of this constant; keep the two in sync.
  */
-const LEGAL_LAST_UPDATED = "2026-05-02";
+const LEGAL_LAST_UPDATED = "2026-05-04";
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 

@@ -97,7 +97,7 @@ const ICO_COMPLAINT_URL = "https://ico.org.uk/make-a-complaint/";
 const MIXPANEL_OPTOUT = "https://mixpanel.com/optout/";
 const MIXPANEL_TERMS = "https://mixpanel.com/terms/";
 
-const EFFECTIVE_DATE = "02/05/2026";
+const EFFECTIVE_DATE = "04/05/2026";
 
 // MARK: - Terms of Service
 
@@ -180,7 +180,7 @@ export const termsDoc: LegalDoc = {
       body: [
         p(
           t(
-            "Premium features are available via subscription. Token packages and Sponsor Circle contributions are available as one-time, in-app purchases. All prices are subject to change. Payment is charged to your Apple ID account at confirmation. Subscriptions automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Subscriptions may be managed through your Apple ID Account Settings. Free trial cancellation must be done 24 hours before the trial ends. Tokens do not expire but token balances are stored locally on your device and may be affected if you delete or reinstall the app on a device not signed into the same Apple ID. You may restore prior eligible purchases at any time from within the Service via the \u201CRestore Status\u201D or equivalent control. Your use through the Apple App Store is also subject to Apple\u2019s terms and conditions. All purchases are final and non-refundable except as required by law or Apple\u2019s refund policies.",
+            "Premium features are available via subscription. Token packages and Sponsor Circle contributions are available as one-time, in-app purchases. All prices are subject to change. Payment is charged to your Apple ID account at confirmation. Subscriptions automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Subscriptions may be managed through your Apple ID Account Settings. Free trial cancellation must be done 24 hours before the trial ends. Tokens do not expire but token balances are stored on your device (in the iOS Keychain) rather than in iCloud, and may be affected if you delete or reinstall the app on a device not signed into the same Apple ID. Your card data, custom content, preferences, and achievement progress are separately synced to your iCloud account where iCloud is enabled (see our Privacy Policy). You may restore prior eligible purchases at any time from within the Service via the \u201CRestore Status\u201D or equivalent control. Your use through the Apple App Store is also subject to Apple\u2019s terms and conditions. All purchases are final and non-refundable except as required by law or Apple\u2019s refund policies.",
           ),
         ),
       ],
@@ -256,12 +256,12 @@ export const termsDoc: LegalDoc = {
       body: [
         p(
           t(
-            "The Service allows you to create custom truth and dare cards and custom packs. All user-created content is stored locally on your device and is not uploaded to our servers. You retain ownership of any content you create. We are not responsible for the loss of locally stored content if you delete the app or reset your device.",
+            "The Service allows you to create custom truth and dare cards, custom packs, and to write private notes on the back of any card. This content is stored on your device and, where you are signed into iCloud, also synced to your private Apple iCloud account so it follows you across your Apple devices. It is not uploaded to our servers. You retain ownership of any content you create. We are not responsible for the loss of locally stored or iCloud-synced content if you delete the app, reset your device, sign out of iCloud, or clear Bevy\u2019s iCloud data.",
           ),
         ),
         p(
           t(
-            "Where you submit a card prompt, suggestion, or other text-based contribution to us through any channel, including for use at a meetup, you grant us a non-exclusive, worldwide, royalty-free licence to use, reproduce, and display the contribution in connection with the Service.",
+            "Where you submit a card prompt, suggestion, or other text-based contribution to us through any channel, including for use at a meetup, you grant us a non-exclusive, worldwide, royalty-free licence to use, reproduce, and display the contribution in connection with the Service. This grant does not extend to private notes, custom cards, or custom packs that remain in your own iCloud account; we have no access to those and seek no licence to them.",
           ),
         ),
       ],
@@ -527,7 +527,12 @@ export const privacyDoc: LegalDoc = {
       body: [
         p(
           t(
-            "Bevy does not require or support user accounts. There is no registration, login, or sign-up process. We do not collect your name, email address, phone number, or any other account-related personal information. All app preferences and user-created content (such as custom cards and packs) are stored locally on your device. While we do not maintain user accounts, our analytics and subscription management services generate anonymous identifiers to provide the Service. These identifiers cannot be used to identify you personally.",
+            "Bevy does not require or support user accounts. There is no registration, login, or sign-up process. We do not collect your name, email address, phone number, or any other account-related personal information. While we do not maintain user accounts, our analytics and subscription management services generate anonymous identifiers to provide the Service. These identifiers cannot be used to identify you personally.",
+          ),
+        ),
+        p(
+          t(
+            "App preferences, user-created content (custom cards and packs), private card notes, achievement progress, and similar app state are stored on your device and, where you are signed into iCloud, also synced to your Apple iCloud account so they follow you across your Apple devices. We do not have a server-side copy of this data; the iCloud copy lives in your private iCloud database under your Apple ID and is governed by Apple\u2019s privacy practices. See \u00a76 (\u201CTypes of Data Collected\u201D) for the specifics of what is synced.",
           ),
         ),
       ],
@@ -562,7 +567,7 @@ export const privacyDoc: LegalDoc = {
         sub("Sponsor Circle Data"),
         p(
           t(
-            "If you make one or more Sponsor Circle contributions, we store the following data on your device in the iOS Keychain: the cumulative number of contributions you have made, the cumulative total contribution amount in your local currency at the time of purchase (in minor units, i.e. cents/pence), and the date of your first contribution. These three values, taken together, are what we use locally to determine your sponsor tier (Gunmetal / Cobalt / Palladium / Iridium) and to keep your \u201CPremium Edition for Life\u201D entitlement active even if your Apple subscription entitlement is not visible at the time of an offline check.",
+            "If you make one or more Sponsor Circle contributions, we store the following data on your device in the iOS Keychain: the cumulative number of contributions you have made, the cumulative total contribution amount in your local currency at the time of purchase (in minor units, i.e. cents/pence), and the date of your first contribution. These three values, taken together, are what we use locally to determine your sponsor tier (Gunmetal / Cobalt / Palladium / Iridium) and to keep your \u201CPremium Edition for Life\u201D entitlement active even if your Apple subscription entitlement is not visible at the time of an offline check. Sponsor data uses iCloud Keychain rather than the iCloud database described under \u201CiCloud Data Sync\u201D \u2014 these are two separate Apple sync infrastructures that we use for different categories of data.",
           ),
         ),
         p(
@@ -595,11 +600,29 @@ export const privacyDoc: LegalDoc = {
           ),
         ),
         sub("Local Game Data"),
-        p(t("Game progress, achievements, and gameplay statistics are stored locally on your device.")),
+        p(t("Game progress, achievements, and gameplay statistics are stored on your device. Where iCloud sync is available (see below), they may also be mirrored to your private iCloud account so they follow you between devices signed into the same Apple ID.")),
+        sub("iCloud Data Sync"),
+        p(
+          t(
+            "Bevy uses Apple\u2019s iCloud (CloudKit private database and NSUbiquitousKeyValueStore) to keep your local data in sync across the Apple devices you sign into with the same Apple ID. The synced categories are: (a) your built-in card state (which cards you have saved or excluded from play, and any private notes you have written on the back of a card); (b) your user-created custom cards and packs (including any private notes on them); (c) your app preferences (NSFW toggle, selected app icon, current bundle, notification preferences, and game-setup options); and (d) your achievement progress (the master progress map and supporting counters). The iCloud copy lives in your own private iCloud database and your iCloud key-value store \u2014 we do not have access to it on our servers. If you are not signed into iCloud, or if iCloud sync is unavailable, this data simply remains on the device on which it was created. You can stop syncing at any time by signing out of iCloud or by disabling iCloud for Bevy in your device settings.",
+          ),
+        ),
+        sub("Private Card Notes"),
+        p(
+          t(
+            "Bevy lets you write a free-text private note on the back of any card. These notes are entirely private to you. They are stored in the same iCloud location as the rest of your card data described above; they are never sent to our servers, our analytics provider, or our AI infrastructure. Where a note exists on a card, viewing it from the back of the card is gated behind your device\u2019s biometric authentication or device passcode (see \u201CBiometric Authentication\u201D below).",
+          ),
+        ),
+        sub("Biometric Authentication"),
+        p(
+          t(
+            "Bevy uses Apple\u2019s LocalAuthentication framework to gate certain on-device actions behind your device\u2019s Face ID, Touch ID, or device passcode. The gates are: (i) enabling adult-content (\u201CNSFW\u201D) display from the safe-for-work default state; (ii) opening the back of a card that has a private note on it; and (iii) the optional \u201Cunlock notes for this session\u201D toggle. Your biometric data (face geometry or fingerprint) never leaves the device, and we never receive or store it. Apple\u2019s system simply tells our app whether the local authentication challenge succeeded or failed; we receive a boolean result and nothing more.",
+          ),
+        ),
         sub("Data We Do NOT Collect"),
         p(
           t(
-            "We do not collect: your name, email address, or any personally identifiable contact information (except where you provide them to us voluntarily, e.g. by emailing us about a support issue or attending an in-person meetup); special category data (racial or ethnic origin, political opinions, religious beliefs, trade union membership, genetic or biometric data, health data, or data concerning sex life or sexual orientation); financial or payment information (all payments are processed by Apple); precise geolocation data; contacts, microphone, or any other device sensor data; or the text content of cards you view, create, or interact with.",
+            "We do not collect: your name, email address, or any personally identifiable contact information (except where you provide them to us voluntarily, e.g. by emailing us about a support issue or attending an in-person meetup); special category data (racial or ethnic origin, political opinions, religious beliefs, trade union membership, genetic or biometric data, health data, or data concerning sex life or sexual orientation); biometric template data of any kind (Face ID and Touch ID never leave your device); financial or payment information (all payments are processed by Apple); precise geolocation data; contacts, microphone, or any other device sensor data; the text content of cards you view, create, or interact with; or the text content of private notes you write on the back of cards.",
           ),
         ),
       ],
@@ -612,6 +635,11 @@ export const privacyDoc: LegalDoc = {
             "We use the collected anonymous data for the following purposes: to provide and maintain our Service; to understand how the Service is used and identify areas for improvement; to detect, prevent, and address technical issues; to monitor aggregate usage patterns; and to improve the quality and relevance of AI-generated content using aggregated, anonymous data.",
           ),
         ),
+        p(
+          t(
+            "We do not use, read, or analyse the content stored in your iCloud-synced app data (cards, packs, private notes, preferences, achievement progress). That data is held in your private iCloud database and on your device(s); we do not have a copy of it on our servers and we do not derive analytics insights from it.",
+          ),
+        ),
       ],
     },
     {
@@ -619,7 +647,7 @@ export const privacyDoc: LegalDoc = {
       body: [
         p(
           t(
-            `Anonymous analytics data is retained for up to 24 months. AI interaction data (prompt identifiers) is not stored on our servers beyond the duration of the request. Locally stored data (preferences, custom cards, packs) remains on your device until you delete the app or clear its data. Certain security-sensitive data (such as subscription status, token balances, and Sponsor Circle ledger fields) is stored in the iOS Keychain, which may persist across app reinstalls until manually cleared by the operating system. Sponsor Circle data specifically is stored in the syncable Keychain namespace and may persist across other Apple devices you sign into with the same Apple ID for as long as iCloud Keychain is enabled, even if you delete the app on every device. Photographs and video taken at in-person meetups, where you have consented, are retained for as long as we use them in our marketing materials; you may request removal at any time by emailing ${SUPPORT_EMAIL}. We will retain data as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements.`,
+            `Anonymous analytics data is retained for up to 24 months. AI interaction data (prompt identifiers) is not stored on our servers beyond the duration of the request. Locally stored data (preferences, custom cards, packs, private notes, achievement progress) remains on your device until you delete the app or clear its data. Where iCloud sync is enabled, the same data is also stored in your private iCloud database and may persist there even after you delete the app from a particular device, until you sign out of iCloud or remove Bevy\u2019s data from your iCloud settings. Certain security-sensitive data (such as subscription status, token balances, and Sponsor Circle ledger fields) is stored in the iOS Keychain, which may persist across app reinstalls until manually cleared by the operating system. Sponsor Circle data specifically is stored in the syncable Keychain namespace and may persist across other Apple devices you sign into with the same Apple ID for as long as iCloud Keychain is enabled, even if you delete the app on every device. Photographs and video taken at in-person meetups, where you have consented, are retained for as long as we use them in our marketing materials; you may request removal at any time by emailing ${SUPPORT_EMAIL}. We will retain data as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements.`,
           ),
         ),
       ],
@@ -630,6 +658,11 @@ export const privacyDoc: LegalDoc = {
         p(
           t(
             "Your anonymous usage data may be processed by our service providers in countries outside the United Kingdom or the EEA. Where we transfer data outside of the UK or the EEA, we ensure that adequate safeguards are in place, including transfers to countries with an adequacy decision, the use of Standard Contractual Clauses (SCCs), and other lawful transfer mechanisms.",
+          ),
+        ),
+        p(
+          t(
+            "Your iCloud-synced data (cards, packs, private notes, preferences, achievement progress, and Sponsor Circle ledger fields) is hosted by Apple in the regions Apple chooses based on your Apple ID and iCloud account location. Apple\u2019s data residency, encryption, and transfer practices are governed by Apple\u2019s privacy policy and end-user agreements, not by us. We do not control where Apple stores or processes this data because we do not hold it.",
           ),
         ),
       ],
@@ -673,9 +706,9 @@ export const privacyDoc: LegalDoc = {
           ),
         ),
         p(
-          b("Sponsor Circle data and locally stored content:"),
+          b("Sponsor Circle data, iCloud-synced content, and locally stored data:"),
           t(
-            " because Sponsor Circle data, custom cards, and other locally stored content live on your device(s) and inside iCloud Keychain (where applicable), you control them directly. You can delete the app, sign out of iCloud, or clear iCloud Keychain on your devices to remove them. We do not hold copies on our servers. Note that erasing local sponsor data will revoke the corresponding sponsor app icons and the \u201CPremium Edition for Life\u201D entitlement on the device or account from which it was erased.",
+            " because this data lives on your device(s), in your private iCloud database, and inside iCloud Keychain (as applicable), you control it directly. You can delete it by: deleting the Bevy app from each device; signing out of iCloud or clearing iCloud Keychain; or removing Bevy\u2019s iCloud data from your device\u2019s Settings (Settings \u203a [Your Name] \u203a iCloud \u203a Manage Account Storage \u203a Bevy). We do not hold copies on our servers and therefore cannot delete this data on your behalf. Note that erasing local sponsor data will revoke the corresponding sponsor app icons and the \u201CPremium Edition for Life\u201D entitlement on the device or account from which it was erased.",
           ),
         ),
         p(
@@ -716,10 +749,14 @@ export const privacyDoc: LegalDoc = {
             b("Modal"),
             t(" \u2014 AI infrastructure hosting. Hosts the backend that processes AI-powered features. Only numeric prompt identifiers are sent to this service; no personal data is transmitted."),
           ],
+          [
+            b("Apple iCloud"),
+            t(" \u2014 Cross-device sync infrastructure. We use Apple\u2019s CloudKit private database, NSUbiquitousKeyValueStore, and iCloud Keychain to keep your app data (cards, packs, private notes, preferences, achievement progress, sponsor ledger) in sync across the Apple devices you sign into with the same Apple ID. The data lives in your private iCloud account, not on our servers. Apple\u2019s handling of this data is governed by Apple\u2019s own privacy policy."),
+          ],
         ),
         p(
           t(
-            "All service providers are bound by data processing agreements and are contractually obligated to keep data confidential and process it only as instructed.",
+            "Mixpanel, RevenueCat, and Modal are bound by data processing agreements and are contractually obligated to keep data confidential and process it only as instructed. Apple iCloud is governed by your existing iCloud terms with Apple; we are not a party to that relationship.",
           ),
         ),
       ],
@@ -975,7 +1012,7 @@ export const disclaimerDoc: LegalDoc = {
       body: [
         p(
           t(
-            "The Service may integrate with or link to third-party services, including AI infrastructure providers (Modal), analytics services (Mixpanel), and subscription management services (RevenueCat). We are not responsible for the content, privacy practices, or terms of any third-party service. All third-party service providers are bound by data processing agreements.",
+            "The Service may integrate with or link to third-party services, including AI infrastructure providers (Modal), analytics services (Mixpanel), subscription management services (RevenueCat), and Apple iCloud (CloudKit, NSUbiquitousKeyValueStore, and iCloud Keychain) for cross-device sync of your app data. We are not responsible for the content, privacy practices, or terms of any third-party service. Mixpanel, Modal, and RevenueCat are bound by data processing agreements with us; Apple iCloud operates under your existing iCloud terms with Apple.",
           ),
         ),
       ],
